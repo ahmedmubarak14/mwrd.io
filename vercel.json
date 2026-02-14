@@ -1,0 +1,21 @@
+{
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/process-auto-quotes",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/send-notification",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}

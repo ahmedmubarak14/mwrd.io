@@ -1,0 +1,13 @@
+# A string used to distinguish different Supabase projects on the same host.
+project_id = "mwrd-marketplace"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[auth]
+enabled = true
+site_url = "https://testmwrdfeb26.vercel.app"
