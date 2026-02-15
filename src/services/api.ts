@@ -494,7 +494,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching users:', error);
-      return [];
+      throw new Error(`Failed to fetch users: ${error.message || 'Unknown error'}`);
     }
 
     const mappedUsers = data.map((row: any) => this.mapDbUserToUser(row));
@@ -510,7 +510,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching user:', error);
-      return null;
+      throw new Error(`Failed to fetch user: ${error.message || 'Unknown error'}`);
     }
 
     const mappedUser = this.mapDbUserToUser(data);
@@ -545,7 +545,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching users by role:', error);
-      return [];
+      throw new Error(`Failed to fetch users by role: ${error.message || 'Unknown error'}`);
     }
 
     const mappedUsers = data.map((row: any) => this.mapDbUserToUser(row));
@@ -851,7 +851,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching credit limit adjustments:', error);
-      return [];
+      throw new Error(`Failed to fetch credit limit adjustments: ${error.message || 'Unknown error'}`);
     }
 
     const adjustments = (data || []).map((row: any) => this.mapDbCreditLimitAdjustment(row));
@@ -1052,7 +1052,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching products:', error);
-      return [];
+      throw new Error(`Failed to fetch products: ${error.message || 'Unknown error'}`);
     }
 
     return data.map((row: any) => this.mapDbProductToProduct(row));
@@ -1067,7 +1067,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching product:', error);
-      return null;
+      throw new Error(`Failed to fetch product: ${error.message || 'Unknown error'}`);
     }
 
     return this.mapDbProductToProduct(data);
@@ -1108,11 +1108,10 @@ export class ApiService {
       }
 
       logger.error('Error creating product:', error);
-      return null;
+      throw new Error(`Failed to create product: ${error.message || 'Unknown error'}`);
     }
 
-    logger.error('Error creating product: no compatible product columns available');
-    return null;
+    throw new Error('Failed to create product: no compatible product columns available');
   }
 
   async updateProduct(id: string, updates: Partial<Product>): Promise<Product | null> {
@@ -1150,7 +1149,7 @@ export class ApiService {
       }
 
       logger.error('Error updating product:', error);
-      return null;
+      throw new Error(`Failed to update product: ${error.message || 'Unknown error'}`);
     }
 
     return this.getProductById(id);
@@ -1313,7 +1312,7 @@ export class ApiService {
     }
 
     logger.error('Error fetching RFQs:', lastError);
-    return [];
+    throw new Error(`Failed to fetch RFQs: ${lastError?.message || 'Unknown error'}`);
   }
 
   async getRFQById(id: string): Promise<RFQ | null> {
@@ -1628,7 +1627,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching quotes:', error);
-      return [];
+      throw new Error(`Failed to fetch quotes: ${error.message || 'Unknown error'}`);
     }
 
     return data.map((row: any) => this.mapDbQuoteToQuote(row));
@@ -1647,7 +1646,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching quotes with details:', error);
-      return [];
+      throw new Error(`Failed to fetch quotes with details: ${error.message || 'Unknown error'}`);
     }
 
     const quoteRows = data || [];
@@ -1916,7 +1915,7 @@ export class ApiService {
       }
 
       logger.error('Error updating quote:', error);
-      return null;
+      throw new Error(`Failed to update quote: ${error.message || 'Unknown error'}`);
     }
 
     if (updates.quoteItems) {
@@ -2024,7 +2023,7 @@ export class ApiService {
 
     if (error) {
       logger.error('Error fetching orders:', error);
-      return [];
+      throw new Error(`Failed to fetch orders: ${error.message || 'Unknown error'}`);
     }
 
     return data.map((row: any) => this.mapDbOrderToOrder(row));
@@ -2074,11 +2073,10 @@ export class ApiService {
       }
 
       logger.error('Error creating order:', error);
-      return null;
+      throw new Error(`Failed to create order: ${error.message || 'Unknown error'}`);
     }
 
-    logger.error('Error creating order: no compatible order columns available');
-    return null;
+    throw new Error('Failed to create order: no compatible order columns available');
   }
 
   async updateOrder(id: string, updates: Partial<Order>): Promise<Order | null> {
@@ -2094,16 +2092,14 @@ export class ApiService {
         .single();
 
       if (currentOrderError || !currentOrderRow) {
-        logger.error(`Cannot update order ${id}: order not found`);
-        return null;
+        throw new Error(`Cannot update order ${id}: order not found`);
       }
 
       currentDbStatus = String((currentOrderRow as any).status || '');
       const currentNormalizedStatus = this.normalizeOrderStatus(currentDbStatus);
 
       if (!canTransitionOrderStatus(currentNormalizedStatus, updates.status)) {
-        logger.error(`Invalid order status transition: ${currentNormalizedStatus} -> ${updates.status}`);
-        return null;
+        throw new Error(`Invalid order status transition: ${currentNormalizedStatus} -> ${updates.status}`);
       }
 
       dbUpdates.status = this.toDbOrderStatus(updates.status);
@@ -2159,8 +2155,7 @@ export class ApiService {
       if (!error) {
         if (!data) {
           if (!updates.status || !currentDbStatus || retryCount >= maxStatusRetryCount) {
-            logger.error(`Order update for ${id} did not apply (record not found or status changed concurrently)`);
-            return null;
+            throw new Error(`Order update for ${id} did not apply (record not found or status changed concurrently)`);
           }
 
           const { data: latestOrderRow, error: latestOrderError } = await (supabase as any)
@@ -2170,22 +2165,19 @@ export class ApiService {
             .single();
 
           if (latestOrderError || !latestOrderRow) {
-            logger.error(`Order update retry failed for ${id}: unable to load latest status`, latestOrderError);
-            return null;
+            throw new Error(`Order update retry failed for ${id}: unable to load latest status`);
           }
 
           const latestDbStatus = String((latestOrderRow as any).status || '');
           if (latestDbStatus === currentDbStatus) {
-            logger.error(`Order update for ${id} did not apply and latest status was unchanged`);
-            return null;
+            throw new Error(`Order update for ${id} did not apply and latest status was unchanged`);
           }
 
           const latestNormalizedStatus = this.normalizeOrderStatus(latestDbStatus);
           if (!canTransitionOrderStatus(latestNormalizedStatus, updates.status)) {
-            logger.error(
+            throw new Error(
               `Order update for ${id} rejected after concurrent change: ${latestNormalizedStatus} -> ${updates.status}`
             );
-            return null;
           }
 
           currentDbStatus = latestDbStatus;
@@ -2212,7 +2204,7 @@ export class ApiService {
       }
 
       logger.error('Error updating order:', error);
-      return null;
+      throw new Error(`Failed to update order: ${error.message || 'Unknown error'}`);
     }
 
     logger.error(`Order update for ${id} skipped because no supported update columns were available`);
@@ -2259,7 +2251,7 @@ export class ApiService {
 
     if (lastError) {
       logger.error('Error fetching margin settings:', lastError);
-      return [];
+      throw new Error(`Failed to fetch margin settings: ${lastError?.message || 'Unknown error'}`);
     }
 
     const latestByKey = new Map<string, {
@@ -2569,7 +2561,7 @@ export class ApiService {
         };
       }
       logger.error('Error fetching system settings:', error);
-      return null;
+      throw new Error(`Failed to fetch system settings: ${error.message || 'Unknown error'}`);
     }
 
     if (!data) {

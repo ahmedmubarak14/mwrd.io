@@ -274,28 +274,24 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
 
   const handleApproveProduct = async (productId: string): Promise<boolean> => {
     try {
-      const updated = await api.approveProduct(productId);
-      if (!updated) {
-        return false;
-      }
+      await api.approveProduct(productId);
       await loadProducts();
       return true;
     } catch (error) {
       logger.error('Failed to approve product', { productId, error });
+      toast.error(t('admin.products.approveFailed', 'Failed to approve product'));
       return false;
     }
   };
 
   const handleRejectProduct = async (productId: string): Promise<boolean> => {
     try {
-      const updated = await api.rejectProduct(productId);
-      if (!updated) {
-        return false;
-      }
+      await api.rejectProduct(productId);
       await loadProducts();
       return true;
     } catch (error) {
       logger.error('Failed to reject product', { productId, error });
+      toast.error(t('admin.products.rejectFailed', 'Failed to reject product'));
       return false;
     }
   };
@@ -335,6 +331,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
         amount: creditLimitFormatter.format(Number(result.user.creditLimit || 0))
       })
     );
+
+    // Reload users list to reflect updated credit limits in the table
+    await loadUsers();
 
     if (creditHistoryClient?.id === result.user.id) {
       setIsCreditHistoryLoading(true);
@@ -644,16 +643,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
       const supplierPrice = Number(quote.supplierPrice || 0);
       const finalPrice = Math.round(supplierPrice * (1 + marginPercent / 100) * 100) / 100;
 
-      const updated = await api.updateQuote(quoteId, {
+      await api.updateQuote(quoteId, {
         status: 'SENT_TO_CLIENT',
         marginPercent,
         finalPrice,
       });
-
-      if (!updated) {
-        toast.error(t('admin.margins.sendFailed', 'Failed to send quote to client'));
-        return;
-      }
 
       setEditingQuotes((previous) => {
         const next = { ...previous };
@@ -670,11 +664,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
 
   const handleRejectQuote = async (quoteId: string) => {
     try {
-      const updated = await api.updateQuote(quoteId, { status: 'REJECTED' });
-      if (!updated) {
-        toast.error(t('admin.margins.rejectFailed', 'Failed to reject quote'));
-        return;
-      }
+      await api.updateQuote(quoteId, { status: 'REJECTED' });
       await loadQuotes();
       toast.success(t('admin.margins.quoteRejected', 'Quote rejected'));
     } catch (error) {

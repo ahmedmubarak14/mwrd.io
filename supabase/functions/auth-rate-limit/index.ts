@@ -19,8 +19,9 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "
 const MAX_ATTEMPTS = 8;
 const WINDOW_SECONDS = 15 * 60; // 15 minutes
 
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || Deno.env.get("SITE_URL") || "";
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": ALLOWED_ORIGIN || "https://localhost",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
@@ -61,8 +62,12 @@ async function checkLoginAttempt(email: string): Promise<Response> {
 
   if (error) {
     console.error("Error checking login attempts:", error.message);
-    // Fail open - allow the attempt if we can't check
-    return json({ allowed: true });
+    // Fail closed - deny the attempt if we can't verify
+    return json({
+      allowed: false,
+      message: "Unable to verify login attempts. Please try again shortly.",
+      retryAfterSeconds: 30,
+    });
   }
 
   const attemptCount = count ?? 0;
@@ -164,7 +169,7 @@ serve(async (req) => {
     }
   } catch (err) {
     console.error("Auth rate limit error:", err);
-    // Fail open on unexpected errors
-    return json({ allowed: true, ok: true });
+    // Fail closed on unexpected errors
+    return json({ allowed: false, ok: false, message: "Rate limit service error. Please try again." });
   }
 });

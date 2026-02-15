@@ -15,8 +15,9 @@ const SENDGRID_FROM_EMAIL = Deno.env.get("SENDGRID_FROM_EMAIL") ?? "";
 const POSTMARK_SERVER_TOKEN = Deno.env.get("POSTMARK_SERVER_TOKEN") ?? "";
 const POSTMARK_FROM_EMAIL = Deno.env.get("POSTMARK_FROM_EMAIL") ?? "";
 
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || Deno.env.get("SITE_URL") || "";
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": ALLOWED_ORIGIN || "https://localhost",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-cron-secret",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
@@ -75,6 +76,15 @@ function toObject(value: unknown): Record<string, unknown> {
     : {};
 }
 
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function interpolateTemplate(template: string, variables: Record<string, unknown>): string {
   return template.replace(/{{\s*([a-zA-Z0-9_.-]+)\s*}}/g, (_match, key) => {
     const value = key
@@ -86,11 +96,11 @@ function interpolateTemplate(template: string, variables: Record<string, unknown
 
     if (value === undefined || value === null) return "";
     if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-      return String(value);
+      return escapeHtml(String(value));
     }
 
     try {
-      return JSON.stringify(value);
+      return escapeHtml(JSON.stringify(value));
     } catch {
       return "";
     }
@@ -98,7 +108,10 @@ function interpolateTemplate(template: string, variables: Record<string, unknown
 }
 
 function ensureAuthorized(req: Request): boolean {
-  if (!CRON_SECRET) return true;
+  if (!CRON_SECRET) {
+    console.error("CRON_SECRET is not configured — rejecting request");
+    return false;
+  }
   return req.headers.get("x-cron-secret") === CRON_SECRET;
 }
 

@@ -8,12 +8,22 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastContainer } from './components/ui/Toast';
 import { Sidebar } from './components/Sidebar';
 import { NotificationBell } from './components/NotificationBell';
-import { Landing } from './pages/Landing';
-import { Login } from './pages/Login';
-import { GetStarted } from './pages/GetStarted';
-import { About } from './pages/About';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { authService } from './services/authService';
+
+// Lazy-load all page-level components to reduce initial bundle size
+const Landing = lazy(() =>
+  import('./pages/Landing').then((module) => ({ default: module.Landing }))
+);
+const Login = lazy(() =>
+  import('./pages/Login').then((module) => ({ default: module.Login }))
+);
+const GetStarted = lazy(() =>
+  import('./pages/GetStarted').then((module) => ({ default: module.GetStarted }))
+);
+const About = lazy(() =>
+  import('./pages/About').then((module) => ({ default: module.About }))
+);
 
 const getDefaultTabForRole = (role?: UserRole): string => {
   if (role === UserRole.ADMIN) return 'overview';
@@ -170,6 +180,13 @@ function App() {
   return (
     <ErrorBoundary>
       <ToastContainer toasts={toast.toasts} onClose={toast.removeToast} />
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <LoadingSpinner size="lg" />
+          </div>
+        }
+      >
       <Routes>
         <Route
           path="/"
@@ -287,6 +304,7 @@ function App() {
           element={<Navigate to={isAuthenticated ? '/app' : '/'} replace />}
         />
       </Routes>
+      </Suspense>
     </ErrorBoundary>
   );
 }

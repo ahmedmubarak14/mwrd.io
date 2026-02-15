@@ -9,8 +9,9 @@ const DEFAULT_AUTO_QUOTE_DELAY_MINUTES = 30;
 const DEFAULT_GLOBAL_MARGIN_PERCENT = 15;
 const DEFAULT_INCLUDE_LIMITED_STOCK = false;
 
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || Deno.env.get("SITE_URL") || "";
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": ALLOWED_ORIGIN || "https://localhost",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-cron-secret",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
@@ -113,7 +114,10 @@ function toNumber(value: unknown, fallback: number): number {
 }
 
 function isAuthorized(req: Request): boolean {
-  if (!CRON_SECRET) return true;
+  if (!CRON_SECRET) {
+    console.error("CRON_SECRET is not configured — rejecting request");
+    return false;
+  }
   return req.headers.get("x-cron-secret") === CRON_SECRET;
 }
 

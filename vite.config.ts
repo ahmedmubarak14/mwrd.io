@@ -26,10 +26,9 @@ export default defineConfig(({ mode }) => {
         },
       },
     ],
-    define: {
-      'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
-    },
+    // SECURITY: Gemini API key removed from client bundle.
+    // AI features must go through a server-side proxy (edge function).
+    define: {},
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
@@ -37,5 +36,23 @@ export default defineConfig(({ mode }) => {
     },
     // Expose Supabase environment variables (VITE_ prefixed vars are automatically exposed)
     envPrefix: ['VITE_'],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            // Split heavy vendor libraries into their own chunks
+            if (id.includes('node_modules')) {
+              if (id.includes('react-dom')) return 'vendor-react';
+              if (id.includes('react-router')) return 'vendor-react';
+              if (id.includes('@supabase')) return 'vendor-supabase';
+              if (id.includes('i18next') || id.includes('react-i18next')) return 'vendor-i18n';
+              if (id.includes('react-hook-form') || id.includes('zod') || id.includes('@hookform')) return 'vendor-forms';
+              if (id.includes('dompurify') || id.includes('html2canvas')) return 'vendor-dom-utils';
+              if (id.includes('gsap')) return 'vendor-gsap';
+            }
+          },
+        },
+      },
+    },
   };
 });

@@ -223,7 +223,7 @@ export const useStore = create<StoreState>()(
               });
             }
 
-            set({ currentUser: user, isAuthenticated: true, isLoading: false });
+            set({ currentUser: user, isAuthenticated: true });
 
             const { data: sessionData } = await supabase.auth.getSession();
             scheduleSessionExpiryWarning(sessionData.session?.expires_at, () => {
@@ -234,7 +234,7 @@ export const useStore = create<StoreState>()(
               });
             });
 
-            // Load data for authenticated user
+            // Load data for authenticated user — await so UI shows spinner until ready
             const bootstrapTasks: Promise<unknown>[] = [
               get().loadProducts(),
               get().loadRFQs(),
@@ -248,14 +248,17 @@ export const useStore = create<StoreState>()(
                 get().loadMarginSettings()
               );
             }
-            void Promise.allSettled(bootstrapTasks).then((results) => {
-              const failedCount = results.filter((result) => result.status === 'rejected').length;
-              if (failedCount > 0) {
-                logger.error('Failed to bootstrap authenticated user data after session restore', {
-                  failedCount,
-                });
-              }
-            });
+            const results = await Promise.allSettled(bootstrapTasks);
+            const failedCount = results.filter((result) => result.status === 'rejected').length;
+            if (failedCount > 0) {
+              logger.error('Failed to bootstrap authenticated user data after session restore', {
+                failedCount,
+                errors: results
+                  .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+                  .map(r => r.reason instanceof Error ? r.reason.message : String(r.reason)),
+              });
+            }
+            set({ isLoading: false });
           } else {
             if (appConfig.debug.logAuthFlow) {
               logger.auth('No existing session found');
@@ -315,7 +318,7 @@ export const useStore = create<StoreState>()(
               });
             });
 
-            // Load data for authenticated user
+            // Load data for authenticated user — await so UI has data before render
             const bootstrapTasks: Promise<unknown>[] = [
               get().loadProducts(),
               get().loadRFQs(),
@@ -329,14 +332,16 @@ export const useStore = create<StoreState>()(
                 get().loadMarginSettings()
               );
             }
-            void Promise.allSettled(bootstrapTasks).then((results) => {
-              const failedCount = results.filter((result) => result.status === 'rejected').length;
-              if (failedCount > 0) {
-                logger.error('Failed to bootstrap authenticated user data after login', {
-                  failedCount,
-                });
-              }
-            });
+            const bootstrapResults = await Promise.allSettled(bootstrapTasks);
+            const failedCount = bootstrapResults.filter((r) => r.status === 'rejected').length;
+            if (failedCount > 0) {
+              logger.error('Failed to bootstrap authenticated user data after login', {
+                failedCount,
+                errors: bootstrapResults
+                  .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+                  .map(r => r.reason instanceof Error ? r.reason.message : String(r.reason)),
+              });
+            }
             return result.user;
           }
 

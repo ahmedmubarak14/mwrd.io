@@ -7,8 +7,9 @@ const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const MOYASAR_SECRET_KEY = Deno.env.get("MOYASAR_SECRET_KEY") ?? "";
 const MOYASAR_WEBHOOK_SECRET = Deno.env.get("MOYASAR_WEBHOOK_SECRET") ?? "";
 
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || Deno.env.get("SITE_URL") || "";
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": ALLOWED_ORIGIN || "https://localhost",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-moyasar-signature",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
@@ -181,6 +182,12 @@ async function applyMoyasarPaymentUpdate(moyasarPayment: any) {
     throw new Error(`No payment found for moyasar_payment_id=${moyasarPaymentId}`);
   }
 
+  // Idempotency: skip if payment is already in a terminal/same state
+  const terminalStatuses = ["PAID", "CAPTURED", "REFUNDED", "CANCELLED"];
+  if (terminalStatuses.includes(paymentRecord.status) && mappedStatus === paymentRecord.status) {
+    return { ...paymentRecord, _idempotent: true };
+  }
+
   const nowIso = new Date().toISOString();
   const updatePayload: Record<string, unknown> = {
     status: mappedStatus,
@@ -263,11 +270,11 @@ serve(async (req: Request) => {
       }
 
       const moyasarPayment = body?.data || body;
-      const payment = await applyMoyasarPaymentUpdate(moyasarPayment);
+      await applyMoyasarPaymentUpdate(moyasarPayment);
+      // Don't return payment details in webhook response to avoid data leakage
       return jsonResponse(200, {
         success: true,
         source: "webhook",
-        payment,
       });
     }
 
