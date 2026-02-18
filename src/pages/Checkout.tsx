@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useToast } from '../hooks/useToast';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { appConfig } from '../config/appConfig';
@@ -17,7 +18,7 @@ interface CheckoutProps {
   onCancel: () => void;
 }
 
-const createFallbackBankDetails = (t: (key: string, fallback: string) => string): BankDetails => ({
+const createFallbackBankDetails = (t: TFunction): BankDetails => ({
   id: 'fallback',
   bankName: t('checkout.notConfigured'),
   accountName: t('checkout.notConfigured'),
