@@ -58,7 +58,7 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
             setProducts(data || []);
         } catch (error) {
             logger.error('Failed to load master products', error);
-            toast.error(t('supplier.masterCatalog.loadError', 'Failed to load products'));
+            toast.error(t('supplier.masterCatalog.loadError'));
         } finally {
             setLoading(false);
         }
@@ -87,12 +87,12 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                 claimData.sku,
                 claimData.stock
             );
-            toast.success(t('supplier.products.addedFromMaster', 'Product added to your catalog'));
+            toast.success(t('supplier.products.addedFromMaster'));
             setClaimingProduct(null);
             // We can optionally redirect back or just close modal
         } catch (error) {
             logger.error('Error adding product:', error);
-            toast.error(t('supplier.masterCatalog.addError', 'Failed to add product'));
+            toast.error(t('supplier.masterCatalog.addError'));
         } finally {
             setSubmitting(false);
         }
@@ -103,16 +103,16 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
             {/* Page Heading */}
             <div className="flex flex-wrap justify-between items-end gap-3 mb-8">
                 <div className="flex min-w-72 flex-col gap-2">
-                    <p className="text-[#111418] text-4xl font-black leading-tight tracking-[-0.033em]">{t('supplier.masterCatalog.title', 'Join Master Catalog')}</p>
+                    <p className="text-[#111418] text-4xl font-black leading-tight tracking-[-0.033em]">{t('supplier.masterCatalog.title')}</p>
                     <p className="text-[#617589] text-base font-normal leading-normal max-w-2xl">
-                        {t('supplier.masterCatalog.description', 'Browse admin-approved products. Link them to your store with your own pricing and stock level to start selling instantly.')}
+                        {t('supplier.masterCatalog.description')}
                     </p>
                 </div>
                 <button
                     onClick={onBack}
                     className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-6 bg-white border border-[#dce0e5] text-[#111418] text-sm font-bold leading-normal shadow-sm hover:bg-slate-50 transition-all"
                 >
-                    <span className="truncate">{t('supplier.masterCatalog.viewMyCatalog', 'View My Catalog')}</span>
+                    <span className="truncate">{t('supplier.masterCatalog.viewMyCatalog')}</span>
                 </button>
             </div>
 
@@ -126,12 +126,12 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                             </div>
                             <input
                                 className="flex w-full min-w-0 flex-1 border-none bg-white focus:ring-0 text-[#111418] h-full placeholder:text-[#617589] px-4 text-base font-normal outline-none"
-                                placeholder={t('supplier.masterCatalog.searchPlaceholder', 'Search by Product Name, SKU, or Category...')}
+                                placeholder={t('supplier.masterCatalog.searchPlaceholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                             <div className="flex items-center px-4 bg-slate-50 border-l border-slate-200 cursor-pointer rounded-r-lg hover:bg-slate-100 transition-colors">
-                                <span className="text-sm font-medium text-[#111418]">{t('supplier.masterCatalog.advancedFilters', 'Advanced Filters')}</span>
+                                <span className="text-sm font-medium text-[#111418]">{t('supplier.masterCatalog.advancedFilters')}</span>
                             </div>
                         </div>
                     </label>
@@ -156,20 +156,20 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                         onClick={() => { setSelectedCategory(''); setSearchTerm(''); }}
                         className="flex h-9 items-center text-[#137fec] text-sm font-semibold hover:underline"
                     >
-                        {t('supplier.masterCatalog.clearAllFilters', 'Clear all filters')}
+                        {t('supplier.masterCatalog.clearAllFilters')}
                     </button>
                 </div>
             </div>
 
             {/* List Header */}
             <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-[#111418] text-xl font-bold">{t('supplier.masterCatalog.productListTitle', 'Master Product List')} ({products.length} {t('common.items', 'items')})</h2>
+                <h2 className="text-[#111418] text-xl font-bold">{t('supplier.masterCatalog.productListTitle')} ({products.length} {t('common.items')})</h2>
                 <div className="flex items-center gap-2 text-sm text-[#617589]">
-                    <span>{t('common.sortBy', 'Sort by:')}</span>
+                    <span>{t('common.sortBy')}</span>
                     <select className="bg-transparent border-none focus:ring-0 text-[#137fec] font-semibold py-0 cursor-pointer outline-none">
-                        <option>{t('supplier.masterCatalog.sortNewest', 'Newest Added')}</option>
-                        <option>{t('supplier.masterCatalog.sortName', 'Product Name (A-Z)')}</option>
-                        <option>{t('supplier.masterCatalog.sortCategory', 'Category')}</option>
+                        <option>{t('supplier.masterCatalog.sortNewest')}</option>
+                        <option>{t('supplier.masterCatalog.sortName')}</option>
+                        <option>{t('supplier.masterCatalog.sortCategory')}</option>
                     </select>
                 </div>
             </div>
@@ -183,7 +183,7 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                 ) : products.length === 0 ? (
                     <div className="text-center py-20 bg-neutral-50 rounded-xl border border-dashed border-neutral-300">
                         <span className="material-symbols-outlined text-4xl text-neutral-400 mb-2">inventory_2</span>
-                        <p className="text-neutral-600 font-medium">{t('supplier.masterCatalog.noProducts', 'No products found.')}</p>
+                        <p className="text-neutral-600 font-medium">{t('supplier.masterCatalog.noProducts')}</p>
                     </div>
                 ) : (
                     products.map(product => (
@@ -203,7 +203,7 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                                         {product.category}
                                     </span>
                                     {product.model_number && (
-                                        <span className="text-xs text-[#617589]">{t('common.sku', 'SKU')}: {product.model_number}</span>
+                                        <span className="text-xs text-[#617589]">{t('common.sku')}: {product.model_number}</span>
                                     )}
                                 </div>
                                 <h3 className="text-[#111418] text-lg font-bold truncate">{product.name}</h3>
@@ -211,11 +211,11 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                                 <div className="flex gap-4 mt-3">
                                     <div className="flex items-center gap-1 text-xs font-medium text-slate-500">
                                         <span className="material-symbols-outlined text-[16px]">inventory_2</span>
-                                        <span>{t('supplier.masterCatalog.masterId', 'Master ID')}: {product.id.substring(0, 8)}...</span>
+                                        <span>{t('supplier.masterCatalog.masterId')}: {product.id.substring(0, 8)}...</span>
                                     </div>
                                     <div className="flex items-center gap-1 text-xs font-medium text-slate-500">
                                         <span className="material-symbols-outlined text-[16px]">local_shipping</span>
-                                        <span>{t('supplier.masterCatalog.standardLeadTime', 'Standard Lead Time: 3-5 Days')}</span>
+                                        <span>{t('supplier.masterCatalog.standardLeadTime')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -225,9 +225,9 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                                     className="bg-[#137fec] text-white px-6 py-2.5 rounded-lg font-bold text-sm shadow-md shadow-blue-500/20 hover:bg-blue-600 transition-all flex items-center gap-2"
                                 >
                                     <span className="material-symbols-outlined text-[20px]">add_circle</span>
-                                    {t('supplier.masterCatalog.sellThisItem', 'Sell this item')}
+                                    {t('supplier.masterCatalog.sellThisItem')}
                                 </button>
-                                <span className="text-[11px] text-[#617589] font-medium uppercase tracking-tighter">{t('supplier.masterCatalog.availableToList', 'Available to list')}</span>
+                                <span className="text-[11px] text-[#617589] font-medium uppercase tracking-tighter">{t('supplier.masterCatalog.availableToList')}</span>
                             </div>
                         </div>
                     ))
@@ -236,23 +236,23 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
 
             {/* Pagination Mock */}
             <div className="mt-4 flex items-center justify-between py-4">
-                <p className="text-sm text-[#617589]">{t('common.showing', 'Showing')} <span className="font-bold text-[#111418]">1 - {products.length}</span> {t('common.of', 'of')} <span className="font-bold text-[#111418]">{products.length}</span> {t('common.products', 'products')}</p>
+                <p className="text-sm text-[#617589]">{t('common.showing')} <span className="font-bold text-[#111418]">1 - {products.length}</span> {t('common.of')} <span className="font-bold text-[#111418]">{products.length}</span> {t('common.products')}</p>
                 <div className="flex gap-2">
                     <button
-                        onClick={() => toast.info(t('common.previousPage', 'Previous page is not available yet'))}
+                        onClick={() => toast.info(t('common.previousPage'))}
                         className="size-10 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-[#137fec] transition-colors"
                     >
                         <span className="material-symbols-outlined">chevron_left</span>
                     </button>
                     <button disabled className="size-10 rounded-lg bg-[#137fec] text-white font-bold text-sm flex items-center justify-center">1</button>
                     <button
-                        onClick={() => toast.info(t('common.nextPage', 'Next page is not available yet'))}
+                        onClick={() => toast.info(t('common.nextPage'))}
                         className="size-10 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:text-[#137fec] transition-colors"
                     >
                         2
                     </button>
                     <button
-                        onClick={() => toast.info(t('common.nextPage', 'Next page is not available yet'))}
+                        onClick={() => toast.info(t('common.nextPage'))}
                         className="size-10 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:text-[#137fec] transition-colors"
                     >
                         <span className="material-symbols-outlined">chevron_right</span>
@@ -266,7 +266,7 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                     <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
                         {/* Modal Header */}
                         <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                            <h3 className="text-xl font-bold text-[#111418]">{t('supplier.masterCatalog.listProductTitle', 'List Product for Sale')}</h3>
+                            <h3 className="text-xl font-bold text-[#111418]">{t('supplier.masterCatalog.listProductTitle')}</h3>
                             <button onClick={() => setClaimingProduct(null)} className="text-slate-400 hover:text-slate-600">
                                 <span className="material-symbols-outlined">close</span>
                             </button>
@@ -286,10 +286,10 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                                 <div>
                                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#137fec] mb-0.5">
                                         <span className="material-symbols-outlined text-[14px]">lock</span>
-                                        <span>{t('supplier.masterCatalog.masterCatalogData', 'MASTER CATALOG DATA')}</span>
+                                        <span>{t('supplier.masterCatalog.masterCatalogData')}</span>
                                     </div>
                                     <h4 className="text-[#111418] font-bold text-sm leading-tight">{claimingProduct.name}</h4>
-                                    <p className="text-slate-500 text-xs mt-1">{t('common.sku', 'SKU')}: {claimingProduct.model_number || t('common.notAvailable', 'N/A')} | {t('common.category', 'Category')}: {claimingProduct.category}</p>
+                                    <p className="text-slate-500 text-xs mt-1">{t('common.sku')}: {claimingProduct.model_number || t('common.notAvailable')} | {t('common.category')}: {claimingProduct.category}</p>
                                 </div>
                             </div>
 
@@ -297,9 +297,9 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                             <form onSubmit={handleClaimProduct} className="space-y-5">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
-                                        <label className="text-sm font-bold text-[#111418]">{t('supplier.masterCatalog.sellingPriceLabel', 'Your Selling Price (SAR)')}</label>
+                                        <label className="text-sm font-bold text-[#111418]">{t('supplier.masterCatalog.sellingPriceLabel')}</label>
                                         <div className="relative">
-                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{t('common.currency', 'SAR')}</span>
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{t('common.currency')}</span>
                                             <input
                                                 className="w-full pl-7 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#137fec]/20 focus:border-[#137fec] outline-none transition-all"
                                                 placeholder="0.00"
@@ -310,13 +310,13 @@ export const MasterProductGallery: React.FC<MasterProductGalleryProps> = ({ onBa
                                                 onChange={(e) => setClaimData({ ...claimData, price: parseFloat(e.target.value) })}
                                             />
                                         </div>
-                                        <p className="text-[11px] text-slate-500">{t('supplier.masterCatalog.adminMsrp', 'Admin MSRP: Calculated')}</p>
+                                        <p className="text-[11px] text-slate-500">{t('supplier.masterCatalog.adminMsrp')}</p>
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className="text-sm font-bold text-[#111418]">{t('supplier.masterCatalog.stockAvailability', 'Stock Availability')}</label>
+                                        <label className="text-sm font-bold text-[#111418]">{t('supplier.masterCatalog.stockAvailability')}</label>
                                         <input
                                             className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#137fec]/20 focus:border-[#137fec] outline-none transition-all"
-                                            placeholder={t('supplier.masterCatalog.unitsPlaceholder', '0 Units')}
+                                            placeholder={t('supplier.masterCatalog.unitsPlaceholder')}
                                             type="number"
                                             required
                                             value={claimData.stock || ''}

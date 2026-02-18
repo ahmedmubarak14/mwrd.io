@@ -120,7 +120,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
             disabled={submitting}
             className="px-4 py-2 rounded-lg bg-[#137fec] text-white hover:bg-[#137fec]/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {submitting ? t('common.processing', 'Processing...') : t('client.reviews.submit')}
+            {submitting ? t('common.processing') : t('client.reviews.submit')}
           </button>
         </div>
       </div>

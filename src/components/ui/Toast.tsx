@@ -63,7 +63,7 @@ export const Toast: React.FC<ToastProps> = ({
       <button
         onClick={() => onClose(id)}
         className="p-1 hover:bg-black/10 rounded transition-colors"
-        aria-label={t('common.dismissNotification', 'Dismiss notification')}
+        aria-label={t('common.dismissNotification')}
       >
         <X className="w-4 h-4" />
       </button>
@@ -88,7 +88,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onClose 
     <div
       className="fixed top-4 right-4 z-[100] flex flex-col gap-2"
       role="region"
-      aria-label={t('notifications.region', 'Notifications')}
+      aria-label={t('notifications.region')}
     >
       {toasts.map((toast) => (
         <Toast key={toast.id} {...toast} onClose={onClose} />

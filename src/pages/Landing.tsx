@@ -108,7 +108,7 @@ export const Landing: React.FC<LandingProps> = ({ onNavigateToLogin, onNavigateT
               <button 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="flex md:hidden items-center justify-center size-11 rounded-lg hover:bg-gray-200 transition-colors"
-                aria-label="Toggle menu"
+                aria-label={t('common.toggleMenu')}
               >
                 <span className="material-symbols-outlined text-[#0A2540]">
                   {mobileMenuOpen ? 'close' : 'menu'}

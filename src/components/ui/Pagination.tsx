@@ -60,13 +60,13 @@ export const Pagination: React.FC<PaginationProps> = ({
   const buttonDisabled = 'text-gray-300 cursor-not-allowed';
 
   return (
-    <nav className={cn('flex items-center justify-center gap-0.5 sm:gap-1 flex-wrap', className)} aria-label="Pagination">
+    <nav className={cn('flex items-center justify-center gap-0.5 sm:gap-1 flex-wrap', className)} aria-label={t('pagination.navigation')}>
       {showFirstLast && (
         <button
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
           className={cn(buttonBase, 'hidden sm:inline-flex', currentPage === 1 ? buttonDisabled : buttonInactive)}
-          aria-label={t('pagination.first', 'First page')}
+          aria-label={t('pagination.first')}
         >
           <ChevronsLeft className="w-4 h-4" />
         </button>
@@ -76,7 +76,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={cn(buttonBase, currentPage === 1 ? buttonDisabled : buttonInactive)}
-        aria-label={t('pagination.previous', 'Previous page')}
+        aria-label={t('pagination.previous')}
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
@@ -100,7 +100,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className={cn(buttonBase, currentPage === totalPages ? buttonDisabled : buttonInactive)}
-        aria-label={t('pagination.next', 'Next page')}
+        aria-label={t('pagination.next')}
       >
         <ChevronRight className="w-4 h-4" />
       </button>
@@ -110,7 +110,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
           className={cn(buttonBase, 'hidden sm:inline-flex', currentPage === totalPages ? buttonDisabled : buttonInactive)}
-          aria-label={t('pagination.last', 'Last page')}
+          aria-label={t('pagination.last')}
         >
           <ChevronsRight className="w-4 h-4" />
         </button>
@@ -139,7 +139,7 @@ export const PaginationInfo: React.FC<PaginationInfoProps> = ({
 
   return (
     <p className={cn('text-sm text-gray-500', className)}>
-      {t('pagination.showing', 'Showing')} {start}-{end} {t('pagination.of', 'of')} {totalItems}
+      {t('pagination.showing')} {start}-{end} {t('pagination.of')} {totalItems}
     </p>
   );
 };

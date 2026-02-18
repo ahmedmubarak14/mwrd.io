@@ -107,7 +107,7 @@ export const AdminCreditUtilizationView: React.FC<AdminCreditUtilizationViewProp
     <div data-testid="admin-credit-utilization-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
+          portalLabel={t('sidebar.adminPortal')}
           title={t('admin.creditUtilization.title')}
           subtitle={t('admin.creditUtilization.subtitle')}
         />

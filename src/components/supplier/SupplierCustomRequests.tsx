@@ -45,10 +45,10 @@ export const SupplierCustomRequests: React.FC = () => {
     <div className="p-4 md:p-8 lg:p-12 space-y-6 animate-in fade-in duration-300">
       <div>
         <h2 className="text-2xl font-bold text-slate-900">
-          {t('supplier.customRequests.title', 'Custom Requests')}
+          {t('supplier.customRequests.title')}
         </h2>
         <p className="text-slate-500 mt-1">
-          {t('supplier.customRequests.subtitle', 'Custom item requests assigned to you by the platform')}
+          {t('supplier.customRequests.subtitle')}
         </p>
       </div>
 
@@ -58,10 +58,10 @@ export const SupplierCustomRequests: React.FC = () => {
             <span className="material-symbols-outlined text-3xl text-gray-400">inbox</span>
           </div>
           <h3 className="text-lg font-bold text-gray-900">
-            {t('supplier.customRequests.noRequests', 'No custom requests assigned')}
+            {t('supplier.customRequests.noRequests')}
           </h3>
           <p className="text-gray-500 mt-2 max-w-md mx-auto">
-            {t('supplier.customRequests.noRequestsDesc', 'When the platform assigns custom item requests to you, they will appear here.')}
+            {t('supplier.customRequests.noRequestsDesc')}
           </p>
         </div>
       ) : (
@@ -82,7 +82,7 @@ export const SupplierCustomRequests: React.FC = () => {
                   <div className="min-w-0">
                     <p className="font-bold text-gray-900 truncate">{req.itemName}</p>
                     <p className="text-sm text-gray-500">
-                      {new Date(req.createdAt).toLocaleDateString()} &middot; {t('customRequest.qty', 'Qty')}: {req.quantity}
+                      {new Date(req.createdAt).toLocaleDateString()} &middot; {t('customRequest.qty')}: {req.quantity}
                     </p>
                   </div>
                 </div>
@@ -103,36 +103,36 @@ export const SupplierCustomRequests: React.FC = () => {
                 <div className="px-5 pb-5 border-t border-gray-100 pt-4 space-y-3">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.description', 'Description')}</p>
+                      <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.description')}</p>
                       <p className="text-sm text-gray-700">{req.description}</p>
                     </div>
                     {req.specifications && (
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.specifications', 'Specifications')}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.specifications')}</p>
                         <p className="text-sm text-gray-700">{req.specifications}</p>
                       </div>
                     )}
                     {req.targetPrice && (
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.targetPrice', 'Target Price')}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.targetPrice')}</p>
                         <p className="text-sm text-gray-700">{req.currency} {req.targetPrice}</p>
                       </div>
                     )}
                     {req.deadline && (
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.deadline', 'Deadline')}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.deadline')}</p>
                         <p className="text-sm text-gray-700">{new Date(req.deadline).toLocaleDateString()}</p>
                       </div>
                     )}
                     {req.category && (
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.category', 'Category')}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.category')}</p>
                         <p className="text-sm text-gray-700">{req.category}</p>
                       </div>
                     )}
                     {req.adminNotes && (
                       <div className="sm:col-span-2">
-                        <p className="text-xs font-bold text-blue-500 uppercase mb-1">{t('supplier.customRequests.platformNotes', 'Platform Notes')}</p>
+                        <p className="text-xs font-bold text-blue-500 uppercase mb-1">{t('supplier.customRequests.platformNotes')}</p>
                         <p className="text-sm text-blue-700 bg-blue-50 p-3 rounded-lg">{req.adminNotes}</p>
                       </div>
                     )}

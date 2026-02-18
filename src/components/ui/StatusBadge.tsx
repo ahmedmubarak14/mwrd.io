@@ -77,7 +77,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-yellow-200',
           text: 'text-yellow-700',
           icon: <Clock className="w-3 h-3" />,
-          label: t('common.pending', 'Pending')
+          label: t('common.pending')
         };
       case 'approved':
       case 'confirmed':
@@ -86,7 +86,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-green-200',
           text: 'text-green-700',
           icon: <CheckCircle className="w-3 h-3" />,
-          label: t('common.approved', 'Approved')
+          label: t('common.approved')
         };
       case 'rejected':
         return {
@@ -94,7 +94,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-red-200',
           text: 'text-red-700',
           icon: <XCircle className="w-3 h-3" />,
-          label: t('common.rejected', 'Rejected')
+          label: t('common.rejected')
         };
       case 'open':
         return {
@@ -102,7 +102,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-blue-200',
           text: 'text-blue-700',
           icon: <FileText className="w-3 h-3" />,
-          label: t('status.open', 'Open')
+          label: t('status.open')
         };
       case 'quoted':
         return {
@@ -110,7 +110,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-purple-200',
           text: 'text-purple-700',
           icon: <Send className="w-3 h-3" />,
-          label: t('status.quoted', 'Quoted')
+          label: t('status.quoted')
         };
       case 'closed':
         return {
@@ -118,7 +118,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-gray-200',
           text: 'text-gray-600',
           icon: <Ban className="w-3 h-3" />,
-          label: t('status.closed', 'Closed')
+          label: t('status.closed')
         };
       case 'processing': // This case already exists, but the instruction snippet had it. Keeping the existing one.
         return {
@@ -126,7 +126,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-blue-200',
           text: 'text-blue-800',
           icon: <Clock className="w-3 h-3" />, // Assuming Clock for processing
-          label: t('status.processing', 'Processing')
+          label: t('status.processing')
         };
       case 'ready_for_pickup':
         return {
@@ -134,7 +134,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-indigo-200',
           text: 'text-indigo-800',
           icon: <Package className="w-3 h-3" />, // Assuming Package for ready for pickup
-          label: t('status.readyForPickup', 'Ready for Pickup')
+          label: t('status.readyForPickup')
         };
       case 'pickup_scheduled':
         return {
@@ -142,7 +142,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-purple-200',
           text: 'text-purple-800',
           icon: <Clock className="w-3 h-3" />, // Assuming Clock for scheduled
-          label: t('status.pickupScheduled', 'Pickup Scheduled')
+          label: t('status.pickupScheduled')
         };
       case 'shipped':
       case 'in_transit':
@@ -152,7 +152,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-orange-200',
           text: 'text-orange-800',
           icon: <Truck className="w-3 h-3" />, // Assuming Truck for transit/delivery
-          label: t('status.inTransit', 'In Transit')
+          label: t('status.inTransit')
         };
       case 'picked_up':
         return {
@@ -160,7 +160,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-teal-200',
           text: 'text-teal-800',
           icon: <Package className="w-3 h-3" />,
-          label: t('status.picked_up', 'Picked Up')
+          label: t('status.picked_up')
         };
       case 'delivered':
         return {
@@ -168,7 +168,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-green-200',
           text: 'text-green-700',
           icon: <Package className="w-3 h-3" />,
-          label: t('status.delivered', 'Delivered')
+          label: t('status.delivered')
         };
       case 'completed':
         return {
@@ -176,7 +176,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-emerald-200',
           text: 'text-emerald-700',
           icon: <CheckCircle className="w-3 h-3" />,
-          label: t('status.completed', 'Completed')
+          label: t('status.completed')
         };
       case 'cancelled':
         return {
@@ -184,7 +184,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-gray-200',
           text: 'text-gray-600',
           icon: <XCircle className="w-3 h-3" />,
-          label: t('status.cancelled', 'Cancelled')
+          label: t('status.cancelled')
         };
       case 'disputed':
         return {
@@ -192,7 +192,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-red-200',
           text: 'text-red-800',
           icon: <AlertCircle className="w-3 h-3" />,
-          label: t('status.disputed', 'Disputed')
+          label: t('status.disputed')
         };
       case 'refunded':
         return {
@@ -200,7 +200,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-violet-200',
           text: 'text-violet-700',
           icon: <CheckCircle className="w-3 h-3" />,
-          label: t('status.refunded', 'Refunded')
+          label: t('status.refunded')
         };
       case 'draft':
         return {
@@ -208,7 +208,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-slate-200',
           text: 'text-slate-600',
           icon: <FileText className="w-3 h-3" />,
-          label: t('status.draft', 'Draft')
+          label: t('status.draft')
         };
       case 'submitted':
         return {
@@ -216,7 +216,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-indigo-200',
           text: 'text-indigo-700',
           icon: <Send className="w-3 h-3" />,
-          label: t('status.submitted', 'Submitted')
+          label: t('status.submitted')
         };
       case 'under_review':
       case 'in_review':
@@ -225,7 +225,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-amber-200',
           text: 'text-amber-700',
           icon: <Eye className="w-3 h-3" />,
-          label: t('status.underReview', 'Under Review')
+          label: t('status.underReview')
         };
       case 'pending_payment':
         return {
@@ -233,7 +233,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-amber-200',
           text: 'text-amber-700',
           icon: <Clock className="w-3 h-3" />,
-          label: t('status.pendingpayment', 'Pending Payment')
+          label: t('status.pendingpayment')
         };
       case 'awaiting_confirmation':
         return {
@@ -241,7 +241,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-yellow-200',
           text: 'text-yellow-700',
           icon: <Clock className="w-3 h-3" />,
-          label: t('status.awaitingconfirmation', 'Awaiting Confirmation')
+          label: t('status.awaitingconfirmation')
         };
       case 'pending_po':
         return {
@@ -249,7 +249,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-amber-200',
           text: 'text-amber-800',
           icon: <FileText className="w-3 h-3" />,
-          label: t('status.pendingPO', 'Pending PO')
+          label: t('status.pendingPO')
         };
       case 'pending_admin_confirmation':
       case 'pending_admin':
@@ -258,7 +258,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-orange-200',
           text: 'text-orange-800',
           icon: <Clock className="w-3 h-3" />,
-          label: t('status.pending_admin_confirmation', 'Pending Admin Confirmation')
+          label: t('status.pending_admin_confirmation')
         };
       case 'sent_to_client':
         return {
@@ -266,7 +266,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-blue-200',
           text: 'text-blue-700',
           icon: <Send className="w-3 h-3" />,
-          label: t('status.sentToClient', 'Sent to Client')
+          label: t('status.sentToClient')
         };
       case 'payment_confirmed':
         return {
@@ -274,7 +274,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-green-200',
           text: 'text-green-700',
           icon: <CheckCircle className="w-3 h-3" />,
-          label: t('status.paymentconfirmed', 'Payment Confirmed')
+          label: t('status.paymentconfirmed')
         };
       case 'accepted':
         return {
@@ -282,7 +282,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-green-200',
           text: 'text-green-700',
           icon: <CheckCircle className="w-3 h-3" />,
-          label: t('status.accepted', 'Accepted')
+          label: t('status.accepted')
         };
       case 'active':
         return {
@@ -290,7 +290,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-green-200',
           text: 'text-green-700',
           icon: <CheckCircle className="w-3 h-3" />,
-          label: t('admin.users.active', 'Active')
+          label: t('admin.users.active')
         };
       case 'deactivated':
         return {
@@ -298,7 +298,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-red-200',
           text: 'text-red-700',
           icon: <Ban className="w-3 h-3" />,
-          label: t('admin.users.deactivated', 'Deactivated')
+          label: t('admin.users.deactivated')
         };
       case 'requires_attention':
         return {
@@ -306,7 +306,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-orange-200',
           text: 'text-orange-700',
           icon: <AlertCircle className="w-3 h-3" />,
-          label: t('admin.users.requiresAttention', 'Requires Attention')
+          label: t('admin.users.requiresAttention')
         };
       case 'verified':
         return {
@@ -314,7 +314,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-green-200',
           text: 'text-green-700',
           icon: <CheckCircle className="w-3 h-3" />,
-          label: t('admin.users.verified', 'Verified')
+          label: t('admin.users.verified')
         };
       case 'incomplete':
         return {
@@ -322,7 +322,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           border: 'border-yellow-200',
           text: 'text-yellow-700',
           icon: <AlertCircle className="w-3 h-3" />,
-          label: t('admin.users.incomplete', 'Incomplete')
+          label: t('admin.users.incomplete')
         };
       default:
         return {

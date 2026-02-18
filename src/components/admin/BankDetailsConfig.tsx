@@ -182,7 +182,7 @@ export const BankDetailsConfig: React.FC = () => {
                   value={formData.bankName}
                   onChange={handleInputChange}
                   required
-                  placeholder="Al Rajhi Bank"
+                  placeholder={t('bankConfig.bankNamePlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                 />
               </div>
@@ -197,7 +197,7 @@ export const BankDetailsConfig: React.FC = () => {
                   value={formData.accountName}
                   onChange={handleInputChange}
                   required
-                  placeholder="MWRD Trading Company"
+                  placeholder={t('bankConfig.accountNamePlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                 />
               </div>
@@ -212,7 +212,7 @@ export const BankDetailsConfig: React.FC = () => {
                   value={formData.accountNumber}
                   onChange={handleInputChange}
                   required
-                  placeholder="123456789012"
+                  placeholder={t('bankConfig.accountNumberPlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                 />
               </div>
@@ -226,7 +226,7 @@ export const BankDetailsConfig: React.FC = () => {
                   name="iban"
                   value={formData.iban}
                   onChange={handleInputChange}
-                  placeholder="SA00XXXX0000000000000000"
+                  placeholder={t('bankConfig.ibanPlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                 />
               </div>
@@ -240,7 +240,7 @@ export const BankDetailsConfig: React.FC = () => {
                   name="swiftCode"
                   value={formData.swiftCode}
                   onChange={handleInputChange}
-                  placeholder="BANKSA00"
+                  placeholder={t('bankConfig.swiftCodePlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                 />
               </div>
@@ -254,7 +254,7 @@ export const BankDetailsConfig: React.FC = () => {
                   name="currency"
                   value={formData.currency}
                   onChange={handleInputChange}
-                  placeholder="SAR"
+                  placeholder={t('bankConfig.currencyPlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                 />
               </div>
@@ -268,7 +268,7 @@ export const BankDetailsConfig: React.FC = () => {
                   name="branchName"
                   value={formData.branchName}
                   onChange={handleInputChange}
-                  placeholder="Riyadh Main Branch"
+                  placeholder={t('bankConfig.branchNamePlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                 />
               </div>
@@ -282,7 +282,7 @@ export const BankDetailsConfig: React.FC = () => {
                   name="branchCode"
                   value={formData.branchCode}
                   onChange={handleInputChange}
-                  placeholder="001"
+                  placeholder={t('bankConfig.branchCodePlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                 />
               </div>
@@ -415,10 +415,10 @@ export const BankDetailsConfig: React.FC = () => {
         isOpen={Boolean(pendingDeleteId)}
         onClose={() => setPendingDeleteId(null)}
         onConfirm={handleConfirmDelete}
-        title={t('bankConfig.deleteTitle', 'Delete bank account')}
+        title={t('bankConfig.deleteTitle')}
         message={t('bankConfig.deleteConfirm')}
-        confirmText={t('common.delete', 'Delete')}
-        cancelText={t('common.cancel', 'Cancel')}
+        confirmText={t('common.delete')}
+        cancelText={t('common.cancel')}
         type="danger"
         isLoading={isDeleting}
       />

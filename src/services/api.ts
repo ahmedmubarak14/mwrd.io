@@ -1949,10 +1949,11 @@ export class ApiService {
       }
 
       const quote = await this.getQuoteById(id);
+      const resolvedOrder = await this.resolveAcceptedOrderFromRpcResult(id, orderData);
 
       return {
         quote,
-        order: orderData ? this.mapDbOrderToOrder(orderData) : null
+        order: resolvedOrder
       };
     } catch (error: any) {
       const message = String(error?.message || '');
@@ -1973,6 +1974,78 @@ export class ApiService {
 
       return this.acceptQuoteFallback(id);
     }
+  }
+
+  private async getLatestOrderForQuote(quoteId: string): Promise<Order | null> {
+    const buildQuery = (orderColumn: 'created_at' | 'date') => (supabase as any)
+      .from('orders')
+      .select('*')
+      .eq('quote_id', quoteId)
+      .order(orderColumn, { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    let { data, error } = await buildQuery('created_at');
+
+    if (error && /column "created_at" of relation "orders" does not exist/i.test(error.message || '')) {
+      const fallbackResult = await buildQuery('date');
+      data = fallbackResult.data;
+      error = fallbackResult.error;
+    }
+
+    if (error) {
+      logger.warn('Unable to resolve accepted order by quote id', {
+        quoteId,
+        error: error.message,
+      });
+      return null;
+    }
+
+    return data ? this.mapDbOrderToOrder(data) : null;
+  }
+
+  private async resolveAcceptedOrderFromRpcResult(quoteId: string, rpcResult: unknown): Promise<Order | null> {
+    const asRecord = (value: unknown): Record<string, any> | null => (
+      value && typeof value === 'object' && !Array.isArray(value)
+        ? value as Record<string, any>
+        : null
+    );
+
+    const looksLikeOrderRow = (value: Record<string, any>): boolean => (
+      typeof value.id === 'string'
+      && (
+        typeof value.client_id === 'string'
+        || typeof value.clientId === 'string'
+      )
+      && (
+        typeof value.supplier_id === 'string'
+        || typeof value.supplierId === 'string'
+      )
+    );
+
+    const rpcRecord = asRecord(rpcResult);
+    if (!rpcRecord) {
+      return this.getLatestOrderForQuote(quoteId);
+    }
+
+    if (looksLikeOrderRow(rpcRecord)) {
+      return this.mapDbOrderToOrder(rpcRecord);
+    }
+
+    const nestedOrderRecord = asRecord(rpcRecord.order);
+    if (nestedOrderRecord && looksLikeOrderRow(nestedOrderRecord)) {
+      return this.mapDbOrderToOrder(nestedOrderRecord);
+    }
+
+    const orderId = rpcRecord.order_id ?? rpcRecord.orderId;
+    if (typeof orderId === 'string' && orderId.trim().length > 0) {
+      const order = await this.getOrderById(orderId);
+      if (order) {
+        return order;
+      }
+    }
+
+    return this.getLatestOrderForQuote(quoteId);
   }
 
   async rejectQuote(id: string): Promise<Quote | null> {

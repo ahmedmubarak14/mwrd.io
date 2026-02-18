@@ -152,7 +152,7 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({
     {
       tab: 'categories',
       icon: 'category',
-      title: t('sidebar.categories', 'Categories'),
+      title: t('sidebar.categories'),
       description: t('admin.overview.quickCategoriesDesc'),
     },
   ];
@@ -161,7 +161,7 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({
     <div data-testid="admin-overview-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
+          portalLabel={t('sidebar.adminPortal')}
           title={t('admin.overview.title')}
           subtitle={t('admin.overview.commandCenterDesc')}
           actions={(
@@ -363,11 +363,11 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Revenue by Category */}
             <div className="flex flex-col gap-4 rounded-xl p-6 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600/50">
-              <h3 className="text-neutral-800 dark:text-white text-lg font-bold">{t('admin.overview.revenueByCategory', 'Revenue by Category')}</h3>
+              <h3 className="text-neutral-800 dark:text-white text-lg font-bold">{t('admin.overview.revenueByCategory')}</h3>
               <div className="space-y-4">
                 {categoryRevenue.length === 0 ? (
                   <p className="text-sm text-neutral-500 dark:text-neutral-300">
-                    {t('admin.overview.noRevenueData', 'No revenue data available')}
+                    {t('admin.overview.noRevenueData')}
                   </p>
                 ) : (
                   categoryRevenue.map((item) => (
@@ -390,7 +390,7 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({
 
             {/* Top Selling Products */}
             <div className="flex flex-col gap-4 rounded-xl p-6 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600/50">
-              <h3 className="text-neutral-800 dark:text-white text-lg font-bold">{t('admin.overview.topSellingProducts', 'Top Selling Products')}</h3>
+              <h3 className="text-neutral-800 dark:text-white text-lg font-bold">{t('admin.overview.topSellingProducts')}</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="text-xs text-neutral-500 uppercase border-b border-neutral-100 dark:border-neutral-700">
@@ -404,7 +404,7 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({
                     {topProducts.length === 0 ? (
                       <tr>
                         <td colSpan={3} className="py-6 text-center text-sm text-neutral-500 dark:text-neutral-300">
-                          {t('admin.overview.noProductData', 'No product data available')}
+                          {t('admin.overview.noProductData')}
                         </td>
                       </tr>
                     ) : (
@@ -452,7 +452,7 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({
                   {recentOrders.length === 0 && (
                     <tr>
                       <td colSpan={5} className="px-6 py-8 text-center text-neutral-500 dark:text-neutral-200">
-                        {t('admin.overview.noOrders', 'No orders found')}
+                        {t('admin.overview.noOrders')}
                       </td>
                     </tr>
                   )}

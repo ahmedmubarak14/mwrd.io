@@ -30,21 +30,21 @@ export const StockBadge: React.FC<StockBadgeProps> = ({
             text: 'text-green-700',
             border: 'border-green-200',
             icon: 'check_circle',
-            label: t('inventory.inStock', 'In Stock')
+            label: t('inventory.inStock')
         },
         low_stock: {
             bg: 'bg-amber-100',
             text: 'text-amber-700',
             border: 'border-amber-200',
             icon: 'warning',
-            label: t('inventory.lowStock', 'Low Stock')
+            label: t('inventory.lowStock')
         },
         out_of_stock: {
             bg: 'bg-red-100',
             text: 'text-red-700',
             border: 'border-red-200',
             icon: 'cancel',
-            label: t('inventory.outOfStock', 'Out of Stock')
+            label: t('inventory.outOfStock')
         }
     };
 
@@ -62,7 +62,7 @@ export const StockBadge: React.FC<StockBadgeProps> = ({
                 {config.icon}
             </span>
             {showCount ? (
-                <span>{stock} {t('inventory.units', 'units')}</span>
+                <span>{stock} {t('inventory.units')}</span>
             ) : (
                 <span>{config.label}</span>
             )}
@@ -115,7 +115,7 @@ export const LowStockWarning: React.FC<LowStockWarningProps> = ({
         return (
             <div className="flex items-center gap-2 text-red-600 text-sm mt-1">
                 <span className="material-symbols-outlined text-base">error</span>
-                <span>{t('inventory.outOfStockWarning', 'This item is out of stock')}</span>
+                <span>{t('inventory.outOfStockWarning')}</span>
             </div>
         );
     }

@@ -46,12 +46,12 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
     const file = event.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error(t('settings.profilePicture.fileTooLarge', 'File size must be less than 5MB'));
+        toast.error(t('settings.profilePicture.fileTooLarge'));
         return;
       }
 
       if (!file.type.startsWith('image/')) {
-        toast.error(t('settings.profilePicture.invalidFileType', 'Please select an image file'));
+        toast.error(t('settings.profilePicture.invalidFileType'));
         return;
       }
 
@@ -75,13 +75,13 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
 
       if (appConfig.supabase.isConfigured) {
         if (!currentUser?.id) {
-          toast.error(t('errors.unauthorized', 'You must be signed in'));
+          toast.error(t('errors.unauthorized'));
           return;
         }
 
         const uploadResult = await profilePictureService.uploadProfilePicture(currentUser.id, selectedFile);
         if (!uploadResult.success || !uploadResult.storagePath) {
-          toast.error(uploadResult.error || t('settings.profilePicture.uploadFailed', 'Failed to upload profile picture'));
+          toast.error(uploadResult.error || t('settings.profilePicture.uploadFailed'));
           return;
         }
 
@@ -90,7 +90,7 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
           uploadResult.storagePath
         );
         if (!metadataResult.success) {
-          toast.error(metadataResult.error || t('settings.profilePicture.uploadFailed', 'Failed to save profile picture'));
+          toast.error(metadataResult.error || t('settings.profilePicture.uploadFailed'));
           return;
         }
 
@@ -101,11 +101,11 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
         setProfilePicture(previewImage);
       }
 
-      toast.success(t('settings.profilePicture.saved', 'Profile picture updated'));
+      toast.success(t('settings.profilePicture.saved'));
       clearSelection();
     } catch (error) {
       logger.error('Error saving profile picture:', error);
-      toast.error(t('settings.profilePicture.uploadFailed', 'Failed to upload profile picture'));
+      toast.error(t('settings.profilePicture.uploadFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -124,7 +124,7 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
       if (appConfig.supabase.isConfigured) {
         const metadataResult = await authService.updateProfilePicture(null, null);
         if (!metadataResult.success) {
-          toast.error(metadataResult.error || t('settings.profilePicture.removeFailed', 'Failed to remove profile picture'));
+          toast.error(metadataResult.error || t('settings.profilePicture.removeFailed'));
           return;
         }
       }
@@ -134,10 +134,10 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
         URL.revokeObjectURL(previewImage);
       }
       clearSelection();
-      toast.success(t('settings.profilePicture.removed', 'Profile picture removed'));
+      toast.success(t('settings.profilePicture.removed'));
     } catch (error) {
       logger.error('Error removing profile picture:', error);
-      toast.error(t('settings.profilePicture.removeFailed', 'Failed to remove profile picture'));
+      toast.error(t('settings.profilePicture.removeFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -179,10 +179,10 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
       <div className="flex flex-col gap-3">
         <div>
           <h3 className="text-base font-semibold text-gray-900">
-            {t('settings.profilePicture.title', 'Profile Picture')}
+            {t('settings.profilePicture.title')}
           </h3>
           <p className="text-sm text-gray-500">
-            {t('settings.profilePicture.description', 'Upload a photo to personalize your account')}
+            {t('settings.profilePicture.description')}
           </p>
         </div>
 
@@ -203,15 +203,15 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
             >
               <span className="material-symbols-outlined text-sm">check</span>
               {isSaving
-                ? t('common.saving', 'Saving...')
-                : t('common.save', 'Save')}
+                ? t('common.saving')
+                : t('common.save')}
             </button>
             <button
               onClick={handleCancel}
               disabled={isSaving}
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
             >
-              {t('common.cancel', 'Cancel')}
+              {t('common.cancel')}
             </button>
           </div>
         ) : (
@@ -222,7 +222,7 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
               className="px-4 py-2 bg-[#137fec] text-white rounded-lg text-sm font-medium hover:bg-[#137fec]/90 transition-colors flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-sm">upload</span>
-              {t('settings.profilePicture.upload', 'Upload Photo')}
+              {t('settings.profilePicture.upload')}
             </button>
             {currentImage && (
               <button
@@ -231,7 +231,7 @@ export const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({
                 className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors flex items-center gap-2"
               >
                 <span className="material-symbols-outlined text-sm">delete</span>
-                {t('settings.profilePicture.remove', 'Remove')}
+                {t('settings.profilePicture.remove')}
               </button>
             )}
           </div>

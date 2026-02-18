@@ -150,27 +150,27 @@ export const GetStarted: React.FC<GetStartedProps> = ({ onBack }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">{t('getStarted.commercialRegistration', 'Commercial Registration (CR)')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('getStarted.commercialRegistration')}</label>
                 <input
                   {...register('commercialRegistration')}
                   type="text"
-                  placeholder={t('getStarted.crPlaceholder', 'e.g. 1010XXXXXX')}
+                  placeholder={t('getStarted.crPlaceholder')}
                   className="w-full px-4 py-3 rounded-lg border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none transition-all"
                 />
                 {errors.commercialRegistration && (
-                  <p className="text-red-500 text-sm mt-1">{errors.commercialRegistration.message || t('getStarted.errors.cr', 'CR number is required')}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.commercialRegistration.message || t('getStarted.errors.cr')}</p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">{t('getStarted.taxId', 'Tax ID (VAT Number)')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t('getStarted.taxId')}</label>
                 <input
                   {...register('taxId')}
                   type="text"
-                  placeholder={t('getStarted.taxIdPlaceholder', 'e.g. 3XXXXXXXXXX0003')}
+                  placeholder={t('getStarted.taxIdPlaceholder')}
                   className="w-full px-4 py-3 rounded-lg border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none transition-all"
                 />
                 {errors.taxId && (
-                  <p className="text-red-500 text-sm mt-1">{errors.taxId.message || t('getStarted.errors.taxId', 'Tax ID is required')}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.taxId.message || t('getStarted.errors.taxId')}</p>
                 )}
               </div>
             </div>

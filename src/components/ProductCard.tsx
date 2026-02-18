@@ -69,7 +69,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 <span className="text-2xl font-bold text-[#0A2540]">
                   {product.retailPrice!.toFixed(2)}
                 </span>
-                <span className="text-sm text-gray-600 ml-1">{t('common.currency', 'SAR')}</span>
+                <span className="text-sm text-gray-600 ml-1">{t('common.currency')}</span>
               </div>
             </div>
           )}
@@ -79,7 +79,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <div className="flex justify-between">
                 <span className="text-gray-600">{t('products.costPrice')}:</span>
                 <span className="font-medium text-gray-900">
-                  {product.supplierPrice.toFixed(2)} {t('common.currency', 'SAR')}
+                  {product.supplierPrice.toFixed(2)} {t('common.currency')}
                 </span>
               </div>
               {product.marginPercent && (
@@ -95,13 +95,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   <div className="flex justify-between">
                     <span className="text-gray-600">{t('products.retailPrice')}:</span>
                     <span className="font-medium text-gray-900">
-                      {product.retailPrice!.toFixed(2)} {t('common.currency', 'SAR')}
+                      {product.retailPrice!.toFixed(2)} {t('common.currency')}
                     </span>
                   </div>
                   <div className="flex justify-between border-t border-gray-200 pt-1">
                     <span className="text-gray-600">{t('products.mwrdProfit')}:</span>
                     <span className="font-bold text-green-600">
-                      {profitAmount.toFixed(2)} {t('common.currency', 'SAR')}
+                      {profitAmount.toFixed(2)} {t('common.currency')}
                     </span>
                   </div>
                 </>

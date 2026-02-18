@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useStore } from '../store/useStore';
 
@@ -33,7 +34,9 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
   const markNotificationRead = useStore((state) => state.markNotificationRead);
   const markAllNotificationsRead = useStore((state) => state.markAllNotificationsRead);
   const [isOpen, setIsOpen] = useState(false);
+  const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   const unreadCount = useMemo(
     () => notifications.filter((notification) => !notification.isRead).length,
@@ -44,17 +47,61 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
     const handleOutsideClick = (event: MouseEvent) => {
       if (!panelRef.current) return;
       if (panelRef.current.contains(event.target as Node)) return;
+      if (triggerRef.current?.contains(event.target as Node)) return;
       setIsOpen(false);
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
     };
 
     if (isOpen) {
       document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('keydown', handleEscape);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscape);
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updatePosition = () => {
+      if (!triggerRef.current) return;
+      const rect = triggerRef.current.getBoundingClientRect();
+      const viewportPadding = 12;
+      const preferredWidth = 340;
+      const width = Math.min(preferredWidth, window.innerWidth - (viewportPadding * 2));
+
+      let left = align === 'left' ? rect.left : rect.right - width;
+      left = Math.max(viewportPadding, Math.min(left, window.innerWidth - width - viewportPadding));
+
+      const top = rect.bottom + 8;
+      const maxHeight = Math.max(220, window.innerHeight - top - viewportPadding);
+
+      setPanelStyle({
+        position: 'fixed',
+        top,
+        left,
+        width,
+        maxHeight,
+      });
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
+  }, [align, isOpen]);
 
   const handleNotificationClick = (id: string, actionUrl?: string) => {
     markNotificationRead(id);
@@ -64,11 +111,10 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
     }
   };
 
-  const alignmentClass = align === 'left' ? 'left-0' : 'right-0';
-
   return (
-    <div className={`relative ${className}`} ref={panelRef}>
+    <div className={`relative ${className}`}>
       <button
+        ref={triggerRef}
         type="button"
         aria-label={t('notifications.openInbox')}
         onClick={() => setIsOpen((prev) => !prev)}
@@ -82,8 +128,12 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
         )}
       </button>
 
-      {isOpen && (
-        <div className={`absolute ${alignmentClass} mt-2 z-50 w-[320px] max-w-[90vw] bg-white rounded-xl border border-gray-200 shadow-lg`}>
+      {isOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          ref={panelRef}
+          style={panelStyle}
+          className="z-[1000] bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden"
+        >
           <div className="p-4 border-b border-gray-200 flex items-center justify-between">
             <h3 className="text-sm font-bold text-gray-900">{t('notifications.title')}</h3>
             <button
@@ -95,7 +145,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
             </button>
           </div>
 
-          <div className="max-h-80 overflow-y-auto">
+          <div className="overflow-y-auto" style={{ maxHeight: panelStyle.maxHeight ? `calc(${panelStyle.maxHeight}px - 57px)` : 320 }}>
             {notifications.length === 0 ? (
               <div className="p-6 text-center">
                 <p className="text-sm text-gray-500">{t('notifications.empty')}</p>
@@ -129,7 +179,8 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
               ))
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -41,17 +41,17 @@ export const ClientMarginModal: React.FC<ClientMarginModalProps> = ({
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 <div className="p-6 border-b border-gray-100 dark:border-gray-700">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                        {t('admin.margins.setClientMargin', 'Set Client Margin')}
+                        {t('admin.margins.setClientMargin')}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {t('admin.margins.settingMarginFor', 'Setting margin for')} <span className="font-semibold text-gray-700 dark:text-gray-300">{client.companyName || client.name}</span>
+                        {t('admin.margins.settingMarginFor')} <span className="font-semibold text-gray-700 dark:text-gray-300">{client.companyName || client.name}</span>
                     </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {t('admin.margins.marginPercentage', 'Margin Percentage')} (%)
+                            {t('admin.margins.marginPercentage')} (%)
                         </label>
                         <div className="relative">
                             <input
@@ -62,7 +62,7 @@ export const ClientMarginModal: React.FC<ClientMarginModalProps> = ({
                                 required
                                 aria-invalid={margin !== '' && (isNaN(parseFloat(margin)) || parseFloat(margin) < 0) ? 'true' : undefined}
                                 className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                placeholder={t('admin.margins.marginPlaceholder', 'e.g. 15')}
+                                placeholder={t('admin.margins.marginPlaceholder')}
                                 value={margin}
                                 onChange={(e) => setMargin(e.target.value)}
                             />
@@ -71,7 +71,7 @@ export const ClientMarginModal: React.FC<ClientMarginModalProps> = ({
                             </div>
                         </div>
                         <p className="text-xs text-gray-500 mt-2">
-                            {t('admin.margins.clientMarginHint', 'This margin will override any Category or Global defaults for this client\'s quotes.')}
+                            {t('admin.margins.clientMarginHint')}
                         </p>
                     </div>
 
@@ -90,7 +90,7 @@ export const ClientMarginModal: React.FC<ClientMarginModalProps> = ({
                             className="px-6 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg shadow-lg hover:shadow-primary/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {isLoading && <span className="material-symbols-outlined animate-spin text-lg">progress_activity</span>}
-                            {t('admin.margins.saveMargin', 'Save Margin')}
+                            {t('admin.margins.saveMargin')}
                         </button>
                     </div>
                 </form>

@@ -57,7 +57,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
         try {
             const parsedCreditLimit = formData.creditLimit === '' ? undefined : Number(formData.creditLimit);
             if (type === 'client' && parsedCreditLimit !== undefined && (!Number.isFinite(parsedCreditLimit) || parsedCreditLimit < 0)) {
-                setFormError(t('admin.users.invalidAmount') || 'Enter a valid non-negative amount');
+                setFormError(t('admin.users.invalidAmount'));
                 setLoading(false);
                 return;
             }
@@ -77,11 +77,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
     };
 
     const title = type === 'supplier'
-        ? t('admin.users.addSupplier') || 'Add New Supplier'
-        : t('admin.users.addClient') || 'Add New Client';
-
-    // Helper to safely get translations or fallbacks
-    const getLabel = (key: string, fallback: string) => t(key) || fallback;
+        ? t('admin.users.addSupplier')
+        : t('admin.users.addClient');
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={title}>
@@ -89,7 +86,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">
-                            {getLabel('common.name', 'Contact Name')} <span className="text-red-500">*</span>
+                            {t('admin.users.contactName')} <span className="text-red-500">*</span>
                         </label>
                         <input
                             required
@@ -97,12 +94,12 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                             value={formData.name}
                             onChange={handleChange}
                             className="w-full h-10 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
-                            placeholder="e.g. John Doe"
+                            placeholder={t('admin.users.contactNamePlaceholder')}
                         />
                     </div>
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">
-                            {getLabel('common.companyName', 'Company Name')} <span className="text-red-500">*</span>
+                            {t('common.companyName')} <span className="text-red-500">*</span>
                         </label>
                         <input
                             required
@@ -110,14 +107,14 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                             value={formData.companyName}
                             onChange={handleChange}
                             className="w-full h-10 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
-                            placeholder="e.g. Acme Corp"
+                            placeholder={t('admin.users.companyNamePlaceholder')}
                         />
                     </div>
                 </div>
 
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">
-                        {getLabel('common.email', 'Email Address')} <span className="text-red-500">*</span>
+                        {t('common.email')} <span className="text-red-500">*</span>
                     </label>
                     <input
                         required
@@ -126,27 +123,27 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                         value={formData.email}
                         onChange={handleChange}
                         className="w-full h-10 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
-                        placeholder="john@example.com"
+                        placeholder={t('admin.users.emailPlaceholder')}
                     />
                 </div>
 
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">
-                        {getLabel('common.phone', 'Phone Number')}
+                        {t('common.phone')}
                     </label>
                     <input
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
                         className="w-full h-10 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
-                        placeholder="+966 50 123 4567"
+                        placeholder={t('admin.users.phonePlaceholder')}
                     />
                 </div>
 
                 {type === 'client' && (
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">
-                            {t('admin.users.creditLimit') || 'Credit Limit (SAR)'}
+                            {t('admin.users.creditLimit')}
                         </label>
                         <input
                             type="number"
@@ -156,14 +153,14 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                             value={formData.creditLimit}
                             onChange={handleChange}
                             className="w-full h-10 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
-                            placeholder="0"
+                            placeholder={t('admin.users.creditLimitPlaceholder')}
                         />
                     </div>
                 )}
 
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">
-                        {getLabel('common.password', 'Initial Password')} <span className="text-red-500">*</span>
+                        {t('admin.users.initialPassword')} <span className="text-red-500">*</span>
                     </label>
                     <input
                         required
@@ -172,11 +169,11 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                         value={formData.password}
                         onChange={handleChange}
                         className="w-full h-10 px-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
-                        placeholder="Set a temporary password"
+                        placeholder={t('admin.users.initialPasswordPlaceholder')}
                         minLength={6}
                     />
                     <p className="text-xs text-gray-500">
-                        Min 6 characters. User can change this later.
+                        {t('admin.users.initialPasswordHint')}
                     </p>
                 </div>
 
@@ -192,7 +189,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                         onClick={onClose}
                         className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
                     >
-                        {getLabel('common.cancel', 'Cancel')}
+                        {t('common.cancel')}
                     </button>
                     <button
                         type="submit"
@@ -200,7 +197,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                         className="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-colors flex items-center gap-2"
                     >
                         {loading && <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>}
-                        {getLabel('common.create', 'Create User')}
+                        {t('admin.users.createUser')}
                     </button>
                 </div>
             </form>

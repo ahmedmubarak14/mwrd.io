@@ -43,10 +43,10 @@ export const PaymentReviewModal: React.FC<PaymentReviewModalProps> = ({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl max-w-lg w-full p-6">
         <h3 className="text-lg font-bold text-gray-900 mb-2">
-          {t('admin.orders.reviewPayment', 'Review Payment')}
+          {t('admin.orders.reviewPayment')}
         </h3>
         <p className="text-sm text-gray-600 mb-4">
-          {t('admin.orders.reviewPaymentDesc', 'Confirm or reject this bank transfer submission before fulfillment.')}
+          {t('admin.orders.reviewPaymentDesc')}
         </p>
 
         <div className="space-y-3 text-sm mb-5">
@@ -55,7 +55,7 @@ export const PaymentReviewModal: React.FC<PaymentReviewModalProps> = ({
           <p><span className="font-semibold">{t('admin.orders.status')}:</span> {statusLabel(order.status)}</p>
           {order.status === 'PENDING_PAYMENT' && (
             <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md p-2">
-              {t('admin.orders.pendingPaymentHint', 'No client reference is currently submitted. Confirm only after external verification or keep waiting.')}
+              {t('admin.orders.pendingPaymentHint')}
             </p>
           )}
         </div>
@@ -63,26 +63,26 @@ export const PaymentReviewModal: React.FC<PaymentReviewModalProps> = ({
         <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('admin.orders.paymentReference', 'Payment Reference')}
+              {t('admin.orders.paymentReference')}
             </label>
             <input
               type="text"
               data-testid="admin-orders-review-payment-reference-input"
               value={paymentReferenceInput}
               onChange={(e) => onPaymentReferenceInputChange(e.target.value)}
-              placeholder={t('admin.orders.noReferenceProvided', 'Enter or verify payment reference')}
+              placeholder={t('admin.orders.noReferenceProvided')}
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('admin.orders.paymentNotes', 'Admin Notes')}
+              {t('admin.orders.paymentNotes')}
             </label>
             <textarea
               data-testid="admin-orders-review-payment-notes-input"
               value={paymentReviewNotes}
               onChange={(e) => onPaymentReviewNotesChange(e.target.value)}
-              placeholder={t('admin.orders.paymentNotesPlaceholder', 'Add verification notes or rejection reason')}
+              placeholder={t('admin.orders.paymentNotesPlaceholder')}
               rows={3}
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -104,8 +104,8 @@ export const PaymentReviewModal: React.FC<PaymentReviewModalProps> = ({
             className="px-4 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 disabled:opacity-50"
           >
             {isRejectingPayment
-              ? t('common.saving', 'Saving...')
-              : t('admin.orders.rejectPayment', 'Reject Payment')}
+              ? t('common.saving')
+              : t('admin.orders.rejectPayment')}
           </button>
           <button
             onClick={onConfirm}
@@ -114,8 +114,8 @@ export const PaymentReviewModal: React.FC<PaymentReviewModalProps> = ({
             className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
           >
             {isConfirmingPayment
-              ? t('common.saving', 'Saving...')
-              : t('admin.orders.confirmPayment', 'Confirm Payment')}
+              ? t('common.saving')
+              : t('admin.orders.confirmPayment')}
           </button>
         </div>
       </div>

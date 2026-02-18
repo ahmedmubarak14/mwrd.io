@@ -80,7 +80,7 @@ export const AdminPayoutsView: React.FC = () => {
       } catch (error) {
         logger.error('Failed to load payout data', error);
         if (isMounted) {
-          toast.error(t('admin.payouts.loadError', 'Failed to load payouts'));
+          toast.error(t('admin.payouts.loadError'));
         }
       } finally {
         if (isMounted) {
@@ -169,29 +169,29 @@ export const AdminPayoutsView: React.FC = () => {
   }, [payouts, statusFilter, searchTerm, users]);
 
   const statusTabs: { key: PayoutStatusFilter; label: string }[] = [
-    { key: 'ALL', label: t('common.all', 'All') },
-    { key: 'PENDING', label: t('admin.payouts.statusPending', 'Pending') },
-    { key: 'PROCESSING', label: t('admin.payouts.statusProcessing', 'Processing') },
-    { key: 'PAID', label: t('admin.payouts.statusPaid', 'Paid') },
-    { key: 'FAILED', label: t('admin.payouts.statusFailed', 'Failed') },
+    { key: 'ALL', label: t('common.all') },
+    { key: 'PENDING', label: t('admin.payouts.statusPending') },
+    { key: 'PROCESSING', label: t('admin.payouts.statusProcessing') },
+    { key: 'PAID', label: t('admin.payouts.statusPaid') },
+    { key: 'FAILED', label: t('admin.payouts.statusFailed') },
   ];
 
   const handleMarkAsProcessing = async (payoutId: string) => {
     logger.info('Mark payout as processing - will call admin_update_payout_status RPC', { payoutId });
     const success = await payoutService.updatePayoutStatus(payoutId, 'PROCESSING');
     if (!success) {
-      toast.error(t('common.error', 'Something went wrong'));
+      toast.error(t('common.error'));
       return;
     }
     setPayouts((prev) => prev.map((p) => (p.id === payoutId ? { ...p, status: 'PROCESSING' as const } : p)));
-    toast.success(t('admin.payouts.markProcessing', 'Mark Processing'));
+    toast.success(t('admin.payouts.markProcessing'));
   };
 
   const handleMarkAsPaid = async (payoutId: string) => {
     logger.info('Mark payout as paid - will call admin_update_payout_status RPC', { payoutId });
     const success = await payoutService.updatePayoutStatus(payoutId, 'PAID');
     if (!success) {
-      toast.error(t('common.error', 'Something went wrong'));
+      toast.error(t('common.error'));
       return;
     }
     setPayouts((prev) =>
@@ -201,7 +201,7 @@ export const AdminPayoutsView: React.FC = () => {
           : p
       )
     );
-    toast.success(t('admin.payouts.markPaid', 'Mark Paid'));
+    toast.success(t('admin.payouts.markPaid'));
   };
 
   const handleRecordPayout = async () => {
@@ -234,12 +234,12 @@ export const AdminPayoutsView: React.FC = () => {
     });
 
     if (!created) {
-      toast.error(t('common.error', 'Something went wrong'));
+      toast.error(t('common.error'));
       return;
     }
 
     setPayouts((prev) => [created, ...prev]);
-    toast.success(t('admin.payouts.recordPayout', 'Record Payout'));
+    toast.success(t('admin.payouts.recordPayout'));
     resetForm();
     setIsRecordModalOpen(false);
   };
@@ -293,16 +293,16 @@ export const AdminPayoutsView: React.FC = () => {
     <div data-testid="admin-payouts-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
-          title={t('admin.payouts.title', 'Supplier Payout Queue')}
-          subtitle={t('admin.payouts.subtitle', 'Manage and track supplier payments')}
+          portalLabel={t('sidebar.adminPortal')}
+          title={t('admin.payouts.title')}
+          subtitle={t('admin.payouts.subtitle')}
           actions={(
             <button
               onClick={() => setIsRecordModalOpen(true)}
               className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
             >
               <span className="material-symbols-outlined text-lg">add</span>
-              {t('admin.payouts.recordPayout', 'Record Payout')}
+              {t('admin.payouts.recordPayout')}
             </button>
           )}
         />
@@ -311,28 +311,28 @@ export const AdminPayoutsView: React.FC = () => {
           <PortalMetricCard
             tone="warning"
             icon="schedule"
-            label={t('admin.payouts.pendingPayouts', 'Pending')}
+            label={t('admin.payouts.pendingPayouts')}
             value={summaryStats.pendingCount}
             hint={formatCurrency(summaryStats.pendingAmount, 'SAR')}
           />
           <PortalMetricCard
             tone="info"
             icon="sync"
-            label={t('admin.payouts.processingPayouts', 'Processing')}
+            label={t('admin.payouts.processingPayouts')}
             value={summaryStats.processingCount}
             hint={formatCurrency(summaryStats.processingAmount, 'SAR')}
           />
           <PortalMetricCard
             tone="success"
             icon="check_circle"
-            label={t('admin.payouts.paidPayouts', 'Paid')}
+            label={t('admin.payouts.paidPayouts')}
             value={summaryStats.paidCount}
             hint={formatCurrency(summaryStats.paidAmount, 'SAR')}
           />
           <PortalMetricCard
             tone="neutral"
             icon="error"
-            label={t('admin.payouts.failedPayouts', 'Failed')}
+            label={t('admin.payouts.failedPayouts')}
             value={summaryStats.failedCount}
           />
         </div>
@@ -344,7 +344,7 @@ export const AdminPayoutsView: React.FC = () => {
             </span>
             <input
               type="text"
-              placeholder={t('admin.payouts.searchPlaceholder', 'Search by payout ID, order, or supplier...')}
+              placeholder={t('admin.payouts.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -372,25 +372,25 @@ export const AdminPayoutsView: React.FC = () => {
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/50">
                     <th className="text-left rtl:text-right px-4 py-3 font-medium text-slate-500">
-                      {t('admin.payouts.columnSupplier', 'Supplier')}
+                      {t('admin.payouts.columnSupplier')}
                     </th>
                     <th className="text-left rtl:text-right px-4 py-3 font-medium text-slate-500">
-                      {t('admin.payouts.columnOrder', 'Order')}
+                      {t('admin.payouts.columnOrder')}
                     </th>
                     <th className="text-left rtl:text-right px-4 py-3 font-medium text-slate-500">
-                      {t('admin.payouts.columnAmount', 'Amount')}
+                      {t('admin.payouts.columnAmount')}
                     </th>
                     <th className="text-left rtl:text-right px-4 py-3 font-medium text-slate-500">
-                      {t('common.status', 'Status')}
+                      {t('common.status')}
                     </th>
                     <th className="text-left rtl:text-right px-4 py-3 font-medium text-slate-500">
-                      {t('admin.payouts.columnPaymentMethod', 'Payment Method')}
+                      {t('admin.payouts.columnPaymentMethod')}
                     </th>
                     <th className="text-left rtl:text-right px-4 py-3 font-medium text-slate-500">
-                      {t('common.date', 'Date')}
+                      {t('common.date')}
                     </th>
                     <th className="text-left rtl:text-right px-4 py-3 font-medium text-slate-500">
-                      {t('common.actions', 'Actions')}
+                      {t('common.actions')}
                     </th>
                   </tr>
                 </thead>
@@ -398,7 +398,7 @@ export const AdminPayoutsView: React.FC = () => {
                   {isLoading ? (
                     <tr>
                       <td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-500">
-                        {t('common.loading', 'Loading...')}
+                        {t('common.loading')}
                       </td>
                     </tr>
                   ) : filteredPayouts.length === 0 ? (
@@ -409,7 +409,7 @@ export const AdminPayoutsView: React.FC = () => {
                             payments
                           </span>
                           <p className="text-sm text-slate-500">
-                            {t('admin.payouts.noPayouts', 'No payouts found')}
+                            {t('admin.payouts.noPayouts')}
                           </p>
                         </div>
                       </td>
@@ -448,7 +448,7 @@ export const AdminPayoutsView: React.FC = () => {
                                 onClick={() => handleMarkAsProcessing(payout.id)}
                                 className="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
                               >
-                                {t('admin.payouts.markProcessing', 'Mark Processing')}
+                                {t('admin.payouts.markProcessing')}
                               </button>
                             )}
                             {(payout.status === 'PENDING' || payout.status === 'PROCESSING') && (
@@ -456,12 +456,12 @@ export const AdminPayoutsView: React.FC = () => {
                                 onClick={() => handleMarkAsPaid(payout.id)}
                                 className="px-3 py-1.5 text-xs font-medium bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
                               >
-                                {t('admin.payouts.markPaid', 'Mark Paid')}
+                                {t('admin.payouts.markPaid')}
                               </button>
                             )}
                             {payout.status === 'PAID' && (
                               <span className="text-xs text-slate-400">
-                                {t('admin.payouts.paidOn', 'Paid on')} {formatDate(payout.paidAt)}
+                                {t('admin.payouts.paidOn')} {formatDate(payout.paidAt)}
                               </span>
                             )}
                             {payout.status === 'FAILED' && payout.notes && (
@@ -487,20 +487,20 @@ export const AdminPayoutsView: React.FC = () => {
             setIsRecordModalOpen(false);
             resetForm();
           }}
-          title={t('admin.payouts.recordPayoutTitle', 'Record Supplier Payout')}
+          title={t('admin.payouts.recordPayoutTitle')}
           size="md"
         >
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                {t('admin.payouts.supplier', 'Supplier')} *
+                {t('admin.payouts.supplier')} *
               </label>
               <select
                 value={formSupplierId}
                 onChange={(e) => setFormSupplierId(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               >
-                <option value="">{t('admin.payouts.selectSupplier', 'Select a supplier...')}</option>
+                <option value="">{t('admin.payouts.selectSupplier')}</option>
                 {supplierUsers.map((supplier) => (
                   <option key={supplier.id} value={supplier.id}>
                     {supplier.companyName || supplier.name} ({supplier.publicId || supplier.id.slice(0, 8)})
@@ -511,14 +511,14 @@ export const AdminPayoutsView: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                {t('admin.payouts.orderId', 'Order ID')} *
+                {t('admin.payouts.orderId')} *
               </label>
               <select
                 value={formOrderId}
                 onChange={(e) => setFormOrderId(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               >
-                <option value="">{t('admin.payouts.selectOrder', 'Select an order...')}</option>
+                <option value="">{t('admin.payouts.selectOrder')}</option>
                 {supplierOrders.map((order) => (
                   <option key={order.id} value={order.id}>
                     #{order.id.slice(0, 8).toUpperCase()} — {t('common.currency')} {order.amount?.toLocaleString() || '0'}
@@ -530,7 +530,7 @@ export const AdminPayoutsView: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t('common.amount', 'Amount')} *
+                  {t('common.amount')} *
                 </label>
                 <input
                   type="number"
@@ -544,7 +544,7 @@ export const AdminPayoutsView: React.FC = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t('admin.payouts.currency', 'Currency')}
+                  {t('admin.payouts.currency')}
                 </label>
                 <select
                   value={formCurrency}
@@ -558,40 +558,40 @@ export const AdminPayoutsView: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                {t('admin.payouts.paymentMethod', 'Payment Method')}
+                {t('admin.payouts.paymentMethod')}
               </label>
               <select
                 value={formPaymentMethod}
                 onChange={(e) => setFormPaymentMethod(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="Bank Transfer">{t('admin.payouts.bankTransfer', 'Bank Transfer')}</option>
-                <option value="Wire Transfer">{t('admin.payouts.wireTransfer', 'Wire Transfer')}</option>
-                <option value="Check">{t('admin.payouts.check', 'Check')}</option>
+                <option value="Bank Transfer">{t('admin.payouts.bankTransfer')}</option>
+                <option value="Wire Transfer">{t('admin.payouts.wireTransfer')}</option>
+                <option value="Check">{t('admin.payouts.check')}</option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                {t('admin.payouts.referenceNumber', 'Reference Number')}
+                {t('admin.payouts.referenceNumber')}
               </label>
               <input
                 type="text"
                 value={formReferenceNumber}
                 onChange={(e) => setFormReferenceNumber(e.target.value)}
-                placeholder={t('admin.payouts.referenceNumberPlaceholder', 'Optional transaction reference')}
+                placeholder={t('admin.payouts.referenceNumberPlaceholder')}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
-                {t('common.notes', 'Notes')}
+                {t('common.notes')}
               </label>
               <textarea
                 value={formNotes}
                 onChange={(e) => setFormNotes(e.target.value)}
-                placeholder={t('admin.payouts.notesPlaceholder', 'Optional notes about this payout...')}
+                placeholder={t('admin.payouts.notesPlaceholder')}
                 rows={3}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               />
@@ -605,14 +605,14 @@ export const AdminPayoutsView: React.FC = () => {
                 }}
                 className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
               >
-                {t('common.cancel', 'Cancel')}
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleRecordPayout}
                 disabled={!formSupplierId.trim() || !formOrderId.trim() || !formAmount.trim()}
                 className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {t('admin.payouts.recordPayout', 'Record Payout')}
+                {t('admin.payouts.recordPayout')}
               </button>
             </div>
           </div>

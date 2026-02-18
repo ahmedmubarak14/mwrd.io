@@ -83,7 +83,7 @@ export const StatCard: React.FC<StatCardProps> = ({
               trend.isPositive ? 'text-green-600' : 'text-red-600'
             )}>
               <span>{trend.isPositive ? '+' : ''}{trend.value}%</span>
-              <span className="text-gray-400 font-normal">{t('common.vsLastMonth', 'vs last month')}</span>
+              <span className="text-gray-400 font-normal">{t('common.vsLastMonth')}</span>
             </div>
           )}
         </div>

@@ -106,7 +106,7 @@ export function useOrderManagement({
 
   const openPaymentReviewModal = (order: Order) => {
     if (order.status !== 'PENDING_PAYMENT' && order.status !== 'AWAITING_CONFIRMATION') {
-      toast.error(t('admin.orders.invalidPaymentReviewStatus', 'This order is not in a payment review state'));
+      toast.error(t('admin.orders.invalidPaymentReviewStatus'));
       return;
     }
 
@@ -131,7 +131,7 @@ export function useOrderManagement({
       setSelectedOrderAuditLogs(logs);
     } catch (error) {
       logger.error('Failed to load payment audit logs', error);
-      toast.error(t('admin.orders.auditLogLoadFailed', 'Failed to load payment audit history'));
+      toast.error(t('admin.orders.auditLogLoadFailed'));
       setSelectedOrderAuditLogs([]);
     } finally {
       setIsLoadingOrderAuditLogs(false);
@@ -149,7 +149,7 @@ export function useOrderManagement({
       const currentOrder = orders.find((order) => order.id === id);
       if (currentOrder && !canTransitionOrderStatus(currentOrder.status, newStatus)) {
         toast.error(
-          t('admin.orders.invalidStatusTransition', 'Invalid status transition for this order')
+          t('admin.orders.invalidStatusTransition')
         );
         return;
       }
@@ -164,7 +164,7 @@ export function useOrderManagement({
 
       if (isPaymentControlledTransition) {
         toast.error(
-          t('admin.orders.paymentTransitionLocked', 'Use payment review actions to manage payment states')
+          t('admin.orders.paymentTransitionLocked')
         );
         return;
       }
@@ -183,13 +183,13 @@ export function useOrderManagement({
   const handleConfirmBankTransferPayment = async () => {
     if (!paymentReviewOrder) return;
     if (!currentUser?.id) {
-      toast.error(t('admin.orders.missingAdminSession', 'Admin session is required'));
+      toast.error(t('admin.orders.missingAdminSession'));
       return;
     }
 
     const paymentReference = paymentReferenceInput.trim();
     if (!paymentReference) {
-      toast.error(t('errors.paymentReferenceRequired', 'Payment reference is required'));
+      toast.error(t('errors.paymentReferenceRequired'));
       return;
     }
 
@@ -201,11 +201,11 @@ export function useOrderManagement({
         paymentReviewNotes.trim() || undefined
       );
       await loadOrders();
-      toast.success(t('admin.orders.paymentConfirmed', 'Payment confirmed successfully'));
+      toast.success(t('admin.orders.paymentConfirmed'));
       closePaymentReviewModal();
     } catch (error) {
       logger.error('Failed to confirm bank transfer payment', error);
-      toast.error(t('admin.orders.paymentActionFailed', 'Failed to update payment status'));
+      toast.error(t('admin.orders.paymentActionFailed'));
     } finally {
       setIsConfirmingPayment(false);
     }
@@ -214,13 +214,13 @@ export function useOrderManagement({
   const handleRejectBankTransferPayment = async () => {
     if (!paymentReviewOrder) return;
     if (!currentUser?.id) {
-      toast.error(t('admin.orders.missingAdminSession', 'Admin session is required'));
+      toast.error(t('admin.orders.missingAdminSession'));
       return;
     }
 
     const reason = paymentReviewNotes.trim();
     if (!reason) {
-      toast.error(t('admin.orders.rejectReasonRequired', 'Please provide a rejection reason'));
+      toast.error(t('admin.orders.rejectReasonRequired'));
       return;
     }
 
@@ -228,11 +228,11 @@ export function useOrderManagement({
     try {
       await bankTransferService.rejectPaymentSubmission(paymentReviewOrder.id, reason);
       await loadOrders();
-      toast.success(t('admin.orders.paymentRejected', 'Payment request sent back to pending'));
+      toast.success(t('admin.orders.paymentRejected'));
       closePaymentReviewModal();
     } catch (error) {
       logger.error('Failed to reject bank transfer payment', error);
-      toast.error(t('admin.orders.paymentActionFailed', 'Failed to update payment status'));
+      toast.error(t('admin.orders.paymentActionFailed'));
     } finally {
       setIsRejectingPayment(false);
     }
@@ -255,7 +255,7 @@ export function useOrderManagement({
   const handleSavePaymentLink = async () => {
     if (!paymentLinkOrder) return;
     if (!paymentLinkUrl.trim()) {
-      toast.error(t('admin.orders.paymentLinkRequired', 'Payment link is required'));
+      toast.error(t('admin.orders.paymentLinkRequired'));
       return;
     }
 
@@ -268,11 +268,11 @@ export function useOrderManagement({
       if (!updatedOrder) {
         throw new Error('Payment link update failed');
       }
-      toast.success(t('admin.orders.paymentLinkSaved', 'Payment link saved'));
+      toast.success(t('admin.orders.paymentLinkSaved'));
       closePaymentLinkModal();
     } catch (error) {
       logger.error('Failed to save payment link', error);
-      toast.error(t('admin.orders.paymentLinkSaveFailed', 'Failed to save payment link'));
+      toast.error(t('admin.orders.paymentLinkSaveFailed'));
     } finally {
       setIsSavingPaymentLink(false);
     }
@@ -281,10 +281,10 @@ export function useOrderManagement({
   const copyPaymentLink = async (link: string) => {
     try {
       await navigator.clipboard.writeText(link);
-      toast.success(t('admin.orders.paymentLinkCopied', 'Payment link copied'));
+      toast.success(t('admin.orders.paymentLinkCopied'));
     } catch (error) {
       logger.error('Failed to copy payment link', error);
-      toast.error(t('admin.orders.paymentLinkCopyFailed', 'Failed to copy payment link'));
+      toast.error(t('admin.orders.paymentLinkCopyFailed'));
     }
   };
 

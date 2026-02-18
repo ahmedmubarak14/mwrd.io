@@ -386,7 +386,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
   const handleSaveGlobalMargin = async () => {
     const parsed = parseMarginInput(globalMarginInput);
     if (parsed === null) {
-      setGlobalMarginError(t('admin.margins.invalidMarginRange', 'Margin must be between 0 and 100'));
+      setGlobalMarginError(t('admin.margins.invalidMarginRange'));
       return;
     }
 
@@ -396,7 +396,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
     setIsSavingGlobalMargin(false);
 
     if (!result.success) {
-      setGlobalMarginError(result.error || t('admin.margins.marginSaveFailed', 'Failed to save margin'));
+      setGlobalMarginError(result.error || t('admin.margins.marginSaveFailed'));
     }
   };
 
@@ -405,7 +405,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
     if (parsed === null) {
       setCategoryErrors((prev) => ({
         ...prev,
-        [category]: t('admin.margins.invalidMarginRange', 'Margin must be between 0 and 100'),
+        [category]: t('admin.margins.invalidMarginRange'),
       }));
       return;
     }
@@ -418,7 +418,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
     if (!result.success) {
       setCategoryErrors((prev) => ({
         ...prev,
-        [category]: result.error || t('admin.margins.marginSaveFailed', 'Failed to save margin'),
+        [category]: result.error || t('admin.margins.marginSaveFailed'),
       }));
     }
   };
@@ -426,23 +426,22 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
   const getClientMarginBadgeLabel = (client: User) =>
     client.clientMargin !== undefined && client.clientMargin !== null
       ? `${client.clientMargin}%`
-      : t('admin.margins.default', 'Default');
+      : t('admin.margins.default');
 
   const getRfqProductLabel = (rfq: RFQ) => {
     const firstItem = rfq.items?.[0];
-    if (!firstItem) return t('admin.margins.unknownProduct', 'Unknown Product');
-    return productsById.get(firstItem.productId)?.name || t('admin.margins.unknownProduct', 'Unknown Product');
+    if (!firstItem) return t('admin.margins.unknownProduct');
+    return productsById.get(firstItem.productId)?.name || t('admin.margins.unknownProduct');
   };
 
   return (
     <div data-testid="admin-margins-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
+          portalLabel={t('sidebar.adminPortal')}
           title={t('sidebar.margins')}
           subtitle={t(
-            'admin.margins.configurationDesc',
-            'Set global and category margins using explicit save actions.'
+            'admin.margins.configurationDesc'
           )}
           actions={(
             <div className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700">
@@ -463,21 +462,21 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
             value={categoriesWithOverrides}
             icon="category"
             tone="success"
-            hint={t('admin.margins.categoriesConfigured', 'Categories configured')}
+            hint={t('admin.margins.categoriesConfigured')}
           />
           <PortalMetricCard
             label={t('admin.margins.manageClientMargins')}
             value={clientsWithCustomMargin}
             icon="group"
             tone="info"
-            hint={t('admin.margins.clientsWithCustomMargins', 'Clients with custom margins')}
+            hint={t('admin.margins.clientsWithCustomMargins')}
           />
           <PortalMetricCard
             label={t('admin.margins.quoteManager')}
             value={pendingReviewQuotes}
             icon="receipt_long"
             tone="warning"
-            hint={t('admin.margins.quotesAwaitingApproval', 'quotes awaiting approval')}
+            hint={t('admin.margins.quotesAwaitingApproval')}
           />
         </section>
 
@@ -504,8 +503,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
             </div>
             <p className="mt-2 text-xs text-gray-500">
               {t(
-                'admin.margins.globalMarginHint',
-                'Used when no client margin exists and no category margin exceeds it.'
+                'admin.margins.globalMarginHint'
               )}
             </p>
             {globalMarginError && <p className="mt-2 text-xs font-semibold text-red-600">{globalMarginError}</p>}
@@ -533,8 +531,8 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
                   type="text"
                   value={categorySearchTerm}
                   onChange={(event) => setCategorySearchTerm(event.target.value)}
-                  placeholder={t('admin.margins.searchCategoriesPlaceholder', 'Search categories...')}
-                  aria-label={t('admin.margins.searchCategoriesPlaceholder', 'Search categories...')}
+                  placeholder={t('admin.margins.searchCategoriesPlaceholder')}
+                  aria-label={t('admin.margins.searchCategoriesPlaceholder')}
                   className="w-full rounded-lg border border-gray-300 px-8 py-2 text-sm text-gray-900 outline-none focus:border-[#0A2540] focus:ring-2 focus:ring-[#0A2540]/10"
                 />
               </div>
@@ -593,7 +591,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
               })}
               {filteredCategoryKeys.length === 0 && (
                 <div className="sm:col-span-2 xl:col-span-3 rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-sm text-gray-500">
-                  {t('admin.margins.noCategoriesMatching', 'No categories match your search.')}
+                  {t('admin.margins.noCategoriesMatching')}
                 </div>
               )}
             </div>
@@ -765,8 +763,8 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
               type="text"
               value={quoteSearchTerm}
               onChange={(event) => setQuoteSearchTerm(event.target.value)}
-              placeholder={t('admin.margins.quoteSearchPlaceholder', 'Search quote, RFQ, client, or supplier')}
-              aria-label={t('admin.margins.quoteSearchPlaceholder', 'Search quote, RFQ, client, or supplier')}
+              placeholder={t('admin.margins.quoteSearchPlaceholder')}
+              aria-label={t('admin.margins.quoteSearchPlaceholder')}
               className="w-full rounded-lg border border-gray-300 px-8 py-2 text-sm text-gray-900 outline-none focus:border-[#0A2540] focus:ring-2 focus:ring-[#0A2540]/10"
             />
           </div>
@@ -774,21 +772,21 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
             value={quoteStatusFilter}
             onChange={(event) => setQuoteStatusFilter(event.target.value)}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#0A2540] focus:ring-2 focus:ring-[#0A2540]/10"
-            aria-label={t('admin.margins.statusFilter', 'Quote status filter')}
+            aria-label={t('admin.margins.statusFilter')}
           >
-            <option value="ALL">{t('common.all', 'All')} {t('common.status', 'Status')}</option>
-            <option value="PENDING_ADMIN">{t('status.pendingadmin', 'Pending Admin')}</option>
-            <option value="SENT_TO_CLIENT">{t('status.senttoclient', 'Sent to Client')}</option>
-            <option value="ACCEPTED">{t('status.accepted', 'Accepted')}</option>
-            <option value="REJECTED">{t('status.rejected', 'Rejected')}</option>
+            <option value="ALL">{t('common.all')} {t('common.status')}</option>
+            <option value="PENDING_ADMIN">{t('status.pendingadmin')}</option>
+            <option value="SENT_TO_CLIENT">{t('status.senttoclient')}</option>
+            <option value="ACCEPTED">{t('status.accepted')}</option>
+            <option value="REJECTED">{t('status.rejected')}</option>
           </select>
           <select
             value={quoteTypeFilter}
             onChange={(event) => setQuoteTypeFilter(event.target.value as 'ALL' | 'auto' | 'custom')}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#0A2540] focus:ring-2 focus:ring-[#0A2540]/10"
-            aria-label={t('admin.margins.typeFilter', 'Quote type filter')}
+            aria-label={t('admin.margins.typeFilter')}
           >
-            <option value="ALL">{t('common.all', 'All')} {t('common.type', 'Type')}</option>
+            <option value="ALL">{t('common.all')} {t('common.type')}</option>
             <option value="auto">{t('client.quotes.quoteTypeAuto')}</option>
             <option value="custom">{t('client.quotes.quoteTypeCustom')}</option>
           </select>
@@ -802,7 +800,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
               onChange={(event) => setManualOverridesOnly(event.target.checked)}
               className="h-4 w-4 rounded border-gray-300 text-[#0A2540] focus:ring-[#0A2540]/30"
             />
-            {t('admin.margins.manualOverridesOnly', 'Manual overrides only')}
+            {t('admin.margins.manualOverridesOnly')}
           </label>
           <span className="text-xs font-semibold text-gray-500">
             {t('admin.margins.showingQuotesCount', { shown: filteredQuotes.length, total: sortedQuotes.length, defaultValue: 'Showing {{shown}} of {{total}} quotes' })}
@@ -852,8 +850,8 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
                     </div>
                     <p className="text-xs text-gray-500">
                       {t('admin.margins.refRfq')}: #{quote.rfqId.slice(0, 8).toUpperCase()} |{' '}
-                      {t('admin.margins.supplier', 'Supplier')}: {supplier?.publicId || supplier?.companyName || t('common.notAvailable')} |{' '}
-                      {t('admin.margins.client', 'Client')}: {client?.publicId || client?.companyName || t('common.notAvailable')}
+                      {t('admin.margins.supplier')}: {supplier?.publicId || supplier?.companyName || t('common.notAvailable')} |{' '}
+                      {t('admin.margins.client')}: {client?.publicId || client?.companyName || t('common.notAvailable')}
                     </p>
                     <p className="text-xs text-gray-500">
                       {t('admin.margins.categoryPrefix')} {t(`categories.${toCategoryTranslationKey(category)}.label`, toReadableCategory(category))}
@@ -942,7 +940,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
                     className="inline-flex items-center gap-1 rounded-lg bg-[#0A2540] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#081a2c]"
                   >
                     <span className="material-symbols-outlined text-sm">send</span>
-                    {t('admin.margins.sendToClient', 'Send to Client')}
+                    {t('admin.margins.sendToClient')}
                   </button>
 
                   {onRejectQuote && quote.status === 'PENDING_ADMIN' && (
@@ -952,7 +950,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
                       className="inline-flex items-center gap-1 rounded-lg border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50"
                     >
                       <span className="material-symbols-outlined text-sm">block</span>
-                      {t('admin.margins.rejectQuote', 'Reject Quote')}
+                      {t('admin.margins.rejectQuote')}
                     </button>
                   )}
                 </div>
@@ -962,7 +960,7 @@ export const AdminMarginsView: React.FC<AdminMarginsViewProps> = ({
 
           {filteredQuotes.length === 0 && (
             <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-sm text-gray-500">
-              {t('admin.margins.noFilteredQuotes', 'No quotes match the current filters.')}
+              {t('admin.margins.noFilteredQuotes')}
             </div>
           )}
         </div>

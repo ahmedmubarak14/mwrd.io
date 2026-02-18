@@ -53,7 +53,7 @@ export const CustomItemRequestForm: React.FC<CustomItemRequestFormProps> = ({
 
     const oversized = selected.find((file) => file.size > MAX_UPLOAD_FILE_BYTES);
     if (oversized) {
-      toast.error(t('customRequest.fileTooLarge', 'Each file must be smaller than 10MB.'));
+      toast.error(t('customRequest.fileTooLarge'));
       event.target.value = '';
       return;
     }
@@ -61,7 +61,7 @@ export const CustomItemRequestForm: React.FC<CustomItemRequestFormProps> = ({
     if (type === 'images') {
       const invalid = selected.find((file) => !file.type.startsWith('image/'));
       if (invalid) {
-        toast.error(t('customRequest.imagesOnly', 'Please select image files only.'));
+        toast.error(t('customRequest.imagesOnly'));
         event.target.value = '';
         return;
       }
@@ -117,7 +117,7 @@ export const CustomItemRequestForm: React.FC<CustomItemRequestFormProps> = ({
         failedCount,
         total: uploads.length,
       });
-      toast.info(t('customRequest.partialUploadWarning', 'Some files could not be uploaded and were skipped.'));
+      toast.info(t('customRequest.partialUploadWarning'));
     }
 
     return successfulUploads;
@@ -127,7 +127,7 @@ export const CustomItemRequestForm: React.FC<CustomItemRequestFormProps> = ({
     e.preventDefault();
 
     if (!clientId) {
-      toast.error(t('errors.unauthorized', 'You must be signed in to submit this request.'));
+      toast.error(t('errors.unauthorized'));
       return;
     }
 
@@ -306,7 +306,7 @@ export const CustomItemRequestForm: React.FC<CustomItemRequestFormProps> = ({
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('customRequest.referenceImages', 'Reference Images')}
+              {t('customRequest.referenceImages')}
             </label>
             <input
               type="file"
@@ -325,7 +325,7 @@ export const CustomItemRequestForm: React.FC<CustomItemRequestFormProps> = ({
                       onClick={() => removeSelectedFile('images', index)}
                       className="text-red-600 hover:text-red-700 font-medium"
                     >
-                      {t('common.remove', 'Remove')}
+                      {t('common.remove')}
                     </button>
                   </li>
                 ))}
@@ -335,7 +335,7 @@ export const CustomItemRequestForm: React.FC<CustomItemRequestFormProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('customRequest.attachments', 'Attachments')}
+              {t('customRequest.attachments')}
             </label>
             <input
               type="file"
@@ -353,7 +353,7 @@ export const CustomItemRequestForm: React.FC<CustomItemRequestFormProps> = ({
                       onClick={() => removeSelectedFile('attachments', index)}
                       className="text-red-600 hover:text-red-700 font-medium"
                     >
-                      {t('common.remove', 'Remove')}
+                      {t('common.remove')}
                     </button>
                   </li>
                 ))}

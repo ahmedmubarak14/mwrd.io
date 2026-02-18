@@ -72,7 +72,7 @@ export const AdminPOVerification: React.FC = () => {
                                 date: order.date,
                                 status: String(order.status)
                             },
-                            clientName: client?.companyName || client?.name || t('admin.overview.unknownClient', 'Unknown Client')
+                            clientName: client?.companyName || client?.name || t('admin.overview.unknownClient')
                         });
                     }
                 } catch (err) {
@@ -83,7 +83,7 @@ export const AdminPOVerification: React.FC = () => {
             setPendingPOs(pending);
         } catch (error) {
             logger.error('Error loading pending POs:', error);
-            showErrorToast(t('errors.failedToLoad', 'Failed to load pending POs'));
+            showErrorToast(t('errors.failedToLoad'));
         } finally {
             setLoading(false);
         }
@@ -200,7 +200,7 @@ export const AdminPOVerification: React.FC = () => {
             <div className="rounded-xl border border-slate-200 bg-white p-4 flex items-center justify-between">
                 <div>
                     <p className="text-sm font-semibold text-slate-900">
-                        {t('admin.po.pendingReviewQueue', 'Pending review queue')}
+                        {t('admin.po.pendingReviewQueue')}
                     </p>
                     <p className="text-xs text-slate-500">
                         {t('admin.po.description') || 'Review and confirm client purchase orders before supplier release'}
@@ -329,7 +329,7 @@ export const AdminPOVerification: React.FC = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-                                        title={t('admin.po.openInNewTab', 'Open in new tab')}
+                                        title={t('admin.po.openInNewTab')}
                                     >
                                         <span className="material-symbols-outlined text-neutral-600">open_in_new</span>
                                     </a>

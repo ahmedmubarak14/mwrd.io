@@ -10,9 +10,9 @@ export const AdminInventoryView: React.FC = () => {
     <div data-testid="admin-inventory-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
-          title={t('sidebar.inventory', 'Inventory')}
-          subtitle={t('admin.inventory.subtitle', 'Monitor inventory and stock movement across suppliers')}
+          portalLabel={t('sidebar.adminPortal')}
+          title={t('sidebar.inventory')}
+          subtitle={t('admin.inventory.subtitle')}
         />
         <InventoryDashboard />
       </PortalPageShell>

@@ -119,7 +119,7 @@ export const Modal: React.FC<ModalProps> = ({
             <h2 id={titleId} className="text-xl font-semibold text-gray-900">{title}</h2>
             <button
               onClick={onClose}
-              aria-label={t('common.closeModal', 'Close modal')}
+              aria-label={t('common.closeModal')}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <X size={20} />

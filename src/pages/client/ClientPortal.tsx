@@ -251,7 +251,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
     return Number(average.toFixed(1));
   }, [users]);
 
-  const dashboardClientName = currentUser?.companyName || currentUser?.name || t('client.dashboard.client', 'Client');
+  const dashboardClientName = currentUser?.companyName || currentUser?.name || t('client.dashboard.client');
 
   const isOrderReviewable = (order: Order) => (
     order.status === OrderStatus.DELIVERED || order.status === OrderStatus.COMPLETED
@@ -348,7 +348,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
 
       const hasInvalidQuantity = items.some((item) => !Number.isFinite(item.quantity) || item.quantity <= 0);
       if (hasInvalidQuantity) {
-        toast.error(t('client.rfq.invalidQuantity', 'Each RFQ item quantity must be greater than 0.'));
+        toast.error(t('client.rfq.invalidQuantity'));
         return;
       }
 
@@ -406,7 +406,10 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
     if (!currentUser || currentUser.creditLimit === undefined || currentUser.creditLimit === null) {
       return { hasLimit: false, creditLimit: 0, creditUsed: 0, available: 0, utilizationPercent: 0 };
     }
-    const creditLimit = currentUser.creditLimit;
+    const creditLimit = Math.max(0, Number(currentUser.creditLimit || 0));
+    if (creditLimit <= 0) {
+      return { hasLimit: false, creditLimit: 0, creditUsed: 0, available: 0, utilizationPercent: 0 };
+    }
     const creditUsed = currentUser.creditUsed || 0;
     const available = Math.max(0, creditLimit - creditUsed);
     const utilizationPercent = creditLimit > 0 ? Math.round((creditUsed / creditLimit) * 100) : 0;
@@ -442,7 +445,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
       ?? 0;
 
     if (!Number.isFinite(Number(quotePrice)) || Number(quotePrice) <= 0) {
-      toast.error(t('client.orders.invalidQuoteAmount', 'The selected quote has an invalid amount.'));
+      toast.error(t('client.orders.invalidQuoteAmount'));
       return false;
     }
 
@@ -463,6 +466,46 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
     setAcceptedQuote(quoteForFlow as Quote);
     setShowPOFlow(true);
     return true;
+  };
+
+  const isOrderEligibleForPOSubmission = (order: Order): boolean => {
+    if (!order.quoteId || order.client_po_uploaded) return false;
+
+    const resumableStatuses = new Set<OrderStatus>([
+      OrderStatus.PENDING_ADMIN_CONFIRMATION,
+      OrderStatus.CONFIRMED,
+      OrderStatus.PENDING_PAYMENT,
+      OrderStatus.AWAITING_CONFIRMATION,
+    ]);
+
+    return resumableStatuses.has(order.status);
+  };
+
+  const handleResumePOFlow = async (order: Order) => {
+    if (!order.quoteId) {
+      toast.error(t('client.orders.resumePoMissingQuote'));
+      return;
+    }
+
+    try {
+      let sourceQuote = quotes.find((quote) => quote.id === order.quoteId) || null;
+      if (!sourceQuote) {
+        sourceQuote = await api.getQuoteById(order.quoteId);
+      }
+
+      if (!sourceQuote) {
+        toast.error(t('client.orders.resumePoQuoteNotFound'));
+        return;
+      }
+
+      setAcceptedQuote(sourceQuote);
+      setCreatedOrderId(order.id);
+      setShowPOFlow(true);
+      setSelectedOrderForDetails(null);
+    } catch (error: any) {
+      logger.error('Failed to resume PO flow:', error);
+      toast.error(getUserFacingError(error, t('client.orders.resumePoError')));
+    }
   };
 
   const handleAcceptQuote = async (quoteId: string) => {
@@ -707,7 +750,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
       <div data-testid="client-dashboard-view">
         <PortalPageShell>
           <PortalPageHeader
-            portalLabel={t('sidebar.clientPortal', 'Client Portal')}
+            portalLabel={t('sidebar.clientPortal')}
             title={t('client.dashboard.title')}
             subtitle={`${t('client.dashboard.welcomeBack')}, ${dashboardClientName}`}
             actions={(
@@ -862,7 +905,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                       className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg hover:bg-amber-100 transition-colors"
                     >
                       <span className="material-symbols-outlined text-sm">trending_up</span>
-                      {t('client.credit.requestIncrease', 'Request Increase')}
+                      {t('client.credit.requestIncrease')}
                     </button>
                     <button
                       onClick={() => onNavigate('financials')}
@@ -903,8 +946,8 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                 ) : (
                   <div className="flex flex-col items-center justify-center py-4 text-center">
                     <span className="material-symbols-outlined text-3xl text-gray-300 mb-2">credit_score</span>
-                    <p className="text-sm text-gray-500">{t('client.credit.noCreditLimit', 'No credit limit has been set for your account yet.')}</p>
-                    <p className="text-xs text-gray-400 mt-1">{t('client.credit.requestCreditHint', 'Click "Request Increase" above to apply for a credit line.')}</p>
+                    <p className="text-sm text-gray-500">{t('client.credit.noCreditLimit')}</p>
+                    <p className="text-xs text-gray-400 mt-1">{t('client.credit.requestCreditHint')}</p>
                   </div>
                 )}
                 <div className="mt-3 inline-flex items-center gap-2 text-xs text-neutral-600">
@@ -1028,13 +1071,13 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                         onClick={() => setOrderForReview(order)}
                         className="text-xs font-semibold text-[#137fec] hover:text-[#0b5cbe] bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors"
                       >
-                        {t('client.orders.rate', 'Rate Order')}
+                        {t('client.orders.rate')}
                       </button>
                     )}
                     {hasOrderReview(order.id) && (
                       <div className="flex items-center gap-1 text-xs font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full">
                         <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span>{t('client.orders.rated', 'Rated')}</span>
+                        <span>{t('client.orders.rated')}</span>
                       </div>
                     )}
                   </div>
@@ -1391,7 +1434,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                     <tr>
                       <th className="px-6 py-3" scope="col">{t('client.rfq.item')}</th>
                       <th className="px-6 py-3 w-32" scope="col">{t('common.quantity')}</th>
-                      <th className="px-6 py-3 w-56" scope="col">{t('client.rfq.flexibility', 'Flexibility Preference')}</th>
+                      <th className="px-6 py-3 w-56" scope="col">{t('client.rfq.flexibility')}</th>
                       <th className="px-6 py-3" scope="col">{t('common.notes')}</th>
                       <th className="px-6 py-3" scope="col"></th>
                     </tr>
@@ -1423,9 +1466,9 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                                 value={item.flexibility || 'EXACT'}
                                 onChange={(e) => updateItemDetails(key, 'flexibility', e.target.value)}
                               >
-                                <option value="EXACT">{t('client.rfq.flexibilityExact', 'Exact Match Only')}</option>
-                                <option value="OPEN_TO_EQUIVALENT">{t('client.rfq.flexibilityEquivalent', 'Open to Equivalent')}</option>
-                                <option value="OPEN_TO_ALTERNATIVES">{t('client.rfq.flexibilityAlternatives', 'Open to Alternatives')}</option>
+                                <option value="EXACT">{t('client.rfq.flexibilityExact')}</option>
+                                <option value="OPEN_TO_EQUIVALENT">{t('client.rfq.flexibilityEquivalent')}</option>
+                                <option value="OPEN_TO_ALTERNATIVES">{t('client.rfq.flexibilityAlternatives')}</option>
                               </select>
                             </td>
                             <td className="px-6 py-4">
@@ -1475,13 +1518,13 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                   <label className="block text-sm font-medium text-[#6C757D] mb-1" htmlFor="delivery-location">
                     <span className="flex items-center gap-1.5">
                       <span className="material-symbols-outlined text-base">location_on</span>
-                      {t('client.rfq.deliveryLocation', 'Delivery Location')}
+                      {t('client.rfq.deliveryLocation')}
                     </span>
                   </label>
                   <input
                     className="w-full rounded-lg border border-[#DEE2E6] bg-[#F7F8FA] focus:ring-[#0052CC] focus:border-[#0052CC] px-4 py-2.5 outline-none"
                     id="delivery-location"
-                    placeholder={t('client.rfq.deliveryLocationPlaceholder', 'Enter delivery address or site location')}
+                    placeholder={t('client.rfq.deliveryLocationPlaceholder')}
                     type="text"
                   />
                 </div>
@@ -1491,7 +1534,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                     <label className="block text-sm font-medium text-[#6C757D] mb-1" htmlFor="rfq-expiry">
                       <span className="flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-base">event_busy</span>
-                        {t('client.rfq.expiryDate', 'RFQ Expiry Date')}
+                        {t('client.rfq.expiryDate')}
                       </span>
                     </label>
                     <input
@@ -1503,23 +1546,23 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                       disabled
                     />
                     <p className="mt-1 text-xs text-[#6C757D]">
-                      {t('client.rfq.expiryManagedByAdmin', 'Expiry is set by admin policy.')}
+                      {t('client.rfq.expiryManagedByAdmin')}
                     </p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[#6C757D] mb-1" htmlFor="rfq-flexibility">
                       <span className="flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-base">swap_horiz</span>
-                        {t('client.rfq.flexibility', 'Flexibility Preference')}
+                        {t('client.rfq.flexibility')}
                       </span>
                     </label>
                     <select
                       className="w-full rounded-lg border border-[#DEE2E6] bg-[#F7F8FA] focus:ring-[#0052CC] focus:border-[#0052CC] px-4 py-2.5 outline-none"
                       id="rfq-flexibility"
                     >
-                      <option value="EXACT">{t('client.rfq.flexibilityExact', 'Exact Match Only')}</option>
-                      <option value="OPEN_TO_EQUIVALENT">{t('client.rfq.flexibilityEquivalent', 'Open to Equivalent')}</option>
-                      <option value="OPEN_TO_ALTERNATIVES">{t('client.rfq.flexibilityAlternatives', 'Open to Alternatives')}</option>
+                      <option value="EXACT">{t('client.rfq.flexibilityExact')}</option>
+                      <option value="OPEN_TO_EQUIVALENT">{t('client.rfq.flexibilityEquivalent')}</option>
+                      <option value="OPEN_TO_ALTERNATIVES">{t('client.rfq.flexibilityAlternatives')}</option>
                     </select>
                   </div>
                 </div>
@@ -1795,7 +1838,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                     {t(`categoryHero.${getCategoryKey(selectedCategory)}.title`, getCategoryDisplayLabel(selectedCategory))}
                   </h1>
                   <p className="text-lg text-gray-600 font-medium">
-                    {t(`categoryHero.${getCategoryKey(selectedCategory)}.subtitle`, t('client.browse.categoryProducts', 'Browse products in this category'))}
+                    {t(`categoryHero.${getCategoryKey(selectedCategory)}.subtitle`, t('client.browse.categoryProducts'))}
                   </p>
                 </div>
               </section>
@@ -1916,16 +1959,16 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                 </div>
                 {selectedProductForDetail.description && (
                   <div>
-                    <h3 className="text-sm font-bold text-gray-500 uppercase mb-1">{t('product.description', 'Description')}</h3>
+                    <h3 className="text-sm font-bold text-gray-500 uppercase mb-1">{t('product.description')}</h3>
                     <p className="text-gray-700 text-sm leading-relaxed">{selectedProductForDetail.description}</p>
                   </div>
                 )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {selectedProductForDetail.stock !== undefined && (
                     <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-xs font-bold text-gray-400 uppercase">{t('product.availability', 'Availability')}</p>
+                      <p className="text-xs font-bold text-gray-400 uppercase">{t('product.availability')}</p>
                       <p className={`text-sm font-bold mt-1 ${selectedProductForDetail.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {selectedProductForDetail.stock > 0 ? t('product.inStock', 'In Stock') : t('product.outOfStock', 'Out of Stock')}
+                        {selectedProductForDetail.stock > 0 ? t('product.inStock') : t('product.outOfStock')}
                       </p>
                     </div>
                   )}
@@ -1945,8 +1988,8 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                       {isSelected(selectedProductForDetail.id) ? 'remove_shopping_cart' : 'add_shopping_cart'}
                     </span>
                     {isSelected(selectedProductForDetail.id)
-                      ? t('client.browse.removeFromRfq', 'Remove from RFQ')
-                      : t('client.browse.addToRfq', 'Add to RFQ')
+                      ? t('client.browse.removeFromRfq')
+                      : t('client.browse.addToRfq')
                     }
                   </button>
                 </div>
@@ -2088,12 +2131,15 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
               quoteId={acceptedQuote.id}
               onComplete={() => {
                 setShowPOFlow(false);
+                setAcceptedQuote(null);
+                setCreatedOrderId(null);
                 toast.success(t('client.orders.createSuccess') || 'Order submitted successfully!');
                 onNavigate('orders');
               }}
               onCancel={() => {
                 setShowPOFlow(false);
                 setAcceptedQuote(null);
+                setCreatedOrderId(null);
               }}
             />
           )
@@ -2126,10 +2172,10 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex gap-2 flex-wrap">
             {[
-              { key: 'all', label: t('client.orders.filterAll', 'All Orders') },
-              { key: 'active', label: t('client.orders.filterActive', 'Active') },
-              { key: 'delivered', label: t('client.orders.filterDelivered', 'Delivered') },
-              { key: 'cancelled', label: t('client.orders.filterCancelled', 'Cancelled') },
+              { key: 'all', label: t('client.orders.filterAll') },
+              { key: 'active', label: t('client.orders.filterActive') },
+              { key: 'delivered', label: t('client.orders.filterDelivered') },
+              { key: 'cancelled', label: t('client.orders.filterCancelled') },
             ].map(tab => (
               <button
                 key={tab.key}
@@ -2146,23 +2192,23 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
 
           <div className="flex flex-wrap items-end gap-2">
             <label className="flex flex-col gap-1 text-xs text-slate-600">
-              <span>{t('client.orders.dateFrom', 'From')}</span>
+              <span>{t('client.orders.dateFrom')}</span>
               <input
                 type="date"
                 value={orderDateFrom}
                 onChange={(event) => setOrderDateFrom(event.target.value)}
                 className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-[#137fec]/20 focus:border-[#137fec]"
-                aria-label={t('client.orders.dateFrom', 'From')}
+                aria-label={t('client.orders.dateFrom')}
               />
             </label>
             <label className="flex flex-col gap-1 text-xs text-slate-600">
-              <span>{t('client.orders.dateTo', 'To')}</span>
+              <span>{t('client.orders.dateTo')}</span>
               <input
                 type="date"
                 value={orderDateTo}
                 onChange={(event) => setOrderDateTo(event.target.value)}
                 className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-[#137fec]/20 focus:border-[#137fec]"
-                aria-label={t('client.orders.dateTo', 'To')}
+                aria-label={t('client.orders.dateTo')}
               />
             </label>
             <button
@@ -2173,7 +2219,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
               }}
               className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
-              {t('client.orders.clearDateFilters', 'Clear dates')}
+              {t('client.orders.clearDateFilters')}
             </button>
           </div>
         </div>
@@ -2203,7 +2249,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                 {filteredClientOrders.length === 0 && (
                   <tr>
                     <td colSpan={6} className="px-8 py-12 text-center text-sm text-slate-500">
-                      {t('client.orders.noOrdersForFilter', 'No orders match the selected filters.')}
+                      {t('client.orders.noOrdersForFilter')}
                     </td>
                   </tr>
                 )}
@@ -2229,6 +2275,14 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                     </td>
                     <td className="px-8 py-6 text-right">
                       <div className="flex flex-col items-end gap-2">
+                        {isOrderEligibleForPOSubmission(order) && (
+                          <button
+                            onClick={() => handleResumePOFlow(order)}
+                            className="text-amber-700 text-xs font-bold hover:underline"
+                          >
+                            {t('client.orders.continuePoSubmission')}
+                          </button>
+                        )}
                         <button
                           onClick={() => setSelectedOrderForDetails(order)}
                           data-testid="client-orders-view-details-button"
@@ -2319,7 +2373,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                     <p><span className="font-semibold text-slate-700">{t('client.orders.date')}:</span> {new Date(selectedOrderForDetails.date).toLocaleString()}</p>
                     <p><span className="font-semibold text-slate-700">{t('client.orders.amount')}:</span> {t('common.currency')} {selectedOrderForDetails.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
                     {selectedOrderForDetails.system_po_number && (
-                      <p><span className="font-semibold text-slate-700">{t('admin.orders.po', 'PO')}:</span> {selectedOrderForDetails.system_po_number}</p>
+                      <p><span className="font-semibold text-slate-700">{t('admin.orders.po')}:</span> {selectedOrderForDetails.system_po_number}</p>
                     )}
                     {appConfig.payment.enableExternalPaymentLinks && selectedOrderForDetails.paymentLinkUrl && (
                       <a
@@ -2340,21 +2394,40 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                   </div>
                 </div>
 
+                {isOrderEligibleForPOSubmission(selectedOrderForDetails) && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                      <p className="font-semibold text-blue-900">
+                        {t('client.orders.poSubmissionPendingTitle')}
+                      </p>
+                      <p className="text-sm text-blue-800 mt-1">
+                        {t('client.orders.poSubmissionPendingDesc')}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleResumePOFlow(selectedOrderForDetails)}
+                      className="self-start lg:self-auto px-4 py-2 rounded-lg bg-[#137fec] text-white text-sm font-semibold hover:bg-[#137fec]/90"
+                    >
+                      {t('client.orders.continuePoSubmission')}
+                    </button>
+                  </div>
+                )}
+
                 {/* Order Status Timeline */}
                 <div className="border-t border-slate-200 pt-4">
-                  <h4 className="text-sm font-bold text-slate-700 mb-4">{t('client.orders.timeline', 'Order Timeline')}</h4>
+                  <h4 className="text-sm font-bold text-slate-700 mb-4">{t('client.orders.timeline')}</h4>
                   {(() => {
                     const timelineSteps = [
-                      { key: 'PENDING_ADMIN_CONFIRMATION', label: t('client.orders.timelinePO', 'PO Submitted'), icon: 'description' },
-                      { key: 'CONFIRMED', label: t('client.orders.timelineConfirmed', 'Order Confirmed'), icon: 'check_circle' },
-                      { key: 'PAYMENT_CONFIRMED', label: t('client.orders.timelinePayment', 'Payment Confirmed'), icon: 'payments' },
-                      { key: 'PROCESSING', label: t('client.orders.timelineProcessing', 'Processing'), icon: 'inventory_2' },
-                      { key: 'READY_FOR_PICKUP', label: t('status.readyForPickup', 'Ready for Pickup'), icon: 'warehouse' },
-                      { key: 'PICKUP_SCHEDULED', label: t('status.pickupScheduled', 'Pickup Scheduled'), icon: 'event' },
-                      { key: 'PICKED_UP', label: t('status.picked_up', 'Picked Up'), icon: 'move_to_inbox' },
-                      { key: 'IN_TRANSIT', label: t('client.orders.timelineDelivery', 'In Transit'), icon: 'local_shipping' },
-                      { key: 'DELIVERED', label: t('client.orders.timelineDelivered', 'Delivered'), icon: 'task_alt' },
-                      { key: 'COMPLETED', label: t('status.completed', 'Completed'), icon: 'check_circle' },
+                      { key: 'PENDING_ADMIN_CONFIRMATION', label: t('client.orders.timelinePO'), icon: 'description' },
+                      { key: 'CONFIRMED', label: t('client.orders.timelineConfirmed'), icon: 'check_circle' },
+                      { key: 'PAYMENT_CONFIRMED', label: t('client.orders.timelinePayment'), icon: 'payments' },
+                      { key: 'PROCESSING', label: t('client.orders.timelineProcessing'), icon: 'inventory_2' },
+                      { key: 'READY_FOR_PICKUP', label: t('status.readyForPickup'), icon: 'warehouse' },
+                      { key: 'PICKUP_SCHEDULED', label: t('status.pickupScheduled'), icon: 'event' },
+                      { key: 'PICKED_UP', label: t('status.picked_up'), icon: 'move_to_inbox' },
+                      { key: 'IN_TRANSIT', label: t('client.orders.timelineDelivery'), icon: 'local_shipping' },
+                      { key: 'DELIVERED', label: t('client.orders.timelineDelivered'), icon: 'task_alt' },
+                      { key: 'COMPLETED', label: t('status.completed'), icon: 'check_circle' },
                     ];
                     const statusOrder = ['PENDING_ADMIN_CONFIRMATION', 'CONFIRMED', 'PENDING_PAYMENT', 'AWAITING_CONFIRMATION', 'PAYMENT_CONFIRMED', 'PROCESSING', 'READY_FOR_PICKUP', 'PICKUP_SCHEDULED', 'PICKED_UP', 'OUT_FOR_DELIVERY', 'IN_TRANSIT', 'SHIPPED', 'DELIVERED', 'COMPLETED', 'DISPUTED', 'REFUNDED', 'CANCELLED'];
                     const currentIdx = statusOrder.indexOf(selectedOrderForDetails.status);
@@ -2390,7 +2463,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                   })()}
                   {selectedOrderForDetails.status === 'CANCELLED' && (
                     <div className="mt-3 bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700 font-medium">
-                      {t('client.orders.orderCancelled', 'This order has been cancelled.')}
+                      {t('client.orders.orderCancelled')}
                     </div>
                   )}
                 </div>
@@ -2516,32 +2589,32 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
       <div className="p-4 md:p-8 lg:p-12 space-y-6">
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
           <h2 className="text-2xl font-bold text-slate-900">{t('sidebar.help')}</h2>
-          <p className="text-slate-500 mt-2">{t('help.description', 'Need assistance? Use one of the support options below.')}</p>
+          <p className="text-slate-500 mt-2">{t('help.description')}</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <button
               onClick={() => onNavigate('custom-request')}
               className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
             >
-              {t('help.createRequest', 'Create a Support Request')}
+              {t('help.createRequest')}
             </button>
             <button
               onClick={() => onNavigate('rfqs')}
               className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors"
             >
-              {t('help.reviewRfqs', 'Review Your RFQs')}
+              {t('help.reviewRfqs')}
             </button>
           </div>
         </div>
         {/* FAQ Section */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">{t('help.faqTitle', 'Frequently Asked Questions')}</h3>
+          <h3 className="text-lg font-bold text-slate-900 mb-4">{t('help.faqTitle')}</h3>
           <div className="space-y-4">
             {[
-              { q: t('help.faq1q', 'How do I submit an RFQ?'), a: t('help.faq1a', 'Navigate to Browse Items, select the products you need, set quantities, and click Submit RFQ.') },
-              { q: t('help.faq2q', 'How do I track my orders?'), a: t('help.faq2a', 'Go to the Orders tab in the sidebar to see all your orders and their current status.') },
-              { q: t('help.faq3q', 'How do I request a credit increase?'), a: t('help.faq3a', 'On the Dashboard, find the Credit Overview section and click "Request Increase" to submit your request.') },
-              { q: t('help.faq4q', 'How do I compare quotes?'), a: t('help.faq4a', 'On the RFQ list page, click "View Quotes" on any RFQ that has received quotes. You can compare prices, lead times, and supplier ratings.') },
-              { q: t('help.faq5q', 'How do I contact support?'), a: t('help.faq5a', 'Click "Create a Support Request" above, or email us at support@mwrd.com.') },
+              { q: t('help.faq1q'), a: t('help.faq1a') },
+              { q: t('help.faq2q'), a: t('help.faq2a') },
+              { q: t('help.faq3q'), a: t('help.faq3a') },
+              { q: t('help.faq4q'), a: t('help.faq4a') },
+              { q: t('help.faq5q'), a: t('help.faq5a') },
             ].map((faq, i) => (
               <details key={i} className="border border-slate-200 rounded-lg p-4 group">
                 <summary className="font-medium text-slate-800 cursor-pointer group-open:text-blue-700 transition-colors">{faq.q}</summary>
@@ -2552,19 +2625,19 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
         </div>
         {/* Contact Info */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">{t('help.contactTitle', 'Contact Us')}</h3>
+          <h3 className="text-lg font-bold text-slate-900 mb-4">{t('help.contactTitle')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex items-start gap-3">
               <span className="material-symbols-outlined text-blue-600">email</span>
               <div>
-                <p className="font-medium text-slate-800">{t('help.email', 'Email')}</p>
+                <p className="font-medium text-slate-800">{t('help.email')}</p>
                 <p className="text-sm text-slate-500">support@mwrd.com</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <span className="material-symbols-outlined text-blue-600">phone</span>
               <div>
-                <p className="font-medium text-slate-800">{t('help.phone', 'Phone')}</p>
+                <p className="font-medium text-slate-800">{t('help.phone')}</p>
                 <p className="text-sm text-slate-500">+966 50 000 0000</p>
               </div>
             </div>

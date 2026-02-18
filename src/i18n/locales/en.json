@@ -62,6 +62,7 @@
     "all": "All",
     "allStatus": "All Status",
     "submitting": "Submitting...",
+    "uploading": "Uploading...",
     "saving": "Saving...",
     "error": "Error",
     "statusUpdated": "Status updated",
@@ -85,7 +86,23 @@
       "thisYear": "This year"
     },
     "saveChanges": "Save Changes",
-    "toBeDetermined": "TBD"
+    "toBeDetermined": "TBD",
+    "remove": "Remove",
+    "copyFailed": "Failed to copy",
+    "select": "Select",
+    "assigning": "Assigning...",
+    "rejecting": "Rejecting...",
+    "type": "Type",
+    "cancelling": "Cancelling...",
+    "items": "items",
+    "showing": "Showing",
+    "of": "of",
+    "products": "products",
+    "previousPage": "Previous page is not available yet",
+    "nextPage": "Next page is not available yet",
+    "category": "Category",
+    "apply": "Apply",
+    "days": "days"
   },
   "about": {
     "clients": {
@@ -218,8 +235,14 @@
       "invalidAccountType": "Please select a valid account type",
       "email": "Please enter a valid email address",
       "phone": "Please enter a valid phone number",
-      "submitFailed": "Failed to submit request. Please try again."
-    }
+      "submitFailed": "Failed to submit request. Please try again.",
+      "cr": "CR number is required",
+      "taxId": "Tax ID is required"
+    },
+    "commercialRegistration": "Commercial Registration (CR)",
+    "crPlaceholder": "e.g. 1010XXXXXX",
+    "taxId": "Tax ID (VAT Number)",
+    "taxIdPlaceholder": "e.g. 3XXXXXXXXXX0003"
   },
   "sidebar": {
     "clientPortal": "Client Portal",
@@ -264,7 +287,8 @@
     "supplierPerformance": "Supplier Performance",
     "creditUtilization": "Credit Utilization",
     "payouts": "Payouts",
-    "categories": "Categories"
+    "categories": "Categories",
+    "portal": "Portal"
   },
   "client": {
     "dashboard": {
@@ -312,7 +336,8 @@
       "marketAnonymityDesc": "You interact with anonymous supplier IDs only (Supplier-XXXX).",
       "viewFinancials": "View Financials",
       "noRfqsYet": "No RFQs yet. Start by creating your first request.",
-      "noOrdersYet": "No orders yet."
+      "noOrdersYet": "No orders yet.",
+      "client": "Client"
     },
     "rfq": {
       "title": "Submit a New RFQ",
@@ -411,7 +436,15 @@
       "noOrdersForFilter": "No orders match the selected filters.",
       "rateOrder": "Rate Order",
       "reviewed": "Reviewed",
-      "invalidQuoteAmount": "The selected quote has an invalid amount."
+      "invalidQuoteAmount": "The selected quote has an invalid amount.",
+      "resumePoMissingQuote": "This order is missing its source quote.",
+      "resumePoQuoteNotFound": "Unable to load quote details for this order.",
+      "resumePoError": "Failed to continue PO submission",
+      "rate": "Rate Order",
+      "rated": "Rated",
+      "continuePoSubmission": "Continue PO Submission",
+      "poSubmissionPendingTitle": "PO submission still required",
+      "poSubmissionPendingDesc": "Complete your stamped PO upload to move this order forward."
     },
     "browse": {
       "title": "Product Catalog",
@@ -457,7 +490,9 @@
       "clearFilters": "Clear Filters",
       "searchResultsFor": "Search Results for",
       "noSearchResults": "No products found matching your search.",
-      "allBrands": "All Brands"
+      "allBrands": "All Brands",
+      "removeFromRfq": "Remove from RFQ",
+      "addToRfq": "Add to RFQ"
     },
     "financials": {
       "subtitle": "Manage your credit line, payments, and invoices",
@@ -496,7 +531,9 @@
         "invoice": "Invoice",
         "adjustment": "Adjustment",
         "commission": "Commission"
-      }
+      },
+      "requestSubmitted": "Credit increase request sent to admin",
+      "statementExported": "Statement exported"
     },
     "rfqs": {
       "title": "Request History",
@@ -653,7 +690,9 @@
       "contactManager": "Contact Account Manager",
       "low": "Low",
       "moderate": "Moderate",
-      "healthy": "Healthy"
+      "healthy": "Healthy",
+      "requestIncrease": "Request Increase",
+      "requestCreditHint": "Click \"Request Increase\" above to apply for a credit line."
     }
   },
   "supplier": {
@@ -771,7 +810,9 @@
       "bulkUploadNoValidRows": "No valid product rows were found in the CSV file.",
       "bulkUploadCreated": "Imported {{count}} products successfully",
       "bulkUploadPartialFailure": "{{count}} products failed to import",
-      "pricePositiveRequired": "Supplier price must be greater than 0"
+      "pricePositiveRequired": "Supplier price must be greater than 0",
+      "loadError": "Failed to refresh products",
+      "selectCategory": "Select Category"
     },
     "masterCatalog": {
       "loadError": "Failed to load products",
@@ -805,7 +846,11 @@
       "daysToShip": "Days to ship after order receipt",
       "listingAgreement": "By listing this item, you agree to fulfill orders using the master product descriptions, images, and technical specifications provided by the marketplace administrator.",
       "saveAndList": "Save & List Item",
-      "masterId": "Master ID: {{id}}"
+      "masterId": "Master ID: {{id}}",
+      "productListTitle": "Master Product List",
+      "sortNewest": "Newest Added",
+      "sortName": "Product Name (A-Z)",
+      "standardLeadTime": "Standard Lead Time: 3-5 Days"
     },
     "rfqs": {
       "title": "Received RFQs",
@@ -862,7 +907,13 @@
       "itemsQuotedSummary": "{{quoted}} of {{total}} items quoted",
       "partialQuoteAllowed": "Partial quotes are allowed. Unquoted items will appear as NOT QUOTED.",
       "atLeastOneItemRequired": "Quote at least one item with unit price and lead time.",
-      "invalidItemValues": "Quoted items must include valid quantity and price values."
+      "invalidItemValues": "Quoted items must include valid quantity and price values.",
+      "suggestAlternative": "Suggest an alternative product",
+      "smartMatch": "✨ Smart Match",
+      "searchCatalog": "Search master catalog or type a custom name...",
+      "catalogMatches": "Catalog Matches",
+      "quoteValidity": "Quote Validity Period",
+      "validityHelp": "How long this quote remains valid for the client"
     },
     "orders": {
       "title": "Orders Management",
@@ -891,6 +942,8 @@
       "of": "of",
       "previous": "Previous",
       "next": "Next",
+      "tabsNavigation": "Order tabs",
+      "tableNavigation": "Table navigation",
       "wonDescription": "This section lists all purchase orders where your quote has been accepted by the client. Client names are anonymized for privacy. You can search, filter, and view detailed information for each won order.",
       "completedDescription": "This section lists all successfully delivered and closed orders. You can search, filter, and view detailed information for each completed order. Client names are anonymized for privacy.",
       "noPendingOrders": "No pending orders found.",
@@ -906,7 +959,9 @@
       "amount": "Amount",
       "itemsSummary": "{{itemCount}} items / {{unitCount}} units",
       "chatAvailableMessage": "Support chat is available during business hours.",
-      "chatLinkedMessage": "Messages are linked to each order record."
+      "chatLinkedMessage": "Messages are linked to each order record.",
+      "printBlocked": "Pop-up blocked. Please allow pop-ups to print.",
+      "printLabel": "Print Shipping Label"
     },
     "settings": {
       "title": "Account Settings",
@@ -941,7 +996,33 @@
       "passwordUpdated": "Password updated successfully",
       "passwordUpdateFailed": "Failed to update password",
       "invalidIban": "Please enter a valid Saudi IBAN (SA followed by 22 digits).",
-      "invalidSwift": "Please enter a valid SWIFT code (8 or 11 characters)."
+      "invalidSwift": "Please enter a valid SWIFT code (8 or 11 characters).",
+      "paymentSettings": "Payment Settings",
+      "kycDocuments": "KYC Documents",
+      "paymentSaved": "Payment settings saved",
+      "paymentSaveFailed": "Failed to save payment settings",
+      "fileTooLarge": "File must be under 10MB",
+      "fileUploaded": "Document uploaded successfully",
+      "uploadFailed": "Failed to upload document",
+      "kycDocumentsDesc": "Upload your business documents for verification",
+      "commercialRegistration": "Commercial Registration (CR)",
+      "taxCertificate": "VAT/Tax Certificate",
+      "businessLicense": "Business License",
+      "bankLetter": "Bank Account Letter",
+      "uploaded": "Uploaded",
+      "uploadPdf": "Upload PDF or image",
+      "uploading": "Uploading...",
+      "replace": "Replace File",
+      "chooseFile": "Choose File",
+      "paymentSettingsDesc": "Configure your bank account for receiving payouts",
+      "bankName": "Bank Name",
+      "bankNamePlaceholder": "e.g. Al Rajhi Bank",
+      "accountHolder": "Account Holder Name",
+      "accountHolderPlaceholder": "Full name as on bank account",
+      "iban": "IBAN",
+      "ibanPlaceholder": "SA...",
+      "swiftCode": "SWIFT/BIC Code",
+      "swiftPlaceholder": "e.g. RJHISARI"
     },
     "fallback": {
       "comingSoon": "Section Coming Soon",
@@ -968,6 +1049,26 @@
         "adjustment": "Adjustment",
         "commission": "Commission"
       }
+    },
+    "customRequests": {
+      "title": "Custom Requests",
+      "subtitle": "Custom item requests assigned to you by the platform",
+      "noRequests": "No custom requests assigned",
+      "noRequestsDesc": "When the platform assigns custom item requests to you, they will appear here.",
+      "platformNotes": "Platform Notes"
+    },
+    "inventory": {
+      "loadError": "Failed to load inventory",
+      "updateSuccess": "Stock updated successfully",
+      "updateError": "Failed to update stock",
+      "subtitle": "Manage your product stock levels",
+      "searchPlaceholder": "Search products...",
+      "product": "Product",
+      "sku": "SKU",
+      "category": "Category",
+      "currentStock": "Current Stock",
+      "status": "Status",
+      "noProducts": "No products found"
     }
   },
   "admin": {
@@ -1020,7 +1121,11 @@
       "uncategorized": "Uncategorized",
       "noRevenueData": "No revenue data available",
       "noProductData": "No product data available",
-      "customRangeTitle": "Custom Date Range"
+      "customRangeTitle": "Custom Date Range",
+      "unknownClient": "Unknown Client",
+      "revenueByCategory": "Revenue by Category",
+      "topSellingProducts": "Top Selling Products",
+      "noOrders": "No orders found"
     },
     "approvals": {
       "title": "Approvals",
@@ -1052,7 +1157,11 @@
       "thisYear": "This year",
       "nameLabel": "Name",
       "skuLabel": "SKU",
-      "descriptionLabel": "Description"
+      "descriptionLabel": "Description",
+      "approved": "Product approved",
+      "rejected": "Product rejected",
+      "bulkApproved": "All pending products approved",
+      "bulkRejected": "All pending products rejected"
     },
     "margins": {
       "title": "Quote Manager",
@@ -1178,6 +1287,16 @@
       "requiresAttention": "Requires Attention",
       "clientManagement": "Client Management",
       "addClient": "Add Client",
+      "contactName": "Contact Name",
+      "contactNamePlaceholder": "e.g. John Doe",
+      "companyNamePlaceholder": "e.g. Acme Corp",
+      "emailPlaceholder": "john@example.com",
+      "phonePlaceholder": "+966 50 123 4567",
+      "creditLimitPlaceholder": "0",
+      "initialPassword": "Initial Password",
+      "initialPasswordPlaceholder": "Set a temporary password",
+      "initialPasswordHint": "Min 6 characters. User can change this later.",
+      "createUser": "Create User",
       "searchClients": "Search clients...",
       "clientId": "Client ID",
       "email": "Email",
@@ -1259,7 +1378,9 @@
       "identityOrderSummary": "Order History Summary",
       "identityTotalOrders": "Total Orders",
       "identityTotalAmount": "Total Amount",
-      "identityNoOrders": "No orders found for this user."
+      "identityNoOrders": "No orders found for this user.",
+      "margin": "Client Margin",
+      "roleUpdateFailed": "Failed to update user role"
     },
     "payments": {
       "title": "Payment Management",
@@ -1301,7 +1422,8 @@
       "auditActionPOGenerated": "System PO generated",
       "auditActionClientPOUploaded": "Client PO uploaded",
       "auditActionPOVerified": "PO verified",
-      "auditActionPORejected": "PO rejected"
+      "auditActionPORejected": "PO rejected",
+      "pendingReviewQueue": "Pending review queue"
     },
     "settings": {
       "title": "Platform Settings",
@@ -1386,7 +1508,13 @@
         "order_shipped": "Triggered when an order is shipped",
         "order_delivered": "Triggered when an order is delivered",
         "payment_received": "Triggered when a payment is received and confirmed"
-      }
+      },
+      "runAutoQuoteNow": "Run Auto-Quote Now",
+      "runAutoQuoteNowDesc": "Manually trigger the auto-quote check for all eligible RFQs immediately.",
+      "autoQuoteTriggered": "Auto-quote check completed",
+      "autoQuoteError": "Failed to run auto-quote check",
+      "running": "Running...",
+      "runNow": "Run Now"
     },
     "masterProducts": {
       "title": "Master Product Catalog",
@@ -1409,10 +1537,14 @@
         "title": "Product Identity",
         "description": "Define the core identification for this master record.",
         "globalName": "Global Product Name",
+        "globalNamePlaceholder": "e.g. High-Pressure Industrial Centrifugal Pump",
         "sku": "Manufacturer SKU / Model",
+        "autoGenerated": "Auto-generated",
+        "autoBadge": "AUTO",
         "category": "Category",
         "subCategory": "Sub-Category",
         "brand": "Brand",
+        "brandPlaceholder": "e.g. Bosch",
         "searchCategories": "Search categories...",
         "selectCategory": "Select Category",
         "selectSubCategory": "Select Sub-Category"
@@ -1422,6 +1554,9 @@
         "description": "High-resolution images that will be available to all vendors.",
         "bulkUpload": "Bulk Upload",
         "primaryUrl": "Primary Image URL",
+        "primaryUrlPlaceholder": "https://... or upload an image above",
+        "uploadImage": "Upload Image",
+        "imageAlt": "Product image",
         "dragDrop": "DRAG & DROP IMAGES",
         "primary": "Primary",
         "slot": "Slot"
@@ -1440,15 +1575,18 @@
       },
       "errors": {
         "nameCategoryRequired": "Name and Category are required",
+        "loadFailed": "Failed to load products",
         "saveFailed": "Failed to save product",
         "deleteFailed": "Failed to delete product"
       },
       "success": {
+        "imageUploaded": "Image uploaded successfully",
         "productUpdated": "Product updated successfully",
         "productCreated": "Product created successfully",
         "productDeleted": "Product deleted successfully"
       },
-      "confirmDelete": "Are you sure you want to delete this product?"
+      "confirmDelete": "Are you sure you want to delete this product?",
+      "confirmDeleteTitle": "Delete Product"
     },
     "leads": {
       "title": "Leads & Signups",
@@ -1465,7 +1603,8 @@
       "pending": "Pending",
       "contacted": "Contacted",
       "converted": "Converted",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "subtitle": "Review landing-page interest form submissions"
     },
     "customRequests": {
       "title": "Custom Item Requests",
@@ -1486,7 +1625,39 @@
       "status": "Status",
       "unknownCompany": "Unknown Company",
       "unknownUser": "Unknown User",
-      "noRequestsFound": "No requests found"
+      "noRequestsFound": "No requests found",
+      "invalidSupplier": "Please select an active supplier.",
+      "assigned": "Request assigned to supplier",
+      "assignError": "Failed to assign request",
+      "rejected": "Request rejected",
+      "rejectError": "Failed to reject request",
+      "notesSaved": "Notes saved",
+      "notesError": "Failed to save notes",
+      "statusUpdated": "Status updated",
+      "statusError": "Failed to update status",
+      "subtitle": "Manage custom item requests from clients",
+      "total": "Total",
+      "pending": "Pending",
+      "assignedCount": "Assigned",
+      "urgent": "Urgent",
+      "priority": "Priority",
+      "assignedTo": "Assigned To",
+      "actions": "Actions",
+      "assignToSupplier": "Assign to Supplier",
+      "adminNotes": "Admin Notes",
+      "markUnderReview": "Mark Under Review",
+      "reject": "Reject",
+      "assignDesc": "Select a supplier to handle this custom request:",
+      "searchSuppliers": "Search suppliers...",
+      "notesOptional": "Notes (optional)",
+      "assignNotesPlaceholder": "Add any instructions for the supplier...",
+      "assign": "Assign",
+      "rejectRequest": "Reject Request",
+      "rejectDesc": "Provide a reason for rejecting",
+      "rejectReasonPlaceholder": "Enter rejection reason...",
+      "confirmReject": "Reject Request",
+      "notesFor": "Notes for:",
+      "notesPlaceholder": "Add internal notes about this request..."
     },
     "orders": {
       "title": "Order Management",
@@ -1502,6 +1673,7 @@
       "noOrdersFound": "No orders found",
       "reviewPayment": "Review Payment",
       "reviewPaymentDesc": "Confirm or reject this bank transfer submission before fulfillment.",
+      "paymentLink": "Payment Link",
       "paymentReference": "Payment Reference",
       "paymentSubmittedAt": "Submitted At",
       "paymentNotes": "Admin Notes",
@@ -1521,7 +1693,25 @@
       "auditActionReferenceResubmitted": "Reference resubmitted",
       "auditActionPaymentConfirmed": "Payment confirmed",
       "auditActionPaymentRejected": "Payment rejected",
-      "focusedOrderBanner": "Filtered to order {{orderId}} from Ready for Pickup widget."
+      "focusedOrderBanner": "Filtered to order {{orderId}} from Ready for Pickup widget.",
+      "setPaymentLink": "Set Payment Link",
+      "setPaymentLinkDesc": "Store the external payment link for this order. Only admins can edit this.",
+      "paymentLinkPlaceholder": "https://...",
+      "paymentLinkSentAt": "Last sent",
+      "openPaymentLink": "Open payment link",
+      "copyPaymentLink": "Copy Payment Link",
+      "editPaymentLink": "Edit Payment Link",
+      "pendingPaymentHint": "No client reference is currently submitted. Confirm only after external verification or keep waiting.",
+      "invalidPaymentReviewStatus": "This order is not in a payment review state",
+      "invalidStatusTransition": "Invalid status transition for this order",
+      "paymentTransitionLocked": "Use payment review actions to manage payment states",
+      "paymentLinkRequired": "Payment link is required",
+      "paymentLinkSaved": "Payment link saved",
+      "paymentLinkSaveFailed": "Failed to save payment link",
+      "paymentLinkCopied": "Payment link copied",
+      "paymentLinkCopyFailed": "Failed to copy payment link",
+      "exported": "Orders exported",
+      "subtitle": "Track statuses, payment links, and payment confirmations"
     },
     "logistics": {
       "title": "Logistics & Shipping",
@@ -1566,6 +1756,7 @@
       "trackingNumber": "Tracking Number",
       "trackingNumberPlaceholder": "Enter tracking number",
       "trackingUrl": "Tracking URL",
+      "trackingUrlPlaceholder": "https://",
       "notes": "Notes",
       "notesPlaceholder": "Optional dispatch notes",
       "createShipment": "Create Shipment",
@@ -1701,7 +1892,10 @@
       "referenceNumber": "Reference Number",
       "referenceNumberPlaceholder": "Optional transaction reference",
       "notesPlaceholder": "Optional notes about this payout...",
-      "loadError": "Failed to load payouts"
+      "loadError": "Failed to load payouts",
+      "supplier": "Supplier",
+      "selectSupplier": "Select a supplier...",
+      "selectOrder": "Select an order..."
     },
     "categories": {
       "title": "Category Management",
@@ -1735,14 +1929,41 @@
       "confirmDelete": "Confirm Delete",
       "deleteWarning": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
       "deleteSubcategoriesWarning": "All subcategories under this category will also be removed.",
+      "iconCategoryPlaceholder": "folder",
+      "iconSubcategoryPlaceholder": "label",
       "moveUp": "Move up",
       "moveDown": "Move down",
       "toggleActive": "Toggle active",
       "expand": "Expand",
-      "collapse": "Collapse"
+      "collapse": "Collapse",
+      "loadError": "Failed to load categories",
+      "created": "Category created",
+      "createFailed": "Failed to create category",
+      "subcategoryCreated": "Subcategory created",
+      "subcategoryCreateFailed": "Failed to create subcategory",
+      "updated": "Category updated",
+      "updateFailed": "Failed to update category",
+      "subcategoryUpdated": "Subcategory updated",
+      "subcategoryUpdateFailed": "Failed to update subcategory",
+      "statusUpdated": "Category status updated",
+      "statusUpdateFailed": "Failed to update category status",
+      "deleted": "Category deleted",
+      "deleteFailed": "Failed to delete category",
+      "orderUpdated": "Category order updated",
+      "orderUpdateFailed": "Failed to update category order",
+      "seededDefaults": "Default categories restored",
+      "seedFailed": "Failed to restore defaults",
+      "restoreDefaults": "Restore Defaults",
+      "active": "Active"
     },
     "loadingTabData": "Fetching latest dashboard data...",
-    "loadingTabDataFailed": "Some dashboard data failed to load. Please refresh again."
+    "loadingTabDataFailed": "Some dashboard data failed to load. Please refresh again.",
+    "inventory": {
+      "subtitle": "Monitor inventory and stock movement across suppliers"
+    },
+    "masterCatalog": {
+      "subtitle": "Manage the platform product master catalog"
+    }
   },
   "inventory": {
     "title": "Inventory Management",
@@ -1753,7 +1974,11 @@
     "outOfStock": "Out of Stock",
     "units": "units",
     "stock": "Stock",
-    "status": "Status",
+    "status": {
+      "in_stock": "In Stock",
+      "low_stock": "Low Stock",
+      "out_of_stock": "Out of Stock"
+    },
     "productName": "Product Name",
     "supplier": "Supplier",
     "category": "Category",
@@ -1842,7 +2067,10 @@
     "disputed": "Disputed",
     "refunded": "Refunded",
     "processing": "Processing",
-    "confirmed": "Confirmed"
+    "confirmed": "Confirmed",
+    "pendingadmin": "Pending Admin",
+    "senttoclient": "Sent to Client",
+    "shipped": "Shipped"
   },
   "categories": {
     "office": {
@@ -2344,7 +2572,11 @@
     "copiedToClipboard": "{{label}} copied to clipboard",
     "enterTransferReference": "Please enter the bank transfer reference number",
     "transferSubmitted": "Bank transfer details submitted. We will verify your payment and confirm shortly.",
-    "transferSubmitFailed": "Failed to submit payment details. Please try again."
+    "transferSubmitFailed": "Failed to submit payment details. Please try again.",
+    "paymentSetupError": "Unable to load payment setup. Please try again.",
+    "bankDetailsMissing": "Bank details are not configured yet. Please contact support.",
+    "paymentLinkUnavailable": "No payment link is available for this order yet.",
+    "paymentMethod": "Payment Method"
   },
   "customRequest": {
     "title": "Request Custom Item",
@@ -2372,7 +2604,25 @@
     "step3": "You'll receive a quote with pricing and delivery time",
     "step4": "Approve the quote to proceed with your order",
     "submitting": "Submitting...",
-    "submitRequest": "Submit Request"
+    "submitRequest": "Submit Request",
+    "fileTooLarge": "Each file must be smaller than 10MB.",
+    "imagesOnly": "Please select image files only.",
+    "partialUploadWarning": "Some files could not be uploaded and were skipped.",
+    "referenceImages": "Reference Images",
+    "attachments": "Attachments",
+    "loadError": "Failed to load requests",
+    "cancelled": "Request cancelled",
+    "cancelError": "Failed to cancel request",
+    "myRequests": "My Custom Requests",
+    "myRequestsDesc": "Track and manage your custom item requests",
+    "newRequest": "New Request",
+    "noRequests": "No custom requests yet",
+    "noRequestsDesc": "Need a product not in our catalog? Submit a custom request and we'll source it for you.",
+    "createFirst": "Create your first request",
+    "qty": "Qty",
+    "deadline": "Deadline",
+    "rejectionReason": "Rejection Reason",
+    "cancelRequest": "Cancel Request"
   },
   "paymentHistory": {
     "totalPaid": "Total Paid",
@@ -2408,7 +2658,9 @@
     "helpTip3": "Contact support@mwrd.com if you have any questions",
     "helpTip4": "Keep your transaction receipt for your records",
     "bankNotConfigured": "Bank details not configured",
-    "contactSupport": "Please contact support for payment instructions."
+    "contactSupport": "Please contact support for payment instructions.",
+    "awaitingAdminReview": "Reference submitted. Waiting for admin verification.",
+    "referenceSubmitted": "Reference submitted"
   },
   "bankConfig": {
     "title": "Bank Details Configuration",
@@ -2424,6 +2676,14 @@
     "currency": "Currency",
     "branchName": "Branch Name",
     "branchCode": "Branch Code",
+    "bankNamePlaceholder": "Al Rajhi Bank",
+    "accountNamePlaceholder": "MWRD Trading Company",
+    "accountNumberPlaceholder": "123456789012",
+    "ibanPlaceholder": "SA00XXXX0000000000000000",
+    "swiftCodePlaceholder": "BANKSA00",
+    "currencyPlaceholder": "SAR",
+    "branchNamePlaceholder": "Riyadh Main Branch",
+    "branchCodePlaceholder": "001",
     "notes": "Notes",
     "notesPlaceholder": "Please include order number in transfer reference",
     "update": "Update",
@@ -2432,7 +2692,8 @@
     "active": "Active",
     "noBankDetails": "No bank details configured yet",
     "addFirstAccount": "Add your first bank account to start receiving payments",
-    "deleteConfirm": "Are you sure you want to delete these bank details?"
+    "deleteConfirm": "Are you sure you want to delete these bank details?",
+    "deleteTitle": "Delete bank account"
   },
   "markAsPaid": {
     "paymentConfirmed": "Payment Confirmed",
@@ -2555,6 +2816,7 @@
     }
   },
   "pagination": {
+    "navigation": "Pagination",
     "first": "First page",
     "previous": "Previous page",
     "next": "Next page",
@@ -2568,7 +2830,12 @@
       "description": "Upload a photo to personalize your account",
       "upload": "Upload Photo",
       "remove": "Remove",
-      "fileTooLarge": "File size must be less than 5MB"
+      "fileTooLarge": "File size must be less than 5MB",
+      "invalidFileType": "Please select an image file",
+      "uploadFailed": "Failed to upload profile picture",
+      "saved": "Profile picture updated",
+      "removeFailed": "Failed to remove profile picture",
+      "removed": "Profile picture removed"
     }
   },
   "subcategories": {
@@ -2670,5 +2937,11 @@
     "poPendingAdminMessage": "Your PO is pending verification. MWRD will confirm within 24 hours.",
     "poConfirmedTitle": "PO confirmed",
     "poConfirmedMessage": "Order {{orderId}} was confirmed and sent to supplier."
+  },
+  "product": {
+    "description": "Description",
+    "availability": "Availability",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock"
   }
 }

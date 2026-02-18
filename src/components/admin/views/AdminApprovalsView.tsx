@@ -134,27 +134,27 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
   const handleApproveSingleProduct = async (productId: string) => {
     const success = await onApproveProduct(productId);
     if (!success) {
-      toast.error(t('admin.approvals.approveError', 'Failed to approve product'));
+      toast.error(t('admin.approvals.approveError'));
       return;
     }
     setSelectedApprovalProductIds((prev) => prev.filter((id) => id !== productId));
-    toast.success(t('admin.approvals.approved', 'Product approved'));
+    toast.success(t('admin.approvals.approved'));
   };
 
   const handleRejectSingleProduct = async (productId: string) => {
     const success = await onRejectProduct(productId);
     if (!success) {
-      toast.error(t('admin.approvals.rejectError', 'Failed to reject product'));
+      toast.error(t('admin.approvals.rejectError'));
       return;
     }
     setSelectedApprovalProductIds((prev) => prev.filter((id) => id !== productId));
-    toast.success(t('admin.approvals.rejected', 'Product rejected'));
+    toast.success(t('admin.approvals.rejected'));
   };
 
   const handleApproveAllPendingProducts = async (targets: Product[]) => {
     if (isBulkActionInProgress) return;
     if (targets.length === 0) {
-      toast.info(t('admin.approvals.allCaughtUp', 'No pending products to approve'));
+      toast.info(t('admin.approvals.allCaughtUp'));
       return;
     }
     setIsBulkActionInProgress(true);
@@ -166,7 +166,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
       const failedCount = results.length - succeededIds.length;
 
       if (succeededIds.length === 0) {
-        toast.error(t('admin.approvals.approveError', 'Failed to approve product'));
+        toast.error(t('admin.approvals.approveError'));
         return;
       }
 
@@ -174,7 +174,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
       if (failedCount > 0) {
         toast.info(t('admin.approvals.bulkPartial', { defaultValue: '{{success}} approved, {{failed}} failed', success: succeededIds.length, failed: failedCount }));
       } else {
-        toast.success(t('admin.approvals.bulkApproved', 'All pending products approved'));
+        toast.success(t('admin.approvals.bulkApproved'));
       }
     } finally {
       setIsBulkActionInProgress(false);
@@ -184,7 +184,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
   const handleRejectAllPendingProducts = async (targets: Product[]) => {
     if (isBulkActionInProgress) return;
     if (targets.length === 0) {
-      toast.info(t('admin.approvals.allCaughtUp', 'No pending products to reject'));
+      toast.info(t('admin.approvals.allCaughtUp'));
       return;
     }
     setIsBulkActionInProgress(true);
@@ -196,7 +196,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
       const failedCount = results.length - succeededIds.length;
 
       if (succeededIds.length === 0) {
-        toast.error(t('admin.approvals.rejectError', 'Failed to reject product'));
+        toast.error(t('admin.approvals.rejectError'));
         return;
       }
 
@@ -204,7 +204,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
       if (failedCount > 0) {
         toast.info(t('admin.approvals.bulkPartial', { defaultValue: '{{success}} processed, {{failed}} failed', success: succeededIds.length, failed: failedCount }));
       } else {
-        toast.success(t('admin.approvals.bulkRejected', 'All pending products rejected'));
+        toast.success(t('admin.approvals.bulkRejected'));
       }
     } finally {
       setIsBulkActionInProgress(false);
@@ -215,7 +215,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
     <div data-testid="admin-approvals-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
+          portalLabel={t('sidebar.adminPortal')}
           title={t('admin.approvals.productApprovalQueue')}
           subtitle={`${filteredRows.length} ${t('admin.approvals.itemsAwaitingReview')}`}
           actions={(
@@ -236,14 +236,14 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
               <button
                 onClick={openAdminNotifications}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 transition-colors"
-                aria-label={t('common.notifications', 'Notifications')}
+                aria-label={t('common.notifications')}
               >
                 <span className="material-symbols-outlined text-xl">notifications</span>
               </button>
               <button
                 onClick={openAdminHelp}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 transition-colors"
-                aria-label={t('common.help', 'Help')}
+                aria-label={t('common.help')}
               >
                 <span className="material-symbols-outlined text-xl">help</span>
               </button>
@@ -280,7 +280,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
                 className="flex h-10 shrink-0 cursor-pointer items-center justify-center gap-x-2 overflow-hidden rounded-lg bg-white border border-slate-200 px-4 text-sm font-medium leading-normal text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="material-symbols-outlined text-base">download</span>
-                <span>{t('common.export', 'Export')}</span>
+                <span>{t('common.export')}</span>
               </button>
             </div>
           )}
@@ -292,7 +292,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
                 onChange={(event) => setApprovalSupplierFilter(event.target.value)}
                 className="h-8 appearance-none rounded-lg bg-white pl-4 pr-8 text-sm font-medium text-[#111318] ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               >
-                <option value="ALL">{t('admin.approvals.supplier')} - {t('common.all', 'All')}</option>
+                <option value="ALL">{t('admin.approvals.supplier')} - {t('common.all')}</option>
                 {supplierOptions.map((option) => (
                   <option key={option} value={option}>{option}</option>
                 ))}
@@ -305,7 +305,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
                 onChange={(event) => setApprovalCategoryFilter(event.target.value)}
                 className="h-8 appearance-none rounded-lg bg-white pl-4 pr-8 text-sm font-medium text-[#111318] ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               >
-                <option value="ALL">{t('admin.approvals.category')} - {t('common.all', 'All')}</option>
+                <option value="ALL">{t('admin.approvals.category')} - {t('common.all')}</option>
                 {categoryOptions.map((option) => (
                   <option key={option} value={option}>{option}</option>
                 ))}
@@ -318,10 +318,10 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
                 onChange={(event) => setApprovalDateFilter(event.target.value as ApprovalDateFilter)}
                 className="h-8 appearance-none rounded-lg bg-white pl-4 pr-8 text-sm font-medium text-[#111318] ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               >
-                <option value="ALL">{t('admin.approvals.dateSubmitted')} - {t('common.all', 'All')}</option>
-                <option value="LAST_7_DAYS">{t('common.dateFilter.last7Days', 'Last 7 days')}</option>
-                <option value="LAST_30_DAYS">{t('common.dateFilter.last30Days', 'Last 30 days')}</option>
-                <option value="THIS_YEAR">{t('common.dateFilter.thisYear', 'This year')}</option>
+                <option value="ALL">{t('admin.approvals.dateSubmitted')} - {t('common.all')}</option>
+                <option value="LAST_7_DAYS">{t('common.dateFilter.last7Days')}</option>
+                <option value="LAST_30_DAYS">{t('common.dateFilter.last30Days')}</option>
+                <option value="THIS_YEAR">{t('common.dateFilter.thisYear')}</option>
               </select>
               <span className="material-symbols-outlined pointer-events-none absolute right-2 top-1.5 text-lg text-[#111318]">expand_more</span>
             </div>
@@ -365,7 +365,7 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
                         </div>
                         <div>
                           <div className="text-sm font-medium text-[#111318]">{product.name}</div>
-                          <div className="text-sm text-gray-500">{t('common.sku', 'SKU')}: {product.sku || t('common.notAvailable', 'N/A')}</div>
+                          <div className="text-sm text-gray-500">{t('common.sku')}: {product.sku || t('common.notAvailable')}</div>
                         </div>
                       </div>
                     </td>
@@ -420,8 +420,8 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
                       </div>
                       <p className="text-gray-500 font-medium">
                         {pendingProducts.length === 0
-                          ? t('admin.approvals.allCaughtUp', 'All caught up')
-                          : t('common.noResults', 'No matching products')}
+                          ? t('admin.approvals.allCaughtUp')
+                          : t('common.noResults')}
                       </p>
                     </td>
                   </tr>
@@ -445,18 +445,18 @@ export const AdminApprovalsView: React.FC<AdminApprovalsViewProps> = ({
               </button>
             </div>
             <div className="grid gap-3 p-4 text-sm text-slate-700">
-              <p><span className="font-semibold">{t('common.name', 'Name')}:</span> {infoProduct.name}</p>
-              <p><span className="font-semibold">{t('common.sku', 'SKU')}:</span> {infoProduct.sku || t('common.notAvailable', 'N/A')}</p>
+              <p><span className="font-semibold">{t('common.name')}:</span> {infoProduct.name}</p>
+              <p><span className="font-semibold">{t('common.sku')}:</span> {infoProduct.sku || t('common.notAvailable')}</p>
               <p><span className="font-semibold">{t('admin.approvals.category')}:</span> {infoProduct.category}</p>
               <p><span className="font-semibold">{t('admin.approvals.costPrice')}:</span> {t('common.currency')} {infoProduct.supplierPrice?.toFixed(2)}</p>
-              <p><span className="font-semibold">{t('common.description', 'Description')}:</span> {infoProduct.description || '-'}</p>
+              <p><span className="font-semibold">{t('common.description')}:</span> {infoProduct.description || '-'}</p>
             </div>
             <div className="flex justify-end border-t border-slate-200 p-4">
               <button
                 onClick={() => setApprovalInfoProductId(null)}
                 className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200"
               >
-                {t('common.close', 'Close')}
+                {t('common.close')}
               </button>
             </div>
           </div>

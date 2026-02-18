@@ -116,7 +116,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               transition-all duration-150 ease-out
               ${size === 'sm' ? 'w-5 h-5' : 'w-6 h-6'}
             `}
-            aria-label={t('common.clearSearch', 'Clear search')}
+            aria-label={t('common.clearSearch')}
           >
             <span className={`material-symbols-outlined ${size === 'sm' ? 'text-sm' : 'text-base'}`}>close</span>
           </button>

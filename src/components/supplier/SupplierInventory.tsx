@@ -32,7 +32,7 @@ export const SupplierInventory: React.FC = () => {
             setProducts(data);
         } catch (error) {
             logger.error('Error loading inventory:', error);
-            toast.error(t('supplier.inventory.loadError', 'Failed to load inventory'));
+            toast.error(t('supplier.inventory.loadError'));
         } finally {
             setLoading(false);
         }
@@ -42,12 +42,12 @@ export const SupplierInventory: React.FC = () => {
         if (!currentUser?.id) return;
         try {
             await inventoryService.updateStock(productId, editStockValue, currentUser.id);
-            toast.success(t('supplier.inventory.updateSuccess', 'Stock updated successfully'));
+            toast.success(t('supplier.inventory.updateSuccess'));
             setEditingStockId(null);
             loadInventory();
         } catch (error) {
             logger.error('Error updating stock:', error);
-            toast.error(t('supplier.inventory.updateError', 'Failed to update stock'));
+            toast.error(t('supplier.inventory.updateError'));
         }
     };
 
@@ -74,15 +74,15 @@ export const SupplierInventory: React.FC = () => {
         <div className="p-4 md:p-8 space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{t('sidebar.inventory', 'Inventory Management')}</h1>
-                    <p className="text-gray-500">{t('supplier.inventory.subtitle', 'Manage your product stock levels')}</p>
+                    <h1 className="text-2xl font-bold text-gray-900">{t('sidebar.inventory')}</h1>
+                    <p className="text-gray-500">{t('supplier.inventory.subtitle')}</p>
                 </div>
                 <button
                     onClick={loadInventory}
                     className="self-start md:self-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2 text-sm font-medium"
                 >
                     <span className="material-symbols-outlined text-lg">refresh</span>
-                    {t('common.refresh', 'Refresh')}
+                    {t('common.refresh')}
                 </button>
             </div>
 
@@ -92,7 +92,7 @@ export const SupplierInventory: React.FC = () => {
                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
                     <input
                         type="text"
-                        placeholder={t('supplier.inventory.searchPlaceholder', 'Search products...')}
+                        placeholder={t('supplier.inventory.searchPlaceholder')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
@@ -103,10 +103,10 @@ export const SupplierInventory: React.FC = () => {
                     onChange={(e) => setStatusFilter(e.target.value as any)}
                     className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white"
                 >
-                    <option value="all">{t('common.allStatus', 'All Status')}</option>
-                    <option value="in_stock">{t('inventory.status.in_stock', 'In Stock')}</option>
-                    <option value="low_stock">{t('inventory.status.low_stock', 'Low Stock')}</option>
-                    <option value="out_of_stock">{t('inventory.status.out_of_stock', 'Out of Stock')}</option>
+                    <option value="all">{t('common.allStatus')}</option>
+                    <option value="in_stock">{t('inventory.status.in_stock')}</option>
+                    <option value="low_stock">{t('inventory.status.low_stock')}</option>
+                    <option value="out_of_stock">{t('inventory.status.out_of_stock')}</option>
                 </select>
             </div>
 
@@ -116,12 +116,12 @@ export const SupplierInventory: React.FC = () => {
                     <table className="w-full text-left">
                         <thead className="bg-gray-50 border-b border-gray-200">
                             <tr>
-                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm">{t('supplier.inventory.product', 'Product')}</th>
-                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm">{t('supplier.inventory.sku', 'SKU')}</th>
-                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm">{t('supplier.inventory.category', 'Category')}</th>
-                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm text-center">{t('supplier.inventory.currentStock', 'Current Stock')}</th>
-                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm text-center">{t('supplier.inventory.status', 'Status')}</th>
-                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm text-right">{t('common.actions', 'Actions')}</th>
+                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm">{t('supplier.inventory.product')}</th>
+                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm">{t('supplier.inventory.sku')}</th>
+                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm">{t('supplier.inventory.category')}</th>
+                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm text-center">{t('supplier.inventory.currentStock')}</th>
+                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm text-center">{t('supplier.inventory.status')}</th>
+                                <th className="px-6 py-4 font-semibold text-gray-600 text-sm text-right">{t('common.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -130,7 +130,7 @@ export const SupplierInventory: React.FC = () => {
                                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
                                         <div className="flex flex-col items-center gap-2">
                                             <span className="material-symbols-outlined text-4xl text-gray-300">inventory_2</span>
-                                            <p>{t('supplier.inventory.noProducts', 'No products found')}</p>
+                                            <p>{t('supplier.inventory.noProducts')}</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -187,7 +187,7 @@ export const SupplierInventory: React.FC = () => {
                                                     onClick={() => startEditing(product)}
                                                     className="text-blue-600 hover:text-blue-800 text-sm font-semibold hover:underline"
                                                 >
-                                                    {t('common.edit', 'Edit')}
+                                                    {t('common.edit')}
                                                 </button>
                                             )}
                                         </td>

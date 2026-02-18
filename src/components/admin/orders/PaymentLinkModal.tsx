@@ -29,26 +29,26 @@ export const PaymentLinkModal: React.FC<PaymentLinkModalProps> = ({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl max-w-lg w-full p-6">
         <h3 className="text-lg font-bold text-gray-900 mb-2">
-          {t('admin.orders.setPaymentLink', 'Set Payment Link')}
+          {t('admin.orders.setPaymentLink')}
         </h3>
         <p className="text-sm text-gray-600 mb-4">
-          {t('admin.orders.setPaymentLinkDesc', 'Store the external payment link for this order. Only admins can edit this.')}
+          {t('admin.orders.setPaymentLinkDesc')}
         </p>
 
         <div className="space-y-3">
           <label className="block text-sm font-medium text-gray-700">
-            {t('admin.orders.paymentLink', 'Payment Link')}
+            {t('admin.orders.paymentLink')}
           </label>
           <input
             type="url"
             value={paymentLinkUrl}
             onChange={(e) => onPaymentLinkUrlChange(e.target.value)}
-            placeholder="https://..."
+            placeholder={t('admin.orders.paymentLinkPlaceholder')}
             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           {order.paymentLinkSentAt && (
             <p className="text-xs text-gray-500">
-              {t('admin.orders.paymentLinkSentAt', 'Last sent')}: {new Date(order.paymentLinkSentAt).toLocaleString()}
+              {t('admin.orders.paymentLinkSentAt')}: {new Date(order.paymentLinkSentAt).toLocaleString()}
             </p>
           )}
         </div>
@@ -66,12 +66,11 @@ export const PaymentLinkModal: React.FC<PaymentLinkModalProps> = ({
             className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
           >
             {isSaving
-              ? t('common.saving', 'Saving...')
-              : t('common.save', 'Save')}
+              ? t('common.saving')
+              : t('common.save')}
           </button>
         </div>
       </div>
     </div>
   );
 };
-

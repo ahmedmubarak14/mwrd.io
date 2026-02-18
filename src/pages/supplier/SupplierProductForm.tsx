@@ -217,7 +217,7 @@ export const SupplierProductForm: React.FC<SupplierProductFormProps> = ({
                                         onChange(updates);
                                     }}
                                 >
-                                    <option value="">{t('supplier.products.selectCategory', 'Select Category')}</option>
+                                    <option value="">{t('supplier.products.selectCategory')}</option>
                                     {categories.map(cat => (
                                         <option key={cat} value={cat}>{cat}</option> // In real app, might want to use translation key if available or just name
                                     ))}

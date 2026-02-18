@@ -42,38 +42,38 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     switch (type) {
       case 'rfqs':
         return {
-          title: t('empty.rfqs.title', 'No RFQs yet'),
-          description: t('empty.rfqs.description', 'Create your first request for quote to get started')
+          title: t('empty.rfqs.title'),
+          description: t('empty.rfqs.description')
         };
       case 'quotes':
         return {
-          title: t('empty.quotes.title', 'No quotes yet'),
-          description: t('empty.quotes.description', 'Quotes will appear here when suppliers respond')
+          title: t('empty.quotes.title'),
+          description: t('empty.quotes.description')
         };
       case 'orders':
         return {
-          title: t('empty.orders.title', 'No orders yet'),
-          description: t('empty.orders.description', 'Your orders will appear here after placing them')
+          title: t('empty.orders.title'),
+          description: t('empty.orders.description')
         };
       case 'products':
         return {
-          title: t('empty.products.title', 'No products yet'),
-          description: t('empty.products.description', 'Add your first product to start selling')
+          title: t('empty.products.title'),
+          description: t('empty.products.description')
         };
       case 'users':
         return {
-          title: t('empty.users.title', 'No users found'),
-          description: t('empty.users.description', 'Users will appear here when they register')
+          title: t('empty.users.title'),
+          description: t('empty.users.description')
         };
       case 'payments':
         return {
-          title: t('empty.payments.title', 'No payments yet'),
-          description: t('empty.payments.description', 'Payment records will appear here')
+          title: t('empty.payments.title'),
+          description: t('empty.payments.description')
         };
       default:
         return {
-          title: t('empty.general.title', 'Nothing here yet'),
-          description: t('empty.general.description', 'Data will appear here once available')
+          title: t('empty.general.title'),
+          description: t('empty.general.description')
         };
     }
   };

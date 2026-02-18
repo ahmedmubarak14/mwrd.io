@@ -97,7 +97,7 @@ const MasterProductManagement = () => {
             setProducts(data || []);
         } catch (error) {
             logger.error('Error loading master products:', error);
-            toast.error('Failed to load products');
+            toast.error(t('admin.masterProducts.errors.loadFailed'));
         } finally {
             setLoading(false);
         }
@@ -194,7 +194,7 @@ const MasterProductManagement = () => {
 
         const validation = imageUploadService.validateImageFile(file);
         if (!validation.valid) {
-            toast.error(validation.error || 'Invalid file');
+            toast.error(validation.error || t('errors.invalidFile'));
             return;
         }
 
@@ -203,13 +203,13 @@ const MasterProductManagement = () => {
             const result = await imageUploadService.uploadImage(file, 'master-products');
             if (result.success && result.url) {
                 setFormData(prev => ({ ...prev, image_url: result.url }));
-                toast.success(t('admin.masterProducts.success.imageUploaded', 'Image uploaded successfully'));
+                toast.success(t('admin.masterProducts.success.imageUploaded'));
             } else {
-                toast.error(result.error || 'Upload failed');
+                toast.error(result.error || t('errors.uploadFailed'));
             }
         } catch (err) {
             logger.error('Image upload error:', err);
-            toast.error(t('errors.uploadFailed', 'Failed to upload image'));
+            toast.error(t('errors.uploadFailed'));
         } finally {
             setIsUploading(false);
             if (fileInputRef.current) {
@@ -349,9 +349,9 @@ const MasterProductManagement = () => {
                         value={brand}
                         onChange={(e) => setBrand(e.target.value)}
                         className="px-4 py-2.5 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        aria-label={t('client.browse.brand', 'Brand')}
+                        aria-label={t('client.browse.brand')}
                     >
-                        <option value="">{t('client.browse.allBrands', 'All Brands')}</option>
+                        <option value="">{t('client.browse.allBrands')}</option>
                         {brandOptions.map((value) => (
                             <option key={value} value={value}>{value}</option>
                         ))}
@@ -376,7 +376,7 @@ const MasterProductManagement = () => {
                                 className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-neutral-300 rounded-lg text-neutral-700 hover:bg-neutral-50"
                             >
                                 <span className="material-symbols-outlined text-base">filter_alt_off</span>
-                                {t('client.browse.clearFilters', 'Clear Filters')}
+                                {t('client.browse.clearFilters')}
                             </button>
                         )}
                     </div>
@@ -401,7 +401,7 @@ const MasterProductManagement = () => {
                                     type="button"
                                     onClick={() => handleOpenModal(product)}
                                     className="w-full h-44 bg-neutral-50 border-b border-neutral-200 flex items-center justify-center p-4"
-                                    aria-label={`${t('common.edit', 'Edit')} ${product.name}`}
+                                    aria-label={`${t('common.edit')} ${product.name}`}
                                 >
                                     {product.image_url ? (
                                         <img src={product.image_url} alt={product.name} className="max-h-full w-auto object-contain" />
@@ -412,7 +412,7 @@ const MasterProductManagement = () => {
                                 <div className="p-4 space-y-3">
                                     <div className="min-w-0">
                                         <h3 className="text-sm font-bold text-neutral-900 line-clamp-2">{product.name}</h3>
-                                        <p className="text-xs text-neutral-500 truncate">{product.model_number || t('common.notAvailable', 'N/A')}</p>
+                                        <p className="text-xs text-neutral-500 truncate">{product.model_number || t('common.notAvailable')}</p>
                                     </div>
 
                                     <div className="flex flex-wrap gap-2">
@@ -432,7 +432,7 @@ const MasterProductManagement = () => {
                                     </div>
 
                                     <p className="text-xs text-neutral-600 line-clamp-2">
-                                        {product.description || t('common.notAvailable', 'N/A')}
+                                        {product.description || t('common.notAvailable')}
                                     </p>
 
                                     <div className="pt-2 flex items-center gap-2">
@@ -441,14 +441,14 @@ const MasterProductManagement = () => {
                                             className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 border border-neutral-300 text-xs font-semibold rounded-lg text-neutral-700 bg-white hover:bg-neutral-50"
                                         >
                                             <span className="material-symbols-outlined text-sm">edit</span>
-                                            {t('common.edit', 'Edit')}
+                                            {t('common.edit')}
                                         </button>
                                         <button
                                             onClick={() => handleDelete(product.id)}
                                             className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 border border-neutral-300 text-xs font-semibold rounded-lg text-neutral-700 bg-white hover:bg-neutral-50"
                                         >
                                             <span className="material-symbols-outlined text-sm">delete</span>
-                                            {t('common.delete', 'Delete')}
+                                            {t('common.delete')}
                                         </button>
                                     </div>
                                 </div>
@@ -522,7 +522,7 @@ const MasterProductManagement = () => {
                                         <label className="block text-sm font-semibold mb-2 text-gray-700">{t('admin.masterProducts.identity.globalName')}</label>
                                         <input
                                             className="w-full rounded-lg border-gray-200 focus:ring-primary focus:border-primary px-4 py-2.5"
-                                            placeholder="e.g. High-Pressure Industrial Centrifugal Pump"
+                                            placeholder={t('admin.masterProducts.identity.globalNamePlaceholder')}
                                             type="text"
                                             required
                                             value={formData.name}
@@ -534,13 +534,13 @@ const MasterProductManagement = () => {
                                         <div className="relative">
                                             <input
                                                 className="w-full rounded-lg border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed px-4 py-2.5"
-                                                placeholder="Auto-generated"
+                                                placeholder={t('admin.masterProducts.identity.autoGenerated')}
                                                 type="text"
                                                 readOnly
                                                 disabled
                                                 value={formData.model_number || ''}
                                             />
-                                            <span className="absolute right-3 top-2.5 text-xs text-gray-400 font-medium bg-gray-200 px-2 py-0.5 rounded">AUTO</span>
+                                            <span className="absolute right-3 top-2.5 text-xs text-gray-400 font-medium bg-gray-200 px-2 py-0.5 rounded">{t('admin.masterProducts.identity.autoBadge')}</span>
                                         </div>
                                     </div>
                                     <div>
@@ -589,7 +589,7 @@ const MasterProductManagement = () => {
                                         <label className="block text-sm font-semibold mb-2 text-gray-700">{t('admin.masterProducts.identity.brand')}</label>
                                         <input
                                             className="w-full rounded-lg border-gray-200 focus:ring-primary focus:border-primary px-4 py-2.5"
-                                            placeholder="e.g. Bosch"
+                                            placeholder={t('admin.masterProducts.identity.brandPlaceholder')}
                                             type="text"
                                             value={formData.brand || ''}
                                             onChange={e => setFormData({ ...formData, brand: e.target.value })}
@@ -624,12 +624,12 @@ const MasterProductManagement = () => {
                                             {isUploading ? (
                                                 <>
                                                     <div className="w-4 h-4 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin" />
-                                                    {t('common.uploading', 'Uploading...')}
+                                                    {t('common.uploading')}
                                                 </>
                                             ) : (
                                                 <>
                                                     <span className="material-symbols-outlined text-base">cloud_upload</span>
-                                                    {t('admin.masterProducts.assets.uploadImage', 'Upload Image')}
+                                                    {t('admin.masterProducts.assets.uploadImage')}
                                                 </>
                                             )}
                                         </button>
@@ -641,7 +641,7 @@ const MasterProductManagement = () => {
                                         <input
                                             type="url"
                                             className="w-full rounded-lg border-gray-200 focus:ring-primary focus:border-primary px-4 py-2.5"
-                                            placeholder="https://... or upload an image above"
+                                            placeholder={t('admin.masterProducts.assets.primaryUrlPlaceholder')}
                                             value={formData.image_url || ''}
                                             onChange={e => setFormData({ ...formData, image_url: e.target.value })}
                                         />
@@ -665,7 +665,7 @@ const MasterProductManagement = () => {
                                         </button>
                                         {formData.image_url && (
                                             <div className="relative aspect-square rounded-xl border border-gray-200 overflow-hidden group">
-                                                <img alt="Product" className="w-full h-full object-cover" src={formData.image_url} />
+                                                <img alt={t('admin.masterProducts.assets.imageAlt')} className="w-full h-full object-cover" src={formData.image_url} />
                                                 <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 flex items-center justify-between">
                                                     <label className="flex items-center gap-1.5 cursor-pointer">
                                                         <input defaultChecked className="rounded-full text-primary focus:ring-0 w-3.5 h-3.5" type="checkbox" />
@@ -679,10 +679,10 @@ const MasterProductManagement = () => {
                                         )}
                                         {/* Placeholders for grid visual */}
                                         <div className="aspect-square rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center">
-                                            <span className="text-xs text-gray-300">Slot 2</span>
+                                            <span className="text-xs text-gray-300">{`${t('admin.masterProducts.assets.slot')} 2`}</span>
                                         </div>
                                         <div className="aspect-square rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center">
-                                            <span className="text-xs text-gray-300">Slot 3</span>
+                                            <span className="text-xs text-gray-300">{`${t('admin.masterProducts.assets.slot')} 3`}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -774,9 +774,9 @@ const MasterProductManagement = () => {
                 isOpen={Boolean(pendingDeleteProduct)}
                 onClose={() => setPendingDeleteProduct(null)}
                 onConfirm={handleConfirmDelete}
-                title={t('admin.masterProducts.confirmDeleteTitle', 'Delete Product')}
+                title={t('admin.masterProducts.confirmDeleteTitle')}
                 message={t('admin.masterProducts.confirmDelete')}
-                confirmText={t('common.delete', 'Delete')}
+                confirmText={t('common.delete')}
                 type="danger"
                 isLoading={isDeletingProduct}
             />

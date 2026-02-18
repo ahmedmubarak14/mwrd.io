@@ -73,7 +73,7 @@ export const InventoryDashboard: React.FC = () => {
                 p.currentStock,
                 p.status,
                 `"${p.supplierName}"`,
-                `"${p.category || t('common.notAvailable', 'N/A')}"`
+                `"${p.category || t('common.notAvailable')}"`
             ].join(','))
         ].join('\n');
 

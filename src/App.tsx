@@ -127,9 +127,9 @@ function App() {
     const result = await authService.requestPasswordReset(email, redirectTo);
 
     if (result.success) {
-      toast.success(t('login.resetEmailSent', 'Password reset email sent. Check your inbox.'));
+      toast.success(t('login.resetEmailSent'));
     } else {
-      toast.error(result.error || t('login.resetEmailFailed', 'Failed to send password reset email'));
+      toast.error(result.error || t('login.resetEmailFailed'));
     }
 
     return result;
@@ -139,10 +139,10 @@ function App() {
     const result = await authService.updatePassword(newPassword);
 
     if (result.success) {
-      toast.success(t('login.passwordResetSuccess', 'Password updated successfully. Please sign in.'));
+      toast.success(t('login.passwordResetSuccess'));
       navigate('/login', { replace: true });
     } else {
-      toast.error(result.error || t('login.passwordResetFailed', 'Failed to update password'));
+      toast.error(result.error || t('login.passwordResetFailed'));
     }
 
     return result;

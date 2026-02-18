@@ -80,7 +80,7 @@ export const AdminCategoriesView: React.FC = () => {
       return tree;
     } catch (error: any) {
       logger.error('Failed to load admin categories:', error);
-      setLoadError(error?.message || t('admin.categories.loadError', 'Failed to load categories'));
+      setLoadError(error?.message || t('admin.categories.loadError'));
       return [];
     } finally {
       if (showLoading) {
@@ -210,8 +210,8 @@ export const AdminCategoriesView: React.FC = () => {
           parentId: null,
         });
       },
-      t('admin.categories.created', 'Category created'),
-      t('admin.categories.createFailed', 'Failed to create category')
+      t('admin.categories.created'),
+      t('admin.categories.createFailed')
     );
 
     resetCategoryDraft();
@@ -233,8 +233,8 @@ export const AdminCategoriesView: React.FC = () => {
           parentId: newSubcategory.parentId,
         });
       },
-      t('admin.categories.subcategoryCreated', 'Subcategory created'),
-      t('admin.categories.subcategoryCreateFailed', 'Failed to create subcategory')
+      t('admin.categories.subcategoryCreated'),
+      t('admin.categories.subcategoryCreateFailed')
     );
 
     resetSubcategoryDraft();
@@ -253,8 +253,8 @@ export const AdminCategoriesView: React.FC = () => {
           isActive: editingCategory.isActive,
         });
       },
-      t('admin.categories.updated', 'Category updated'),
-      t('admin.categories.updateFailed', 'Failed to update category')
+      t('admin.categories.updated'),
+      t('admin.categories.updateFailed')
     );
 
     setEditingCategory(null);
@@ -273,8 +273,8 @@ export const AdminCategoriesView: React.FC = () => {
           parentId: editingSubcategory.parentId,
         });
       },
-      t('admin.categories.subcategoryUpdated', 'Subcategory updated'),
-      t('admin.categories.subcategoryUpdateFailed', 'Failed to update subcategory')
+      t('admin.categories.subcategoryUpdated'),
+      t('admin.categories.subcategoryUpdateFailed')
     );
 
     setEditingSubcategory(null);
@@ -287,8 +287,8 @@ export const AdminCategoriesView: React.FC = () => {
           isActive: !category.isActive,
         });
       },
-      t('admin.categories.statusUpdated', 'Category status updated'),
-      t('admin.categories.statusUpdateFailed', 'Failed to update category status')
+      t('admin.categories.statusUpdated'),
+      t('admin.categories.statusUpdateFailed')
     );
   };
 
@@ -299,8 +299,8 @@ export const AdminCategoriesView: React.FC = () => {
           isActive: !subcategory.isActive,
         });
       },
-      t('admin.categories.statusUpdated', 'Category status updated'),
-      t('admin.categories.statusUpdateFailed', 'Failed to update category status')
+      t('admin.categories.statusUpdated'),
+      t('admin.categories.statusUpdateFailed')
     );
   };
 
@@ -315,8 +315,8 @@ export const AdminCategoriesView: React.FC = () => {
           await categoryManagementService.deleteCategory(deleteTarget.id);
         }
       },
-      t('admin.categories.deleted', 'Category deleted'),
-      t('admin.categories.deleteFailed', 'Failed to delete category')
+      t('admin.categories.deleted'),
+      t('admin.categories.deleteFailed')
     );
 
     setDeleteTarget(null);
@@ -341,8 +341,8 @@ export const AdminCategoriesView: React.FC = () => {
           normalized.map((category) => ({ id: category.id, sortOrder: category.sortOrder }))
         );
       },
-      t('admin.categories.orderUpdated', 'Category order updated'),
-      t('admin.categories.orderUpdateFailed', 'Failed to update category order')
+      t('admin.categories.orderUpdated'),
+      t('admin.categories.orderUpdateFailed')
     );
   };
 
@@ -372,8 +372,8 @@ export const AdminCategoriesView: React.FC = () => {
           normalizedSubs.map((subcategory) => ({ id: subcategory.id, sortOrder: subcategory.sortOrder }))
         );
       },
-      t('admin.categories.orderUpdated', 'Category order updated'),
-      t('admin.categories.orderUpdateFailed', 'Failed to update category order')
+      t('admin.categories.orderUpdated'),
+      t('admin.categories.orderUpdateFailed')
     );
   };
 
@@ -385,7 +385,7 @@ export const AdminCategoriesView: React.FC = () => {
   const renderLoadingState = () => (
     <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-12 text-center">
       <span className="material-symbols-outlined text-4xl text-slate-400 animate-spin">progress_activity</span>
-      <p className="mt-3 text-sm text-slate-500">{t('common.loading', 'Loading...')}</p>
+      <p className="mt-3 text-sm text-slate-500">{t('common.loading')}</p>
     </div>
   );
 
@@ -393,18 +393,18 @@ export const AdminCategoriesView: React.FC = () => {
     <div className="bg-gray-50 animate-in fade-in duration-300">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
-          title={t('admin.categories.title', 'Category Management')}
-          subtitle={t('admin.categories.subtitle', 'Manage product categories and subcategories')}
+          portalLabel={t('sidebar.adminPortal')}
+          title={t('admin.categories.title')}
+          subtitle={t('admin.categories.subtitle')}
           actions={(
             <>
               <button
                 onClick={() => { void loadCategories(false, true); }}
                 className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium"
-                aria-label={t('common.refresh', 'Refresh')}
+                aria-label={t('common.refresh')}
                 disabled={isMutating}
               >
-                {t('common.refresh', 'Refresh')}
+                {t('common.refresh')}
               </button>
               <button
                 onClick={() => {
@@ -412,11 +412,11 @@ export const AdminCategoriesView: React.FC = () => {
                   setIsAddCategoryModalOpen(true);
                 }}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-[#137fec] hover:bg-[#0f6fd0] text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
-                aria-label={t('admin.categories.addCategory', 'Add Category')}
+                aria-label={t('admin.categories.addCategory')}
                 disabled={isMutating}
               >
                 <span className="material-symbols-outlined text-sm">add</span>
-                {t('admin.categories.addCategory', 'Add Category')}
+                {t('admin.categories.addCategory')}
               </button>
             </>
           )}
@@ -432,8 +432,8 @@ export const AdminCategoriesView: React.FC = () => {
                 type="text"
                 value={categorySearchTerm}
                 onChange={(event) => setCategorySearchTerm(event.target.value)}
-                placeholder={t('admin.categories.searchPlaceholder', 'Search categories or subcategories')}
-                aria-label={t('admin.categories.searchPlaceholder', 'Search categories or subcategories')}
+                placeholder={t('admin.categories.searchPlaceholder')}
+                aria-label={t('admin.categories.searchPlaceholder')}
                 className="w-full rounded-lg border border-slate-300 px-8 py-2 text-sm text-slate-900 outline-none focus:border-[#137fec] focus:ring-2 focus:ring-[#137fec]/15"
               />
             </div>
@@ -444,14 +444,14 @@ export const AdminCategoriesView: React.FC = () => {
                 className="px-3 py-2 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium"
                 disabled={isMutating || visibleCategories.length === 0}
               >
-                {t('admin.categories.expandAll', 'Expand All')}
+                {t('admin.categories.expandAll')}
               </button>
               <button
                 onClick={handleCollapseAll}
                 className="px-3 py-2 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium"
                 disabled={isMutating || expandedCategories.size === 0}
               >
-                {t('admin.categories.collapseAll', 'Collapse All')}
+                {t('admin.categories.collapseAll')}
               </button>
             </div>
           </div>
@@ -465,7 +465,7 @@ export const AdminCategoriesView: React.FC = () => {
           </p>
           {isSearchActive && (
             <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-              {t('admin.categories.reorderDisabledWhileFiltering', 'Reordering is disabled while search filters are active.')}
+              {t('admin.categories.reorderDisabledWhileFiltering')}
             </p>
           )}
         </PortalSection>
@@ -480,35 +480,35 @@ export const AdminCategoriesView: React.FC = () => {
         {isLoading ? renderLoadingState() : (
           <>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <SummaryCard icon="category" label={t('admin.categories.totalCategories', 'Total Categories')} value={categories.length} color="blue" />
-              <SummaryCard icon="account_tree" label={t('admin.categories.totalSubcategories', 'Total Subcategories')} value={totalSubcategories} color="green" />
-              <SummaryCard icon="check_circle" label={t('admin.categories.activeCategories', 'Active')} value={categories.filter((category) => category.isActive).length} color="emerald" />
-              <SummaryCard icon="pause_circle" label={t('admin.categories.inactiveCategories', 'Inactive')} value={categories.filter((category) => !category.isActive).length} color="amber" />
+              <SummaryCard icon="category" label={t('admin.categories.totalCategories')} value={categories.length} color="blue" />
+              <SummaryCard icon="account_tree" label={t('admin.categories.totalSubcategories')} value={totalSubcategories} color="green" />
+              <SummaryCard icon="check_circle" label={t('admin.categories.activeCategories')} value={categories.filter((category) => category.isActive).length} color="emerald" />
+              <SummaryCard icon="pause_circle" label={t('admin.categories.inactiveCategories')} value={categories.filter((category) => !category.isActive).length} color="amber" />
             </div>
 
             {categories.length === 0 ? (
               <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
                 <span className="material-symbols-outlined text-5xl text-slate-300 mb-3">folder_off</span>
-                <p className="text-sm text-slate-500">{t('admin.categories.noCategories', 'No categories found.')}</p>
+                <p className="text-sm text-slate-500">{t('admin.categories.noCategories')}</p>
                 <button
                   onClick={() => {
                     void runMutation(
                       async () => {
                         await categoryManagementService.seedDefaults();
                       },
-                      t('admin.categories.seededDefaults', 'Default categories restored'),
-                      t('admin.categories.seedFailed', 'Failed to restore defaults')
+                      t('admin.categories.seededDefaults'),
+                      t('admin.categories.seedFailed')
                     );
                   }}
                   className="mt-3 px-4 py-2 rounded-md bg-[#137fec] text-white text-sm font-semibold hover:bg-[#137fec]/90"
                 >
-                  {t('admin.categories.restoreDefaults', 'Restore Defaults')}
+                  {t('admin.categories.restoreDefaults')}
                 </button>
               </div>
             ) : visibleCategories.length === 0 ? (
               <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
                 <span className="material-symbols-outlined text-5xl text-slate-300 mb-3">search_off</span>
-                <p className="text-sm text-slate-500">{t('admin.categories.noSearchResults', 'No categories matched your search.')}</p>
+                <p className="text-sm text-slate-500">{t('admin.categories.noSearchResults')}</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -522,7 +522,7 @@ export const AdminCategoriesView: React.FC = () => {
                       <button
                         onClick={() => toggleExpand(category.id)}
                         className="p-1 rounded hover:bg-slate-100"
-                        aria-label={isExpanded ? t('admin.categories.collapse', 'Collapse') : t('admin.categories.expand', 'Expand')}
+                        aria-label={isExpanded ? t('admin.categories.collapse') : t('admin.categories.expand')}
                       >
                         <span className="material-symbols-outlined text-lg text-slate-500" style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
                           chevron_right
@@ -538,12 +538,12 @@ export const AdminCategoriesView: React.FC = () => {
                           <h3 className="font-semibold text-slate-900 truncate">{category.name}</h3>
                           {!category.isActive && (
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-                              {t('common.inactive', 'Inactive')}
+                              {t('common.inactive')}
                             </span>
                           )}
                         </div>
                         <p className="text-xs text-slate-500 mt-0.5">
-                          {t('admin.categories.subcategoriesCount', '{{count}} subcategories', { count: category.subcategories.length })}
+                          {t('admin.categories.subcategoriesCount', { count: category.subcategories.length })}
                         </p>
                       </div>
 
@@ -552,7 +552,7 @@ export const AdminCategoriesView: React.FC = () => {
                           onClick={() => { void handleMoveCategory(categoryIndexInFull, -1); }}
                           disabled={isMutating || isSearchActive || categoryIndexInFull <= 0}
                           className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40"
-                          aria-label={t('admin.categories.moveUp', 'Move up')}
+                          aria-label={t('admin.categories.moveUp')}
                         >
                           <span className="material-symbols-outlined text-base text-slate-600">arrow_upward</span>
                         </button>
@@ -560,7 +560,7 @@ export const AdminCategoriesView: React.FC = () => {
                           onClick={() => { void handleMoveCategory(categoryIndexInFull, 1); }}
                           disabled={isMutating || isSearchActive || categoryIndexInFull < 0 || categoryIndexInFull === categories.length - 1}
                           className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40"
-                          aria-label={t('admin.categories.moveDown', 'Move down')}
+                          aria-label={t('admin.categories.moveDown')}
                         >
                           <span className="material-symbols-outlined text-base text-slate-600">arrow_downward</span>
                         </button>
@@ -568,7 +568,7 @@ export const AdminCategoriesView: React.FC = () => {
                           onClick={() => { void handleToggleCategory(category); }}
                           disabled={isMutating}
                           className={`p-1.5 rounded ${category.isActive ? 'text-green-700 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`}
-                          aria-label={t('admin.categories.toggleActive', 'Toggle active')}
+                          aria-label={t('admin.categories.toggleActive')}
                         >
                           <span className="material-symbols-outlined text-base">{category.isActive ? 'toggle_on' : 'toggle_off'}</span>
                         </button>
@@ -576,7 +576,7 @@ export const AdminCategoriesView: React.FC = () => {
                           onClick={() => setEditingCategory({ ...category })}
                           disabled={isMutating}
                           className="p-1.5 rounded hover:bg-slate-100 text-slate-600"
-                          aria-label={t('common.edit', 'Edit')}
+                          aria-label={t('common.edit')}
                         >
                           <span className="material-symbols-outlined text-base">edit</span>
                         </button>
@@ -584,7 +584,7 @@ export const AdminCategoriesView: React.FC = () => {
                           onClick={() => openCreateSubcategoryModal(category.id)}
                           disabled={isMutating}
                           className="p-1.5 rounded hover:bg-blue-50 text-blue-700"
-                          aria-label={t('admin.categories.addSubcategory', 'Add Subcategory')}
+                          aria-label={t('admin.categories.addSubcategory')}
                         >
                           <span className="material-symbols-outlined text-base">add_circle</span>
                         </button>
@@ -592,7 +592,7 @@ export const AdminCategoriesView: React.FC = () => {
                           onClick={() => setDeleteTarget({ id: category.id, name: category.name, type: 'category' })}
                           disabled={isMutating}
                           className="p-1.5 rounded hover:bg-red-50 text-red-600"
-                          aria-label={t('common.delete', 'Delete')}
+                          aria-label={t('common.delete')}
                         >
                           <span className="material-symbols-outlined text-base">delete</span>
                         </button>
@@ -602,7 +602,7 @@ export const AdminCategoriesView: React.FC = () => {
                     {isExpanded && (
                       <div className="border-t border-slate-100 px-4 pb-4">
                         {category.subcategories.length === 0 ? (
-                          <div className="py-5 text-sm text-slate-500">{t('admin.categories.noSubcategories', 'No subcategories yet')}</div>
+                          <div className="py-5 text-sm text-slate-500">{t('admin.categories.noSubcategories')}</div>
                         ) : (
                           <div className="space-y-2 pt-3">
                             {category.subcategories.map((subcategory, subIndex) => {
@@ -623,7 +623,7 @@ export const AdminCategoriesView: React.FC = () => {
                                 </div>
                                 {!subcategory.isActive && (
                                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-100 text-amber-700">
-                                    {t('common.inactive', 'Inactive')}
+                                    {t('common.inactive')}
                                   </span>
                                 )}
                                 <div className="flex items-center gap-1">
@@ -631,7 +631,7 @@ export const AdminCategoriesView: React.FC = () => {
                                     onClick={() => { void handleMoveSubcategory(category.id, normalizedSubIndex, -1); }}
                                     disabled={isMutating || isSearchActive || isFirstSubcategory}
                                     className="p-1 rounded hover:bg-slate-100 disabled:opacity-40"
-                                    aria-label={t('admin.categories.moveUp', 'Move up')}
+                                    aria-label={t('admin.categories.moveUp')}
                                   >
                                     <span className="material-symbols-outlined text-base text-slate-600">arrow_upward</span>
                                   </button>
@@ -639,7 +639,7 @@ export const AdminCategoriesView: React.FC = () => {
                                     onClick={() => { void handleMoveSubcategory(category.id, normalizedSubIndex, 1); }}
                                     disabled={isMutating || isSearchActive || isLastSubcategory}
                                     className="p-1 rounded hover:bg-slate-100 disabled:opacity-40"
-                                    aria-label={t('admin.categories.moveDown', 'Move down')}
+                                    aria-label={t('admin.categories.moveDown')}
                                   >
                                     <span className="material-symbols-outlined text-base text-slate-600">arrow_downward</span>
                                   </button>
@@ -647,7 +647,7 @@ export const AdminCategoriesView: React.FC = () => {
                                     onClick={() => { void handleToggleSubcategory(subcategory); }}
                                     disabled={isMutating}
                                     className={`p-1 rounded ${subcategory.isActive ? 'text-green-700 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`}
-                                    aria-label={t('admin.categories.toggleActive', 'Toggle active')}
+                                    aria-label={t('admin.categories.toggleActive')}
                                   >
                                     <span className="material-symbols-outlined text-base">{subcategory.isActive ? 'toggle_on' : 'toggle_off'}</span>
                                   </button>
@@ -655,7 +655,7 @@ export const AdminCategoriesView: React.FC = () => {
                                     onClick={() => setEditingSubcategory({ parentId: category.id, subcategory: { ...subcategory } })}
                                     disabled={isMutating}
                                     className="p-1 rounded hover:bg-slate-100 text-slate-600"
-                                    aria-label={t('common.edit', 'Edit')}
+                                    aria-label={t('common.edit')}
                                   >
                                     <span className="material-symbols-outlined text-base">edit</span>
                                   </button>
@@ -663,7 +663,7 @@ export const AdminCategoriesView: React.FC = () => {
                                     onClick={() => setDeleteTarget({ id: subcategory.id, name: subcategory.name, type: 'subcategory', parentId: category.id })}
                                     disabled={isMutating}
                                     className="p-1 rounded hover:bg-red-50 text-red-600"
-                                    aria-label={t('common.delete', 'Delete')}
+                                    aria-label={t('common.delete')}
                                   >
                                     <span className="material-symbols-outlined text-base">delete</span>
                                   </button>
@@ -686,32 +686,36 @@ export const AdminCategoriesView: React.FC = () => {
 
       {isAddCategoryModalOpen && (
         <ModalBackdrop onClose={() => setIsAddCategoryModalOpen(false)}>
-          <ModalCard title={t('admin.categories.addCategory', 'Add Category')} onClose={() => setIsAddCategoryModalOpen(false)}>
+          <ModalCard
+            title={t('admin.categories.addCategory')}
+            onClose={() => setIsAddCategoryModalOpen(false)}
+            closeAriaLabel={t('common.close')}
+          >
             <div className="space-y-4">
               <InputField
-                label={t('admin.categories.categoryName', 'Category Name')}
+                label={t('admin.categories.categoryName')}
                 value={newCategory.name}
                 onChange={(value) => setNewCategory((prev) => ({ ...prev, name: value }))}
-                placeholder={t('admin.categories.categoryNamePlaceholder', 'Category name')}
+                placeholder={t('admin.categories.categoryNamePlaceholder')}
               />
               <InputField
-                label={t('admin.categories.iconName', 'Icon Name')}
+                label={t('admin.categories.iconName')}
                 value={newCategory.icon}
                 onChange={(value) => setNewCategory((prev) => ({ ...prev, icon: value }))}
-                placeholder="folder"
+                placeholder={t('admin.categories.iconCategoryPlaceholder')}
               />
               <InputField
-                label={t('admin.categories.sortOrder', 'Sort Order')}
+                label={t('admin.categories.sortOrder')}
                 value={String(newCategory.sortOrder)}
                 type="number"
                 onChange={(value) => setNewCategory((prev) => ({ ...prev, sortOrder: toSafeOrder(value, categories.length + 1) }))}
               />
               <div className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
-                <span className="text-sm text-gray-700">{t('admin.categories.active', 'Active')}</span>
+                <span className="text-sm text-gray-700">{t('admin.categories.active')}</span>
                 <button
                   onClick={() => setNewCategory((prev) => ({ ...prev, isActive: !prev.isActive }))}
                   className="text-[#137fec]"
-                  aria-label={t('admin.categories.toggleActive', 'Toggle active')}
+                  aria-label={t('admin.categories.toggleActive')}
                 >
                   <span className="material-symbols-outlined">{newCategory.isActive ? 'toggle_on' : 'toggle_off'}</span>
                 </button>
@@ -721,14 +725,14 @@ export const AdminCategoriesView: React.FC = () => {
                   onClick={() => setIsAddCategoryModalOpen(false)}
                   className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
-                  {t('common.cancel', 'Cancel')}
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={() => { void handleCreateCategory(); }}
                   disabled={isMutating || !newCategory.name.trim()}
                   className="px-5 py-2 rounded-lg bg-[#0A2540] text-white font-semibold hover:bg-[#0A2540]/90 disabled:opacity-50"
                 >
-                  {t('common.create', 'Create')}
+                  {t('common.create')}
                 </button>
               </div>
             </div>
@@ -738,11 +742,15 @@ export const AdminCategoriesView: React.FC = () => {
 
       {isAddSubcategoryModalOpen && (
         <ModalBackdrop onClose={() => setIsAddSubcategoryModalOpen(false)}>
-          <ModalCard title={t('admin.categories.addSubcategory', 'Add Subcategory')} onClose={() => setIsAddSubcategoryModalOpen(false)}>
+          <ModalCard
+            title={t('admin.categories.addSubcategory')}
+            onClose={() => setIsAddSubcategoryModalOpen(false)}
+            closeAriaLabel={t('common.close')}
+          >
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('admin.categories.parentCategory', 'Parent Category')}
+                  {t('admin.categories.parentCategory')}
                 </label>
                 <select
                   value={newSubcategory.parentId}
@@ -753,36 +761,36 @@ export const AdminCategoriesView: React.FC = () => {
                   }}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#0A2540] focus:ring-2 focus:ring-[#0A2540]/10"
                 >
-                  <option value="">{t('common.select', 'Select')}</option>
+                  <option value="">{t('common.select')}</option>
                   {categories.map((category) => (
                     <option key={category.id} value={category.id}>{category.name}</option>
                   ))}
                 </select>
               </div>
               <InputField
-                label={t('admin.categories.subcategoryName', 'Subcategory Name')}
+                label={t('admin.categories.subcategoryName')}
                 value={newSubcategory.name}
                 onChange={(value) => setNewSubcategory((prev) => ({ ...prev, name: value }))}
-                placeholder={t('admin.categories.subcategoryNamePlaceholder', 'Subcategory name')}
+                placeholder={t('admin.categories.subcategoryNamePlaceholder')}
               />
               <InputField
-                label={t('admin.categories.iconName', 'Icon Name')}
+                label={t('admin.categories.iconName')}
                 value={newSubcategory.icon}
                 onChange={(value) => setNewSubcategory((prev) => ({ ...prev, icon: value }))}
-                placeholder="label"
+                placeholder={t('admin.categories.iconSubcategoryPlaceholder')}
               />
               <InputField
-                label={t('admin.categories.sortOrder', 'Sort Order')}
+                label={t('admin.categories.sortOrder')}
                 value={String(newSubcategory.sortOrder)}
                 type="number"
                 onChange={(value) => setNewSubcategory((prev) => ({ ...prev, sortOrder: toSafeOrder(value, prev.sortOrder) }))}
               />
               <div className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
-                <span className="text-sm text-gray-700">{t('admin.categories.active', 'Active')}</span>
+                <span className="text-sm text-gray-700">{t('admin.categories.active')}</span>
                 <button
                   onClick={() => setNewSubcategory((prev) => ({ ...prev, isActive: !prev.isActive }))}
                   className="text-[#137fec]"
-                  aria-label={t('admin.categories.toggleActive', 'Toggle active')}
+                  aria-label={t('admin.categories.toggleActive')}
                 >
                   <span className="material-symbols-outlined">{newSubcategory.isActive ? 'toggle_on' : 'toggle_off'}</span>
                 </button>
@@ -792,14 +800,14 @@ export const AdminCategoriesView: React.FC = () => {
                   onClick={() => setIsAddSubcategoryModalOpen(false)}
                   className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
-                  {t('common.cancel', 'Cancel')}
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={() => { void handleCreateSubcategory(); }}
                   disabled={isMutating || !newSubcategory.name.trim() || !newSubcategory.parentId}
                   className="px-5 py-2 rounded-lg bg-[#0A2540] text-white font-semibold hover:bg-[#0A2540]/90 disabled:opacity-50"
                 >
-                  {t('common.create', 'Create')}
+                  {t('common.create')}
                 </button>
               </div>
             </div>
@@ -809,26 +817,30 @@ export const AdminCategoriesView: React.FC = () => {
 
       {editingCategory && (
         <ModalBackdrop onClose={() => setEditingCategory(null)}>
-          <ModalCard title={t('admin.categories.editCategory', 'Edit Category')} onClose={() => setEditingCategory(null)}>
+          <ModalCard
+            title={t('admin.categories.editCategory')}
+            onClose={() => setEditingCategory(null)}
+            closeAriaLabel={t('common.close')}
+          >
             <div className="space-y-4">
               <InputField
-                label={t('admin.categories.categoryName', 'Category Name')}
+                label={t('admin.categories.categoryName')}
                 value={editingCategory.name}
                 onChange={(value) => setEditingCategory((prev) => prev ? { ...prev, name: value } : prev)}
               />
               <InputField
-                label={t('admin.categories.iconName', 'Icon Name')}
+                label={t('admin.categories.iconName')}
                 value={editingCategory.icon}
                 onChange={(value) => setEditingCategory((prev) => prev ? { ...prev, icon: value } : prev)}
               />
               <InputField
-                label={t('admin.categories.sortOrder', 'Sort Order')}
+                label={t('admin.categories.sortOrder')}
                 value={String(editingCategory.sortOrder)}
                 type="number"
                 onChange={(value) => setEditingCategory((prev) => prev ? { ...prev, sortOrder: toSafeOrder(value, prev.sortOrder) } : prev)}
               />
               <div className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
-                <span className="text-sm text-gray-700">{t('admin.categories.active', 'Active')}</span>
+                <span className="text-sm text-gray-700">{t('admin.categories.active')}</span>
                 <button
                   onClick={() => setEditingCategory((prev) => prev ? { ...prev, isActive: !prev.isActive } : prev)}
                   className="text-[#137fec]"
@@ -841,14 +853,14 @@ export const AdminCategoriesView: React.FC = () => {
                   onClick={() => setEditingCategory(null)}
                   className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
-                  {t('common.cancel', 'Cancel')}
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={() => { void handleSaveCategory(); }}
                   disabled={isMutating || !editingCategory.name.trim()}
                   className="px-5 py-2 rounded-lg bg-[#0A2540] text-white font-semibold hover:bg-[#0A2540]/90 disabled:opacity-50"
                 >
-                  {t('common.save', 'Save')}
+                  {t('common.save')}
                 </button>
               </div>
             </div>
@@ -858,11 +870,15 @@ export const AdminCategoriesView: React.FC = () => {
 
       {editingSubcategory && (
         <ModalBackdrop onClose={() => setEditingSubcategory(null)}>
-          <ModalCard title={t('admin.categories.editSubcategory', 'Edit Subcategory')} onClose={() => setEditingSubcategory(null)}>
+          <ModalCard
+            title={t('admin.categories.editSubcategory')}
+            onClose={() => setEditingSubcategory(null)}
+            closeAriaLabel={t('common.close')}
+          >
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('admin.categories.parentCategory', 'Parent Category')}
+                  {t('admin.categories.parentCategory')}
                 </label>
                 <select
                   value={editingSubcategory.parentId}
@@ -875,7 +891,7 @@ export const AdminCategoriesView: React.FC = () => {
                 </select>
               </div>
               <InputField
-                label={t('admin.categories.subcategoryName', 'Subcategory Name')}
+                label={t('admin.categories.subcategoryName')}
                 value={editingSubcategory.subcategory.name}
                 onChange={(value) => setEditingSubcategory((prev) => prev ? {
                   ...prev,
@@ -883,7 +899,7 @@ export const AdminCategoriesView: React.FC = () => {
                 } : prev)}
               />
               <InputField
-                label={t('admin.categories.iconName', 'Icon Name')}
+                label={t('admin.categories.iconName')}
                 value={editingSubcategory.subcategory.icon}
                 onChange={(value) => setEditingSubcategory((prev) => prev ? {
                   ...prev,
@@ -891,7 +907,7 @@ export const AdminCategoriesView: React.FC = () => {
                 } : prev)}
               />
               <InputField
-                label={t('admin.categories.sortOrder', 'Sort Order')}
+                label={t('admin.categories.sortOrder')}
                 value={String(editingSubcategory.subcategory.sortOrder)}
                 type="number"
                 onChange={(value) => setEditingSubcategory((prev) => prev ? {
@@ -900,7 +916,7 @@ export const AdminCategoriesView: React.FC = () => {
                 } : prev)}
               />
               <div className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
-                <span className="text-sm text-gray-700">{t('admin.categories.active', 'Active')}</span>
+                <span className="text-sm text-gray-700">{t('admin.categories.active')}</span>
                 <button
                   onClick={() => setEditingSubcategory((prev) => prev ? {
                     ...prev,
@@ -916,14 +932,14 @@ export const AdminCategoriesView: React.FC = () => {
                   onClick={() => setEditingSubcategory(null)}
                   className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
-                  {t('common.cancel', 'Cancel')}
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={() => { void handleSaveSubcategory(); }}
                   disabled={isMutating || !editingSubcategory.subcategory.name.trim() || !editingSubcategory.parentId}
                   className="px-5 py-2 rounded-lg bg-[#0A2540] text-white font-semibold hover:bg-[#0A2540]/90 disabled:opacity-50"
                 >
-                  {t('common.save', 'Save')}
+                  {t('common.save')}
                 </button>
               </div>
             </div>
@@ -933,14 +949,18 @@ export const AdminCategoriesView: React.FC = () => {
 
       {deleteTarget && (
         <ModalBackdrop onClose={() => setDeleteTarget(null)}>
-          <ModalCard title={t('admin.categories.confirmDelete', 'Confirm Delete')} onClose={() => setDeleteTarget(null)}>
+          <ModalCard
+            title={t('admin.categories.confirmDelete')}
+            onClose={() => setDeleteTarget(null)}
+            closeAriaLabel={t('common.close')}
+          >
             <div className="space-y-5">
               <p className="text-sm text-gray-700">
-                {t('admin.categories.deleteWarning', 'Are you sure you want to delete "{{name}}"?', { name: deleteTarget.name })}
+                {t('admin.categories.deleteWarning', { name: deleteTarget.name })}
               </p>
               {deleteTarget.type === 'category' && (
                 <p className="text-xs text-red-600">
-                  {t('admin.categories.deleteSubcategoriesWarning', 'All subcategories under this category will also be removed.')}
+                  {t('admin.categories.deleteSubcategoriesWarning')}
                 </p>
               )}
               <div className="flex justify-end gap-3">
@@ -948,14 +968,14 @@ export const AdminCategoriesView: React.FC = () => {
                   onClick={() => setDeleteTarget(null)}
                   className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
-                  {t('common.cancel', 'Cancel')}
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={() => { void handleDelete(); }}
                   disabled={isMutating}
                   className="px-5 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 disabled:opacity-50"
                 >
-                  {t('common.delete', 'Delete')}
+                  {t('common.delete')}
                 </button>
               </div>
             </div>
@@ -1014,12 +1034,22 @@ function ModalBackdrop({ children, onClose }: { children: React.ReactNode; onClo
   );
 }
 
-function ModalCard({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+function ModalCard({
+  title,
+  onClose,
+  closeAriaLabel,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  closeAriaLabel: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white shadow-xl">
       <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
         <h3 className="text-lg font-bold text-gray-900">{title}</h3>
-        <button onClick={onClose} className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700" aria-label="Close">
+        <button onClick={onClose} className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700" aria-label={closeAriaLabel}>
           <span className="material-symbols-outlined">close</span>
         </button>
       </div>

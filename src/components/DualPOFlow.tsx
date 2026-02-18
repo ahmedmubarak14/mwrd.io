@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { orderDocumentService } from '../services/orderDocumentService';
 import { poGeneratorService, POData } from '../services/poGeneratorService';
@@ -43,6 +43,43 @@ export const DualPOFlow: React.FC<DualPOFlowProps> = ({ orderId, quoteId, onComp
   const [submittingConfirmation, setSubmittingConfirmation] = useState(false);
   const [isNotTestOrderConfirmed, setIsNotTestOrderConfirmed] = useState(false);
   const [isPaymentTermsConfirmed, setIsPaymentTermsConfirmed] = useState(false);
+  const currentOrder = orders.find((item) => item.id === orderId);
+
+  useEffect(() => {
+    if (!currentOrder) return;
+
+    const hasSubmittedConfirmation = Boolean(
+      currentOrder.client_po_confirmation_submitted_at
+      || (currentOrder.not_test_order_confirmed_at && currentOrder.payment_terms_confirmed_at)
+    );
+
+    if (currentOrder.client_po_uploaded) {
+      setDownloadedPO(Boolean(currentOrder.system_po_generated));
+      setStep('pending');
+      return;
+    }
+
+    if (currentOrder.system_po_generated) {
+      setDownloadedPO(true);
+      setStep('upload');
+      return;
+    }
+
+    if (hasSubmittedConfirmation) {
+      setStep('download');
+      return;
+    }
+
+    setDownloadedPO(false);
+    setStep('confirmation');
+  }, [
+    currentOrder?.id,
+    currentOrder?.client_po_uploaded,
+    currentOrder?.system_po_generated,
+    currentOrder?.client_po_confirmation_submitted_at,
+    currentOrder?.not_test_order_confirmed_at,
+    currentOrder?.payment_terms_confirmed_at,
+  ]);
 
   const handleSubmitForConfirmation = async () => {
     if (!currentUser) return;
@@ -87,7 +124,7 @@ export const DualPOFlow: React.FC<DualPOFlowProps> = ({ orderId, quoteId, onComp
       if (!currentUser) return;
       setGenerating(true);
 
-      const order = orders.find((item) => item.id === orderId);
+      const order = currentOrder;
       const quote = quotes.find((item) => item.id === quoteId);
       const rfq = quote ? rfqs.find((item) => item.id === quote.rfqId) : null;
 

@@ -39,11 +39,11 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                     <div className="bg-white p-8 rounded-lg shadow-xl max-w-2xl w-full border border-red-100">
                         <div className="flex items-center gap-3 mb-6 text-red-600">
                             <span className="material-symbols-outlined text-4xl">error</span>
-                            <h1 className="text-2xl font-bold">{i18n.t('errors.globalTitle', 'Something went wrong')}</h1>
+                            <h1 className="text-2xl font-bold">{i18n.t('errors.globalTitle')}</h1>
                         </div>
 
                         <p className="text-gray-600 mb-6">
-                            {i18n.t('errors.globalMessage', 'The application encountered an unexpected error and could not load.')}
+                            {i18n.t('errors.globalMessage')}
                         </p>
 
                         {this.state.error && (
@@ -63,7 +63,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                             onClick={() => window.location.reload()}
                             className="px-6 py-3 bg-[#0A2540] text-white rounded-lg font-bold hover:bg-[#0A2540]/90 transition-colors w-full sm:w-auto"
                         >
-                            {i18n.t('errors.reloadApplication', 'Reload Application')}
+                            {i18n.t('errors.reloadApplication')}
                         </button>
                     </div>
                 </div>

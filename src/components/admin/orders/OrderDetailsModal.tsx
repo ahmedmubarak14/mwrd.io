@@ -40,13 +40,13 @@ export const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
           <p><span className="font-semibold">{t('admin.orders.amount')}:</span> {t('common.currency')} {order.amount.toLocaleString()}</p>
           <p><span className="font-semibold">{t('admin.orders.status')}:</span> {order.status}</p>
           {order.paymentReference && (
-            <p><span className="font-semibold">{t('admin.orders.paymentReference', 'Payment Reference')}:</span> {order.paymentReference}</p>
+            <p><span className="font-semibold">{t('admin.orders.paymentReference')}:</span> {order.paymentReference}</p>
           )}
           {order.paymentSubmittedAt && (
-            <p><span className="font-semibold">{t('admin.orders.paymentSubmittedAt', 'Submitted At')}:</span> {new Date(order.paymentSubmittedAt).toLocaleString()}</p>
+            <p><span className="font-semibold">{t('admin.orders.paymentSubmittedAt')}:</span> {new Date(order.paymentSubmittedAt).toLocaleString()}</p>
           )}
           {order.system_po_number && (
-            <p><span className="font-semibold">{t('admin.orders.po', 'PO')}:</span> {order.system_po_number}</p>
+            <p><span className="font-semibold">{t('admin.orders.po')}:</span> {order.system_po_number}</p>
           )}
           {enableExternalPaymentLinks && order.paymentLinkUrl && (
             <a
@@ -56,16 +56,16 @@ export const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
               className="inline-flex items-center gap-2 text-blue-600 hover:underline font-medium"
             >
               <span className="material-symbols-outlined text-base">open_in_new</span>
-              {t('admin.orders.openPaymentLink', 'Open payment link')}
+              {t('admin.orders.openPaymentLink')}
             </a>
           )}
 
           <div className="mt-4 border-t border-gray-200 pt-4">
-            <p className="font-semibold mb-2">{t('admin.orders.auditHistory', 'Payment Audit History')}</p>
+            <p className="font-semibold mb-2">{t('admin.orders.auditHistory')}</p>
             {isLoadingOrderAuditLogs ? (
-              <p className="text-xs text-gray-500">{t('common.loading', 'Loading...')}</p>
+              <p className="text-xs text-gray-500">{t('common.loading')}</p>
             ) : paymentAuditLogs.length === 0 ? (
-              <p className="text-xs text-gray-500">{t('admin.orders.noAuditHistory', 'No payment audit events yet')}</p>
+              <p className="text-xs text-gray-500">{t('admin.orders.noAuditHistory')}</p>
             ) : (
               <div className="space-y-2">
                 {paymentAuditLogs.map((entry) => (
@@ -84,7 +84,7 @@ export const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
                     )}
                     {entry.paymentReference && (
                       <p className="text-xs text-gray-700">
-                        {t('admin.orders.paymentReference', 'Payment Reference')}: {entry.paymentReference}
+                        {t('admin.orders.paymentReference')}: {entry.paymentReference}
                       </p>
                     )}
                     {entry.notes && (
@@ -101,7 +101,7 @@ export const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
             onClick={onClose}
             className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200"
           >
-            {t('common.close', 'Close')}
+            {t('common.close')}
           </button>
         </div>
       </div>

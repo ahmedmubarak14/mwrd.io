@@ -113,16 +113,16 @@ export const Login: React.FC<LoginProps> = ({
 
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
             {mode === 'recovery'
-              ? t('login.resetPasswordTitle', 'Reset Password')
+              ? t('login.resetPasswordTitle')
               : mode === 'request-reset'
-                ? t('login.forgotPassword', 'Forgot Password?')
+                ? t('login.forgotPassword')
                 : t('login.title')}
           </h1>
           <p className="text-slate-500 mb-6 sm:mb-8 text-sm sm:text-base">
             {mode === 'recovery'
-              ? t('login.resetPasswordSubtitle', 'Choose a new password for your account.')
+              ? t('login.resetPasswordSubtitle')
               : mode === 'request-reset'
-                ? t('login.resetEmailSubtitle', 'Enter your email and we will send a reset link.')
+                ? t('login.resetEmailSubtitle')
                 : t('login.subtitle')}
           </p>
 
@@ -195,7 +195,7 @@ export const Login: React.FC<LoginProps> = ({
                 {isLoading ? (
                   <span className="material-symbols-outlined animate-spin text-xl">progress_activity</span>
                 ) : (
-                  t('login.sendResetLink', 'Send Reset Link')
+                  t('login.sendResetLink')
                 )}
               </button>
               <button
@@ -203,7 +203,7 @@ export const Login: React.FC<LoginProps> = ({
                 onClick={() => setMode('login')}
                 className="w-full text-sm text-slate-600 hover:text-slate-800"
               >
-                {t('common.back', 'Back')}
+                {t('common.back')}
               </button>
             </form>
           )}
@@ -212,7 +212,7 @@ export const Login: React.FC<LoginProps> = ({
             <form onSubmit={handleCompleteReset} className="space-y-4 sm:space-y-5">
               <input
                 type="password"
-                placeholder={t('login.newPassword', 'New password')}
+                placeholder={t('login.newPassword')}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
@@ -221,7 +221,7 @@ export const Login: React.FC<LoginProps> = ({
               />
               <input
                 type="password"
-                placeholder={t('login.confirmPassword', 'Confirm password')}
+                placeholder={t('login.confirmPassword')}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -236,7 +236,7 @@ export const Login: React.FC<LoginProps> = ({
                 {isLoading ? (
                   <span className="material-symbols-outlined animate-spin text-xl">progress_activity</span>
                 ) : (
-                  t('login.resetPasswordAction', 'Update Password')
+                  t('login.resetPasswordAction')
                 )}
               </button>
               <button
@@ -244,7 +244,7 @@ export const Login: React.FC<LoginProps> = ({
                 onClick={() => setMode('login')}
                 className="w-full text-sm text-slate-600 hover:text-slate-800"
               >
-                {t('common.back', 'Back')}
+                {t('common.back')}
               </button>
             </form>
           )}
@@ -258,7 +258,7 @@ export const Login: React.FC<LoginProps> = ({
                 </button>
               </p>
             ) : (
-              <p className="text-slate-500 text-sm">{t('login.backToSignIn', 'Return to sign in when ready.')}</p>
+              <p className="text-slate-500 text-sm">{t('login.backToSignIn')}</p>
             )}
           </div>
         </div>

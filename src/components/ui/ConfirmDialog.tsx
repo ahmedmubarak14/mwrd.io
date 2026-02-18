@@ -91,7 +91,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               disabled={isLoading}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50"
             >
-              {cancelText || t('common.cancel', 'Cancel')}
+              {cancelText || t('common.cancel')}
             </button>
             <button
               onClick={onConfirm}
@@ -101,10 +101,10 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               {isLoading ? (
                 <span className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  {t('common.processing', 'Processing...')}
+                  {t('common.processing')}
                 </span>
               ) : (
-                confirmText || t('common.confirm', 'Confirm')
+                confirmText || t('common.confirm')
               )}
             </button>
           </div>

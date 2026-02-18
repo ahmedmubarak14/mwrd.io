@@ -32,7 +32,7 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
       setRequests(data);
     } catch (err) {
       logger.error('Failed to load custom requests', err);
-      toast.error(t('customRequest.loadError', 'Failed to load requests'));
+      toast.error(t('customRequest.loadError'));
     } finally {
       setLoading(false);
     }
@@ -43,11 +43,11 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
     try {
       setCancellingId(requestId);
       await cancelCustomRequest(requestId, currentUser.id);
-      toast.success(t('customRequest.cancelled', 'Request cancelled'));
+      toast.success(t('customRequest.cancelled'));
       await loadRequests();
     } catch (err) {
       logger.error('Failed to cancel request', err);
-      toast.error(t('customRequest.cancelError', 'Failed to cancel request'));
+      toast.error(t('customRequest.cancelError'));
     } finally {
       setCancellingId(null);
     }
@@ -72,10 +72,10 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-slate-900">
-            {t('customRequest.myRequests', 'My Custom Requests')}
+            {t('customRequest.myRequests')}
           </h2>
           <p className="text-slate-500 mt-1">
-            {t('customRequest.myRequestsDesc', 'Track and manage your custom item requests')}
+            {t('customRequest.myRequestsDesc')}
           </p>
         </div>
         <button
@@ -83,7 +83,7 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
           className="px-4 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
         >
           <span className="material-symbols-outlined text-lg">add</span>
-          {t('customRequest.newRequest', 'New Request')}
+          {t('customRequest.newRequest')}
         </button>
       </div>
 
@@ -93,16 +93,16 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
             <span className="material-symbols-outlined text-3xl text-gray-400">design_services</span>
           </div>
           <h3 className="text-lg font-bold text-gray-900">
-            {t('customRequest.noRequests', 'No custom requests yet')}
+            {t('customRequest.noRequests')}
           </h3>
           <p className="text-gray-500 mt-2 max-w-md mx-auto">
-            {t('customRequest.noRequestsDesc', 'Need a product not in our catalog? Submit a custom request and we\'ll source it for you.')}
+            {t('customRequest.noRequestsDesc')}
           </p>
           <button
             onClick={onCreateNew}
             className="mt-6 px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
           >
-            {t('customRequest.createFirst', 'Create your first request')}
+            {t('customRequest.createFirst')}
           </button>
         </div>
       ) : (
@@ -123,7 +123,7 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
                   <div className="min-w-0">
                     <p className="font-bold text-gray-900 truncate">{req.itemName}</p>
                     <p className="text-sm text-gray-500">
-                      {new Date(req.createdAt).toLocaleDateString()} &middot; {t('customRequest.qty', 'Qty')}: {req.quantity}
+                      {new Date(req.createdAt).toLocaleDateString()} &middot; {t('customRequest.qty')}: {req.quantity}
                     </p>
                   </div>
                 </div>
@@ -144,30 +144,30 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
                 <div className="px-5 pb-5 border-t border-gray-100 pt-4 space-y-3">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.description', 'Description')}</p>
+                      <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.description')}</p>
                       <p className="text-sm text-gray-700">{req.description}</p>
                     </div>
                     {req.specifications && (
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.specifications', 'Specifications')}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.specifications')}</p>
                         <p className="text-sm text-gray-700">{req.specifications}</p>
                       </div>
                     )}
                     {req.targetPrice && (
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.targetPrice', 'Target Price')}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.targetPrice')}</p>
                         <p className="text-sm text-gray-700">{req.currency} {req.targetPrice}</p>
                       </div>
                     )}
                     {req.deadline && (
                       <div>
-                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.deadline', 'Deadline')}</p>
+                        <p className="text-xs font-bold text-gray-400 uppercase mb-1">{t('customRequest.deadline')}</p>
                         <p className="text-sm text-gray-700">{new Date(req.deadline).toLocaleDateString()}</p>
                       </div>
                     )}
                     {req.rejectionReason && (
                       <div className="sm:col-span-2">
-                        <p className="text-xs font-bold text-red-500 uppercase mb-1">{t('customRequest.rejectionReason', 'Rejection Reason')}</p>
+                        <p className="text-xs font-bold text-red-500 uppercase mb-1">{t('customRequest.rejectionReason')}</p>
                         <p className="text-sm text-red-700 bg-red-50 p-3 rounded-lg">{req.rejectionReason}</p>
                       </div>
                     )}
@@ -183,8 +183,8 @@ export const ClientCustomRequestsList: React.FC<ClientCustomRequestsListProps> =
                         className="px-4 py-2 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
                       >
                         {cancellingId === req.id
-                          ? t('common.cancelling', 'Cancelling...')
-                          : t('customRequest.cancelRequest', 'Cancel Request')}
+                          ? t('common.cancelling')
+                          : t('customRequest.cancelRequest')}
                       </button>
                     </div>
                   )}

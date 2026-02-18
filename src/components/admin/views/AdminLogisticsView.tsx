@@ -79,7 +79,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
       setProviders(rows);
     } catch (error) {
       logger.error('Failed to load logistics providers:', error);
-      toast.error(t('admin.logistics.providers.loadError', 'Failed to load logistics providers'));
+      toast.error(t('admin.logistics.providers.loadError'));
     } finally {
       setIsProvidersLoading(false);
     }
@@ -121,7 +121,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
     const trackingNumber = dispatchTrackingNumber.trim();
 
     if (!carrier || !trackingNumber) {
-      toast.error(t('admin.logistics.dispatchMissingFields', 'Carrier and tracking number are required'));
+      toast.error(t('admin.logistics.dispatchMissingFields'));
       return;
     }
 
@@ -137,12 +137,12 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
     setIsDispatchSubmitting(true);
     try {
       await logisticsService.createShipment(dispatchOrderId, shipment);
-      toast.success(t('admin.logistics.dispatchSuccess', 'Shipment created successfully'));
+      toast.success(t('admin.logistics.dispatchSuccess'));
       await Promise.resolve(onRefreshOrders());
       resetDispatchForm();
     } catch (error) {
       logger.error('Failed to create shipment:', error);
-      toast.error(t('admin.logistics.dispatchError', 'Failed to create shipment'));
+      toast.error(t('admin.logistics.dispatchError'));
     } finally {
       setIsDispatchSubmitting(false);
     }
@@ -167,7 +167,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
 
     const trackingNumber = trackingNumberInput.trim();
     if (!trackingNumber) {
-      toast.error(t('admin.logistics.trackingRequired', 'Tracking number is required'));
+      toast.error(t('admin.logistics.trackingRequired'));
       return;
     }
 
@@ -178,12 +178,12 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
         trackingNumber,
         trackingUrlInput.trim() || undefined
       );
-      toast.success(t('admin.logistics.trackingSuccess', 'Tracking details updated'));
+      toast.success(t('admin.logistics.trackingSuccess'));
       await Promise.resolve(onRefreshOrders());
       resetTrackingForm();
     } catch (error) {
       logger.error('Failed to update tracking:', error);
-      toast.error(t('admin.logistics.trackingError', 'Failed to update tracking details'));
+      toast.error(t('admin.logistics.trackingError'));
     } finally {
       setIsTrackingSubmitting(false);
     }
@@ -193,14 +193,14 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
     setMarkDeliveredOrderId(orderId);
     try {
       await logisticsService.markAsDelivered(orderId);
-      toast.success(t('admin.logistics.markDeliveredSuccess', 'Order marked as delivered'));
+      toast.success(t('admin.logistics.markDeliveredSuccess'));
       await Promise.resolve(onRefreshOrders());
       if (trackingOrderId === orderId) {
         resetTrackingForm();
       }
     } catch (error) {
       logger.error('Failed to mark order as delivered:', error);
-      toast.error(t('admin.logistics.markDeliveredError', 'Failed to update delivery status'));
+      toast.error(t('admin.logistics.markDeliveredError'));
     } finally {
       setMarkDeliveredOrderId(null);
     }
@@ -213,7 +213,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
       new Map(
         users
           .filter((user) => user.role === UserRole.CLIENT)
-          .map((user) => [user.id, user.companyName || user.name || t('admin.logistics.unknownDestination', 'Unknown destination')])
+          .map((user) => [user.id, user.companyName || user.name || t('admin.logistics.unknownDestination')])
       ),
     [t, users]
   );
@@ -223,7 +223,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
       new Map(
         users
           .filter((user) => user.role === UserRole.SUPPLIER)
-          .map((user) => [user.id, user.companyName || user.name || t('admin.logistics.unknownSupplier', 'Unknown supplier')])
+          .map((user) => [user.id, user.companyName || user.name || t('admin.logistics.unknownSupplier')])
       ),
     [t, users]
   );
@@ -355,19 +355,19 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
       event.preventDefault();
 
       if (!providerForm.name.trim()) {
-        toast.error(t('admin.logistics.providers.nameRequired', 'Provider name is required'));
+        toast.error(t('admin.logistics.providers.nameRequired'));
         return;
       }
       if (!providerForm.contactName.trim()) {
-        toast.error(t('admin.logistics.providers.contactNameRequired', 'Contact name is required'));
+        toast.error(t('admin.logistics.providers.contactNameRequired'));
         return;
       }
       if (!providerForm.contactPhone.trim()) {
-        toast.error(t('admin.logistics.providers.contactPhoneRequired', 'Contact phone is required'));
+        toast.error(t('admin.logistics.providers.contactPhoneRequired'));
         return;
       }
       if (!providerForm.contactEmail.trim()) {
-        toast.error(t('admin.logistics.providers.contactEmailRequired', 'Contact email is required'));
+        toast.error(t('admin.logistics.providers.contactEmailRequired'));
         return;
       }
 
@@ -375,16 +375,16 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
       try {
         if (editingProviderId) {
           await logisticsProviderService.updateProvider(editingProviderId, providerForm);
-          toast.success(t('admin.logistics.providers.providerUpdated', 'Provider updated successfully'));
+          toast.success(t('admin.logistics.providers.providerUpdated'));
         } else {
           await logisticsProviderService.createProvider(providerForm);
-          toast.success(t('admin.logistics.providers.providerCreated', 'Provider created successfully'));
+          toast.success(t('admin.logistics.providers.providerCreated'));
         }
         await loadProviders();
         closeProviderModal();
       } catch (error) {
         logger.error('Failed to save logistics provider', error);
-        toast.error(t('admin.logistics.providers.providerSaveError', 'Failed to save logistics provider'));
+        toast.error(t('admin.logistics.providers.providerSaveError'));
       } finally {
         setProviderActionId(null);
       }
@@ -406,10 +406,10 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
               : p
           ))
         );
-        toast.success(t('admin.logistics.providers.providerStatusUpdated', 'Provider status updated'));
+        toast.success(t('admin.logistics.providers.providerStatusUpdated'));
       } catch (error) {
         logger.error('Failed to update logistics provider status', error);
-        toast.error(t('admin.logistics.providers.providerStatusUpdateError', 'Failed to update provider status'));
+        toast.error(t('admin.logistics.providers.providerStatusUpdateError'));
       } finally {
         setProviderActionId(null);
       }
@@ -422,9 +422,9 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
     <div data-testid="admin-logistics-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
-          title={t('sidebar.logistics', 'Logistics')}
-          subtitle={t('admin.logistics.subtitle', 'Manage dispatching, tracking, delivery updates, and logistics providers')}
+          portalLabel={t('sidebar.adminPortal')}
+          title={t('sidebar.logistics')}
+          subtitle={t('admin.logistics.subtitle')}
         />
 
         <div className="space-y-8">
@@ -439,7 +439,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
           }`}
         >
           <span className="material-symbols-outlined text-base">local_shipping</span>
-          {t('admin.logistics.tabShipments', 'Shipments')}
+          {t('admin.logistics.tabShipments')}
         </button>
         <button
           onClick={() => setActiveTab('providers')}
@@ -450,7 +450,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
           }`}
         >
           <span className="material-symbols-outlined text-base">business</span>
-          {t('admin.logistics.tabProviders', 'Providers')}
+          {t('admin.logistics.tabProviders')}
         </button>
       </div>
 
@@ -465,7 +465,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
               <p className="text-4xl font-bold text-slate-900">{activeShipmentCount}</p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-2">{t('admin.logistics.deliveredToday', 'Delivered Today')}</h3>
+              <h3 className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-2">{t('admin.logistics.deliveredToday')}</h3>
               <p className="text-4xl font-bold text-slate-900">{deliveredTodayCount}</p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
@@ -481,7 +481,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 <input
                   value={logisticsSearchTerm}
                   onChange={(event) => setLogisticsSearchTerm(event.target.value)}
-                  placeholder={t('admin.logistics.searchPlaceholder', 'Search order, supplier, destination or tracking...')}
+                  placeholder={t('admin.logistics.searchPlaceholder')}
                   className="w-full rounded-xl border border-slate-300 pl-10 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                 />
               </div>
@@ -490,7 +490,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors"
               >
                 <span className="material-symbols-outlined text-base">refresh</span>
-                {t('common.refresh', 'Refresh')}
+                {t('common.refresh')}
               </button>
             </div>
           </div>
@@ -499,33 +499,33 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
             <div className="p-6 border-b border-slate-100">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <span className="material-symbols-outlined text-amber-600">inventory_2</span>
-                {t('admin.logistics.dispatchQueue', 'Dispatch Queue')}
+                {t('admin.logistics.dispatchQueue')}
               </h3>
-              <p className="text-sm text-slate-500 mt-1">{t('admin.logistics.dispatchQueueHint', 'Orders ready to be dispatched')}</p>
+              <p className="text-sm text-slate-500 mt-1">{t('admin.logistics.dispatchQueueHint')}</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
-                    <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.orderId', 'Order')}</th>
+                    <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.orderId')}</th>
                     <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.supplier')}</th>
                     <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.destination')}</th>
                     <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.status')}</th>
-                    <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.orders.amount', 'Amount')}</th>
+                    <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.orders.amount')}</th>
                     <th className="p-4 text-xs font-bold text-slate-500 uppercase text-right">{t('admin.logistics.actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {dispatchQueueOrders.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="p-8 text-center text-slate-500">{t('admin.logistics.noDispatchQueue', 'No orders pending dispatch')}</td>
+                      <td colSpan={6} className="p-8 text-center text-slate-500">{t('admin.logistics.noDispatchQueue')}</td>
                     </tr>
                   ) : (
                     dispatchQueueOrders.map((order) => (
                       <tr key={order.id} className="hover:bg-slate-50 transition-colors">
                         <td className="p-4 font-bold text-slate-900">{order.id}</td>
-                        <td className="p-4 text-sm text-slate-700">{suppliersById.get(order.supplierId) || t('admin.logistics.unknownSupplier', 'Unknown supplier')}</td>
-                        <td className="p-4 text-sm text-slate-700">{clientsById.get(order.clientId) || t('admin.logistics.unknownDestination', 'Unknown destination')}</td>
+                        <td className="p-4 text-sm text-slate-700">{suppliersById.get(order.supplierId) || t('admin.logistics.unknownSupplier')}</td>
+                        <td className="p-4 text-sm text-slate-700">{clientsById.get(order.clientId) || t('admin.logistics.unknownDestination')}</td>
                         <td className="p-4">
                           <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${orderStatusBadgeClasses[order.status] || 'bg-slate-100 text-slate-700'}`}>
                             {order.status}
@@ -539,7 +539,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                               className="inline-flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition-colors"
                             >
                               <span className="material-symbols-outlined text-sm">local_shipping</span>
-                              {t('admin.logistics.dispatchOrder', 'Dispatch')}
+                              {t('admin.logistics.dispatchOrder')}
                             </button>
                           </div>
                         </td>
@@ -556,52 +556,52 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900">
-                    {t('admin.logistics.dispatchFormTitle', 'Create Shipment')} #{selectedDispatchOrder.id}
+                    {t('admin.logistics.dispatchFormTitle')} #{selectedDispatchOrder.id}
                   </h3>
                   <p className="text-sm text-slate-500 mt-1">
-                    {t('admin.logistics.dispatchFormHint', 'Provide carrier and tracking details to dispatch this order')}
+                    {t('admin.logistics.dispatchFormHint')}
                   </p>
                 </div>
                 <button
                   onClick={resetDispatchForm}
                   className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg"
-                  aria-label={t('common.close', 'Close')}
+                  aria-label={t('common.close')}
                 >
                   <span className="material-symbols-outlined">close</span>
                 </button>
               </div>
               <form onSubmit={handleCreateShipment} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="space-y-1">
-                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.carrier', 'Carrier')}</span>
+                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.carrier')}</span>
                   <input
                     value={dispatchCarrier}
                     onChange={(event) => setDispatchCarrier(event.target.value)}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    placeholder={t('admin.logistics.carrierPlaceholder', 'e.g. Aramex')}
+                    placeholder={t('admin.logistics.carrierPlaceholder')}
                     required
                   />
                 </label>
                 <label className="space-y-1">
-                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.trackingNumber', 'Tracking Number')}</span>
+                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.trackingNumber')}</span>
                   <input
                     value={dispatchTrackingNumber}
                     onChange={(event) => setDispatchTrackingNumber(event.target.value)}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    placeholder={t('admin.logistics.trackingNumberPlaceholder', 'Enter tracking number')}
+                    placeholder={t('admin.logistics.trackingNumberPlaceholder')}
                     required
                   />
                 </label>
                 <label className="space-y-1">
-                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.trackingUrl', 'Tracking URL')}</span>
+                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.trackingUrl')}</span>
                   <input
                     value={dispatchTrackingUrl}
                     onChange={(event) => setDispatchTrackingUrl(event.target.value)}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    placeholder="https://"
+                    placeholder={t('admin.logistics.trackingUrlPlaceholder')}
                   />
                 </label>
                 <label className="space-y-1">
-                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.eta', 'ETA')}</span>
+                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.eta')}</span>
                   <input
                     type="date"
                     value={dispatchEstimatedDeliveryDate}
@@ -610,12 +610,12 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                   />
                 </label>
                 <label className="space-y-1 md:col-span-2">
-                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.notes', 'Notes')}</span>
+                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.notes')}</span>
                   <textarea
                     value={dispatchNotes}
                     onChange={(event) => setDispatchNotes(event.target.value)}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[96px]"
-                    placeholder={t('admin.logistics.notesPlaceholder', 'Optional dispatch notes')}
+                    placeholder={t('admin.logistics.notesPlaceholder')}
                   />
                 </label>
                 <div className="md:col-span-2 flex justify-end gap-3 pt-2">
@@ -624,7 +624,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                     onClick={resetDispatchForm}
                     className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
-                    {t('common.cancel', 'Cancel')}
+                    {t('common.cancel')}
                   </button>
                   <button
                     type="submit"
@@ -632,7 +632,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                     className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isDispatchSubmitting && <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>}
-                    {t('admin.logistics.createShipment', 'Create Shipment')}
+                    {t('admin.logistics.createShipment')}
                   </button>
                 </div>
               </form>
@@ -657,7 +657,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
                     <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.shipmentId')}</th>
-                    <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.orderId', 'Order ID')}</th>
+                    <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.orderId')}</th>
                     <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.supplier')}</th>
                     <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.destination')}</th>
                     <th className="p-4 text-xs font-bold text-slate-500 uppercase">{t('admin.logistics.status')}</th>
@@ -677,8 +677,8 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                           {order.shipment?.trackingNumber || `TRK-${order.id.slice(-8).toUpperCase()}`}
                         </td>
                         <td className="p-4 text-sm font-medium text-slate-700">{order.id}</td>
-                        <td className="p-4 text-sm font-bold text-slate-700">{suppliersById.get(order.supplierId) || t('admin.logistics.unknownSupplier', 'Unknown supplier')}</td>
-                        <td className="p-4 text-sm text-slate-500">{clientsById.get(order.clientId) || t('admin.logistics.unknownDestination', 'Unknown destination')}</td>
+                        <td className="p-4 text-sm font-bold text-slate-700">{suppliersById.get(order.supplierId) || t('admin.logistics.unknownSupplier')}</td>
+                        <td className="p-4 text-sm text-slate-500">{clientsById.get(order.clientId) || t('admin.logistics.unknownDestination')}</td>
                         <td className="p-4">
                           <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${orderStatusBadgeClasses[order.status] || 'bg-slate-100 text-slate-700'}`}>
                             {order.status}
@@ -687,7 +687,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                         <td className="p-4 text-sm font-bold text-slate-700">
                           {order.shipment?.estimatedDeliveryDate
                             ? new Date(order.shipment.estimatedDeliveryDate).toLocaleDateString()
-                            : t('common.toBeDetermined', 'TBD')}
+                            : t('common.toBeDetermined')}
                         </td>
                         <td className="p-4">
                           <div className="flex flex-wrap gap-2">
@@ -696,7 +696,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                               className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
                             >
                               <span className="material-symbols-outlined text-sm">edit</span>
-                              {t('admin.logistics.updateTracking', 'Update Tracking')}
+                              {t('admin.logistics.updateTracking')}
                             </button>
                             {order.status !== OrderStatus.DELIVERED && (
                               <button
@@ -707,7 +707,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                                 {markDeliveredOrderId === order.id && (
                                   <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
                                 )}
-                                {t('admin.logistics.markDelivered', 'Mark Delivered')}
+                                {t('admin.logistics.markDelivered')}
                               </button>
                             )}
                             {order.shipment?.trackingUrl && (
@@ -718,7 +718,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                                 className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100"
                               >
                                 <span className="material-symbols-outlined text-sm">open_in_new</span>
-                                {t('admin.logistics.track', 'Track')}
+                                {t('admin.logistics.track')}
                               </a>
                             )}
                           </div>
@@ -736,38 +736,38 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900">
-                    {t('admin.logistics.editTrackingTitle', 'Update Tracking')} #{selectedTrackingOrder.id}
+                    {t('admin.logistics.editTrackingTitle')} #{selectedTrackingOrder.id}
                   </h3>
                   <p className="text-sm text-slate-500 mt-1">
-                    {t('admin.logistics.editTrackingHint', 'Update tracking info shown to the client and supplier')}
+                    {t('admin.logistics.editTrackingHint')}
                   </p>
                 </div>
                 <button
                   onClick={resetTrackingForm}
                   className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg"
-                  aria-label={t('common.close', 'Close')}
+                  aria-label={t('common.close')}
                 >
                   <span className="material-symbols-outlined">close</span>
                 </button>
               </div>
               <form onSubmit={handleUpdateTracking} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="space-y-1">
-                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.trackingNumber', 'Tracking Number')}</span>
+                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.trackingNumber')}</span>
                   <input
                     value={trackingNumberInput}
                     onChange={(event) => setTrackingNumberInput(event.target.value)}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    placeholder={t('admin.logistics.trackingNumberPlaceholder', 'Enter tracking number')}
+                    placeholder={t('admin.logistics.trackingNumberPlaceholder')}
                     required
                   />
                 </label>
                 <label className="space-y-1">
-                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.trackingUrl', 'Tracking URL')}</span>
+                  <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.trackingUrl')}</span>
                   <input
                     value={trackingUrlInput}
                     onChange={(event) => setTrackingUrlInput(event.target.value)}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    placeholder="https://"
+                    placeholder={t('admin.logistics.trackingUrlPlaceholder')}
                   />
                 </label>
                 <div className="md:col-span-2 flex justify-end gap-3 pt-2">
@@ -776,7 +776,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                     onClick={resetTrackingForm}
                     className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                   >
-                    {t('common.cancel', 'Cancel')}
+                    {t('common.cancel')}
                   </button>
                   <button
                     type="submit"
@@ -784,7 +784,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                     className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isTrackingSubmitting && <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>}
-                    {t('admin.logistics.saveTracking', 'Save Tracking')}
+                    {t('admin.logistics.saveTracking')}
                   </button>
                 </div>
               </form>
@@ -801,8 +801,8 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
           {/* Header + Add button */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-slate-900">{t('admin.logistics.providers.title', 'Logistics Providers')}</h2>
-              <p className="text-sm text-slate-500 mt-1">{t('admin.logistics.providers.subtitle', 'Manage your logistics and delivery partners')}</p>
+              <h2 className="text-xl font-bold text-slate-900">{t('admin.logistics.providers.title')}</h2>
+              <p className="text-sm text-slate-500 mt-1">{t('admin.logistics.providers.subtitle')}</p>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -811,7 +811,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <span className={`material-symbols-outlined text-base ${isProvidersLoading ? 'animate-spin' : ''}`}>refresh</span>
-                {t('common.refresh', 'Refresh')}
+                {t('common.refresh')}
               </button>
               <button
                 onClick={openAddProviderModal}
@@ -819,7 +819,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:opacity-70"
               >
                 <span className="material-symbols-outlined text-base">add</span>
-                {t('admin.logistics.providers.addProvider', 'Add Provider')}
+                {t('admin.logistics.providers.addProvider')}
               </button>
             </div>
           </div>
@@ -832,16 +832,16 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 <input
                   value={providerSearchTerm}
                   onChange={(event) => setProviderSearchTerm(event.target.value)}
-                  placeholder={t('admin.logistics.providers.searchPlaceholder', 'Search providers...')}
+                  placeholder={t('admin.logistics.providers.searchPlaceholder')}
                   className="w-full rounded-xl border border-slate-300 pl-10 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                 />
               </div>
               <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
                 {(
                   [
-                    ['all', t('admin.logistics.providers.filterAll', 'All Providers')],
-                    ['active', t('admin.logistics.providers.filterActive', 'Active Only')],
-                    ['inactive', t('admin.logistics.providers.filterInactive', 'Inactive Only')],
+                    ['all', t('admin.logistics.providers.filterAll')],
+                    ['active', t('admin.logistics.providers.filterActive')],
+                    ['inactive', t('admin.logistics.providers.filterInactive')],
                   ] as [ProviderFilter, string][]
                 ).map(([key, label]) => (
                   <button
@@ -864,13 +864,13 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
           {isProvidersLoading ? (
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-12 text-center">
               <span className="material-symbols-outlined text-4xl text-slate-400 mb-2 block animate-spin">progress_activity</span>
-              <p className="text-sm text-slate-500">{t('admin.logistics.providers.loading', 'Loading providers...')}</p>
+              <p className="text-sm text-slate-500">{t('admin.logistics.providers.loading')}</p>
             </div>
           ) : filteredProviders.length === 0 ? (
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-12 text-center">
               <span className="material-symbols-outlined text-5xl text-slate-300 mb-4 block">business</span>
-              <h3 className="text-lg font-bold text-slate-700 mb-1">{t('admin.logistics.providers.noProviders', 'No logistics providers found')}</h3>
-              <p className="text-sm text-slate-500">{t('admin.logistics.providers.noProvidersHint', 'Add your first logistics provider to get started')}</p>
+              <h3 className="text-lg font-bold text-slate-700 mb-1">{t('admin.logistics.providers.noProviders')}</h3>
+              <p className="text-sm text-slate-500">{t('admin.logistics.providers.noProvidersHint')}</p>
             </div>
           ) : (
             <div className="grid gap-4">
@@ -892,8 +892,8 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                           }`}
                         >
                           {provider.isActive
-                            ? t('admin.logistics.providers.active', 'Active')
-                            : t('admin.logistics.providers.inactive', 'Inactive')}
+                            ? t('admin.logistics.providers.active')
+                            : t('admin.logistics.providers.inactive')}
                         </span>
                       </div>
 
@@ -925,7 +925,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                             </span>
                           ))
                         ) : (
-                          <span className="text-xs text-slate-400">{t('admin.logistics.providers.noAreas', 'No service areas defined')}</span>
+                          <span className="text-xs text-slate-400">{t('admin.logistics.providers.noAreas')}</span>
                         )}
                       </div>
 
@@ -942,7 +942,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                         className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         <span className="material-symbols-outlined text-sm">edit</span>
-                        {t('common.edit', 'Edit')}
+                        {t('common.edit')}
                       </button>
                       <button
                         onClick={() => handleToggleProviderActive(provider)}
@@ -959,8 +959,8 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                             : (provider.isActive ? 'toggle_off' : 'toggle_on')}
                         </span>
                         {provider.isActive
-                          ? t('admin.logistics.providers.inactive', 'Inactive')
-                          : t('admin.logistics.providers.active', 'Active')}
+                          ? t('admin.logistics.providers.inactive')
+                          : t('admin.logistics.providers.active')}
                       </button>
                     </div>
                   </div>
@@ -986,13 +986,13 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
             <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 rounded-t-2xl flex items-center justify-between z-10">
               <h3 className="text-lg font-bold text-slate-900">
                 {editingProviderId
-                  ? t('admin.logistics.providers.editProvider', 'Edit Provider')
-                  : t('admin.logistics.providers.addProvider', 'Add Provider')}
+                  ? t('admin.logistics.providers.editProvider')
+                  : t('admin.logistics.providers.addProvider')}
               </h3>
               <button
                 onClick={closeProviderModal}
                 className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg"
-                aria-label={t('common.close', 'Close')}
+                aria-label={t('common.close')}
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -1002,13 +1002,13 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
               {/* Name */}
               <label className="block space-y-1">
                 <span className="text-sm font-semibold text-slate-700">
-                  {t('admin.logistics.providers.providerName', 'Provider Name')} *
+                  {t('admin.logistics.providers.providerName')} *
                 </span>
                 <input
                   value={providerForm.name}
                   onChange={(e) => setProviderForm((f) => ({ ...f, name: e.target.value }))}
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder={t('admin.logistics.providers.providerNamePlaceholder', 'e.g. Aramex, DHL, SMSA')}
+                  placeholder={t('admin.logistics.providers.providerNamePlaceholder')}
                   required
                 />
               </label>
@@ -1017,13 +1017,13 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 {/* Contact Name */}
                 <label className="block space-y-1">
                   <span className="text-sm font-semibold text-slate-700">
-                    {t('admin.logistics.providers.contactName', 'Contact Name')} *
+                    {t('admin.logistics.providers.contactName')} *
                   </span>
                   <input
                     value={providerForm.contactName}
                     onChange={(e) => setProviderForm((f) => ({ ...f, contactName: e.target.value }))}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    placeholder={t('admin.logistics.providers.contactNamePlaceholder', 'Primary contact person')}
+                    placeholder={t('admin.logistics.providers.contactNamePlaceholder')}
                     required
                   />
                 </label>
@@ -1031,13 +1031,13 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 {/* Contact Phone */}
                 <label className="block space-y-1">
                   <span className="text-sm font-semibold text-slate-700">
-                    {t('admin.logistics.providers.contactPhone', 'Contact Phone')} *
+                    {t('admin.logistics.providers.contactPhone')} *
                   </span>
                   <input
                     value={providerForm.contactPhone}
                     onChange={(e) => setProviderForm((f) => ({ ...f, contactPhone: e.target.value }))}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    placeholder={t('admin.logistics.providers.contactPhonePlaceholder', '+966...')}
+                    placeholder={t('admin.logistics.providers.contactPhonePlaceholder')}
                     required
                   />
                 </label>
@@ -1046,14 +1046,14 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
               {/* Contact Email */}
               <label className="block space-y-1">
                 <span className="text-sm font-semibold text-slate-700">
-                  {t('admin.logistics.providers.contactEmail', 'Contact Email')} *
+                  {t('admin.logistics.providers.contactEmail')} *
                 </span>
                 <input
                   type="email"
                   value={providerForm.contactEmail}
                   onChange={(e) => setProviderForm((f) => ({ ...f, contactEmail: e.target.value }))}
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                  placeholder={t('admin.logistics.providers.contactEmailPlaceholder', 'contact@provider.com')}
+                  placeholder={t('admin.logistics.providers.contactEmailPlaceholder')}
                   required
                 />
               </label>
@@ -1061,7 +1061,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
               {/* Service Areas */}
               <div className="space-y-2">
                 <span className="text-sm font-semibold text-slate-700 block">
-                  {t('admin.logistics.providers.serviceAreas', 'Service Areas')}
+                  {t('admin.logistics.providers.serviceAreas')}
                 </span>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {providerForm.serviceAreas.map((area) => (
@@ -1086,7 +1086,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                     onChange={(e) => setServiceAreaInput(e.target.value)}
                     onKeyDown={handleServiceAreaKeyDown}
                     className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    placeholder={t('admin.logistics.providers.serviceAreasPlaceholder', 'Enter area and press Enter (e.g. Riyadh, Jeddah, Eastern Province)')}
+                    placeholder={t('admin.logistics.providers.serviceAreasPlaceholder')}
                   />
                   <button
                     type="button"
@@ -1096,7 +1096,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                     <span className="material-symbols-outlined text-base">add</span>
                   </button>
                 </div>
-                <p className="text-xs text-slate-400">{t('admin.logistics.providers.serviceAreasHint', 'Press Enter or comma to add an area')}</p>
+                <p className="text-xs text-slate-400">{t('admin.logistics.providers.serviceAreasHint')}</p>
               </div>
 
               {/* Active toggle */}
@@ -1118,19 +1118,19 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                 </button>
                 <span className="text-sm font-medium text-slate-700">
                   {providerForm.isActive
-                    ? t('admin.logistics.providers.active', 'Active')
-                    : t('admin.logistics.providers.inactive', 'Inactive')}
+                    ? t('admin.logistics.providers.active')
+                    : t('admin.logistics.providers.inactive')}
                 </span>
               </div>
 
               {/* Notes */}
               <label className="block space-y-1">
-                <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.providers.notes', 'Notes')}</span>
+                <span className="text-sm font-semibold text-slate-700">{t('admin.logistics.providers.notes')}</span>
                 <textarea
                   value={providerForm.notes}
                   onChange={(e) => setProviderForm((f) => ({ ...f, notes: e.target.value }))}
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[80px]"
-                  placeholder={t('admin.logistics.providers.notesPlaceholder', 'Additional notes about this provider...')}
+                  placeholder={t('admin.logistics.providers.notesPlaceholder')}
                 />
               </label>
 
@@ -1142,7 +1142,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                   disabled={Boolean(providerActionId)}
                   className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {t('common.cancel', 'Cancel')}
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
@@ -1152,7 +1152,7 @@ export const AdminLogisticsView: React.FC<AdminLogisticsViewProps> = ({
                   {providerActionId && (
                     <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
                   )}
-                  {t('admin.logistics.providers.saveProvider', 'Save Provider')}
+                  {t('admin.logistics.providers.saveProvider')}
                 </button>
               </div>
             </form>

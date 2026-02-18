@@ -115,10 +115,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
   const handleCreateUser = async (userData: any) => {
     try {
       await addUser(userData);
-      toast.success(t('admin.users.userCreated', 'User created successfully'));
+      toast.success(t('admin.users.userCreated'));
     } catch (error: any) {
       logger.error('Error creating user:', error);
-      toast.error(error.message || t('admin.users.createUserFailed', 'Failed to create user'));
+      toast.error(error.message || t('admin.users.createUserFailed'));
     }
   };
 
@@ -145,11 +145,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
 
     const updatedUser = await updateUser(userId, { status, kycStatus });
     if (!updatedUser) {
-      toast.error(t('common.error', 'Unable to save changes'));
+      toast.error(t('common.error'));
       return;
     }
 
-    toast.success(t('common.statusUpdated', 'User status updated'));
+    toast.success(t('common.statusUpdated'));
   };
 
   const handleConvertRole = async (userId: string, newRole: UserRole) => {
@@ -170,11 +170,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
       if (!updatedUser) {
         throw new Error('Failed to update user role');
       }
-      toast.success(t('admin.users.roleUpdated', 'User role updated successfully'));
+      toast.success(t('admin.users.roleUpdated'));
       setPendingRoleChange(null);
     } catch (error) {
       logger.error('Failed to update user role:', error);
-      toast.error(t('admin.users.roleUpdateFailed', 'Failed to update user role'));
+      toast.error(t('admin.users.roleUpdateFailed'));
     } finally {
       setIsConvertingRole(false);
     }
@@ -234,10 +234,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
     setIsClientMarginSubmitting(false);
 
     if (result.success) {
-      toast.success(t('admin.users.marginUpdated', 'Client margin updated successfully'));
+      toast.success(t('admin.users.marginUpdated'));
       setIsClientMarginModalOpen(false);
     } else {
-      toast.error(t('admin.users.marginUpdateError', 'Failed to update client margin'));
+      toast.error(t('admin.users.marginUpdateError'));
     }
   };
 
@@ -264,10 +264,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
           });
         return next;
       });
-      toast.success(t('admin.margins.rfqMarginUpdated', 'RFQ margin updated'));
+      toast.success(t('admin.margins.rfqMarginUpdated'));
       setIsRFQMarginModalOpen(false);
     } else {
-      toast.error(result.error || t('common.error', 'Failed to update RFQ margin'));
+      toast.error(result.error || t('common.error'));
     }
     setIsRFQMarginSubmitting(false);
   };
@@ -309,7 +309,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
     setIsCreditAdjustSubmitting(false);
 
     if (!result.user) {
-      toast.error(result.error || t('common.error', 'Unable to update credit limit'));
+      toast.error(result.error || t('common.error'));
       return;
     }
 
@@ -318,10 +318,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
     }
 
     const actionVerb = creditAdjustMode === 'SET'
-      ? t('common.set', 'set')
+      ? t('common.set')
       : creditAdjustMode === 'INCREASE'
-        ? t('admin.users.increaseCredit', 'increased')
-        : t('admin.users.decreaseCredit', 'decreased');
+        ? t('admin.users.increaseCredit')
+        : t('admin.users.decreaseCredit');
 
     toast.success(
       t('admin.users.creditLimitUpdateSuccess', {
@@ -431,7 +431,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
   const handleCategoryMarginSave = async (category: string, val: number): Promise<{ success: boolean; error?: string }> => {
     const normalized = validateMarginValue(val);
     if (normalized === null) {
-      const error = t('admin.margins.invalidMarginRange', 'Margin must be between 0 and 100');
+      const error = t('admin.margins.invalidMarginRange');
       toast.error(error);
       return { success: false, error };
     }
@@ -447,7 +447,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
       return { success: true };
     }
 
-    const error = t('admin.margins.categoryMarginSaveFailed', 'Failed to update category margin');
+    const error = t('admin.margins.categoryMarginSaveFailed');
     toast.error(error);
     return { success: false, error };
   };
@@ -455,7 +455,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
   const handleGlobalMarginSave = async (val: number): Promise<{ success: boolean; error?: string }> => {
     const normalized = validateMarginValue(val);
     if (normalized === null) {
-      const error = t('admin.margins.invalidMarginRange', 'Margin must be between 0 and 100');
+      const error = t('admin.margins.invalidMarginRange');
       toast.error(error);
       return { success: false, error };
     }
@@ -465,19 +465,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
       defaultMarginPercent: normalized,
     });
     if (systemConfigUpdated) {
-      await loadSystemConfig(); // Reload to update UI immediately
-      toast.success(t('admin.margins.globalMarginSaved', 'Global margin updated'));
+      await loadSystemConfig();
+      toast.success(t('admin.margins.globalMarginSaved'));
       return { success: true };
     }
 
     const marginSettingUpdated = await updateMarginSetting(null, normalized);
     if (marginSettingUpdated) {
-      await loadSystemConfig(); // Reload to update UI immediately
-      toast.success(t('admin.margins.globalMarginSaved', 'Global margin updated'));
+      await loadSystemConfig();
+      toast.success(t('admin.margins.globalMarginSaved'));
       return { success: true };
     }
 
-    const error = t('admin.margins.globalMarginSaveFailed', 'Failed to update global margin');
+    const error = t('admin.margins.globalMarginSaveFailed');
     toast.error(error);
     return { success: false, error };
   };
@@ -518,7 +518,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
   const handleApplyOverviewCustomRange = () => {
     const parsed = Number(overviewCustomRangeInput);
     if (!Number.isFinite(parsed) || parsed < 7 || parsed > 365) {
-      toast.error(t('admin.overview.invalidRange', 'Please enter a number between 7 and 365'));
+      toast.error(t('admin.overview.invalidRange'));
       return;
     }
     setOverviewRangeDays(Math.floor(parsed));
@@ -546,10 +546,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
           <div className="flex items-center justify-between border-b border-slate-200 p-4">
             <h3 className="text-lg font-bold text-slate-900">
               {adminOverlay === 'notifications'
-                ? t('common.notifications', 'Notifications')
+                ? t('common.notifications')
                 : adminOverlay === 'range'
-                  ? t('admin.overview.customRangeTitle', 'Custom Date Range')
-                  : t('common.help', 'Help')}
+                  ? t('admin.overview.customRangeTitle')
+                  : t('common.help')}
             </h3>
             <button
               onClick={closeAdminOverlay}
@@ -562,9 +562,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
           {adminOverlay === 'notifications' ? (
             <div className="space-y-3 p-4">
               {[
-                t('admin.overview.pendingActions', 'Pending actions require review'),
-                t('admin.approvals.itemsAwaitingReview', 'Products are awaiting approval'),
-                t('admin.users.supplierManagement', 'User updates are available'),
+                t('admin.overview.pendingActions'),
+                t('admin.approvals.itemsAwaitingReview'),
+                t('admin.users.supplierManagement'),
               ].map((item, index) => (
                 <div key={index} className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
                   {item}
@@ -574,7 +574,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
           ) : adminOverlay === 'range' ? (
             <div className="space-y-4 p-4">
               <p className="text-sm text-slate-600">
-                {t('admin.overview.customRangePrompt', 'Enter number of days (7-365)')}
+                {t('admin.overview.customRangePrompt')}
               </p>
               <input
                 type="number"
@@ -589,20 +589,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
                   onClick={closeAdminOverlay}
                   className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                 >
-                  {t('common.cancel', 'Cancel')}
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={handleApplyOverviewCustomRange}
                   className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700"
                 >
-                  {t('common.apply', 'Apply')}
+                  {t('common.apply')}
                 </button>
               </div>
             </div>
           ) : (
             <div className="p-4">
               <p className="text-sm text-slate-600 mb-4">
-                {t('help.description', 'Find answers to common questions and manage your support requests.')}
+                {t('help.description')}
               </p>
               <div className="grid gap-3">
                 <button className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 hover:bg-slate-50 transition-colors text-left">
@@ -610,8 +610,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
                     <span className="material-symbols-outlined">description</span>
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900">{t('help.reviewRequests', 'Review Requests')}</h4>
-                    <p className="text-xs text-slate-500">{t('help.checkPendingItems', 'Check pending items')}</p>
+                    <h4 className="font-bold text-slate-900">{t('help.reviewRequests')}</h4>
+                    <p className="text-xs text-slate-500">{t('help.checkPendingItems')}</p>
                   </div>
                 </button>
                 <button className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 hover:bg-slate-50 transition-colors text-left">
@@ -619,8 +619,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
                     <span className="material-symbols-outlined">settings</span>
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900">{t('help.openSettings', 'Open Settings')}</h4>
-                    <p className="text-xs text-slate-500">{t('help.configureSystem', 'Configure system')}</p>
+                    <h4 className="font-bold text-slate-900">{t('help.openSettings')}</h4>
+                    <p className="text-xs text-slate-500">{t('help.configureSystem')}</p>
                   </div>
                 </button>
               </div>
@@ -635,7 +635,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
     try {
       const quote = quotes.find((item) => item.id === quoteId);
       if (!quote) {
-        toast.error(t('admin.margins.quoteNotFound', 'Quote not found'));
+        toast.error(t('admin.margins.quoteNotFound'));
         return;
       }
 
@@ -648,17 +648,16 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
         marginPercent,
         finalPrice,
       });
-
       setEditingQuotes((previous) => {
         const next = { ...previous };
         delete next[quoteId];
         return next;
       });
       await loadQuotes();
-      toast.success(t('admin.margins.sentToClient', 'Quote sent to client'));
+      toast.success(t('admin.margins.sentToClient'));
     } catch (error) {
       logger.error('Failed to send quote to client', error);
-      toast.error(t('admin.margins.sendFailed', 'Failed to send quote to client'));
+      toast.error(t('admin.margins.sendFailed'));
     }
   };
 
@@ -666,10 +665,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
     try {
       await api.updateQuote(quoteId, { status: 'REJECTED' });
       await loadQuotes();
-      toast.success(t('admin.margins.quoteRejected', 'Quote rejected'));
+      toast.success(t('admin.margins.quoteRejected'));
     } catch (error) {
       logger.error('Failed to reject quote', error);
-      toast.error(t('admin.margins.rejectFailed', 'Failed to reject quote'));
+      toast.error(t('admin.margins.rejectFailed'));
     }
   };
 
@@ -848,7 +847,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
       const dateKey = toDateKey(orderDateValue(order)) || '-';
       return {
         id: order.id,
-        client: client?.companyName || client?.name || t('admin.overview.unknownClient', 'Unknown Client'),
+        client: client?.companyName || client?.name || t('admin.overview.unknownClient'),
         status: order.status,
         value: moneyFormatter.format(order.amount),
         date: dateKey,
@@ -861,7 +860,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
       const supplier = users.find((user) => user.id === order.supplierId);
       return {
         id: order.id,
-        supplierName: supplier?.companyName || supplier?.publicId || supplier?.name || t('admin.overview.unknownSupplier', 'Unknown Supplier'),
+        supplierName: supplier?.companyName || supplier?.publicId || supplier?.name || t('admin.overview.unknownSupplier'),
       };
     })
     .slice(0, 12);
@@ -877,8 +876,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
     const rfq = quote ? rfqsById.get(quote.rfqId) : undefined;
     const firstItem = rfq?.items?.[0];
     const category = firstItem
-      ? (productsById.get(firstItem.productId)?.category || t('admin.overview.uncategorized', 'Uncategorized'))
-      : t('admin.overview.uncategorized', 'Uncategorized');
+      ? (productsById.get(firstItem.productId)?.category || t('admin.overview.uncategorized'))
+      : t('admin.overview.uncategorized');
     categoryRevenueMap.set(category, (categoryRevenueMap.get(category) || 0) + Number(order.amount || 0));
   });
 
@@ -944,7 +943,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
   if (dashboardStats?.pendingUsers) {
     overviewPendingActions.push({
       type: t('admin.overview.newSupplier'),
-      desc: `${dashboardStats.pendingUsers} ${t('admin.overview.awaitsVerification', 'users awaiting verification')}`,
+      desc: `${dashboardStats.pendingUsers} ${t('admin.overview.awaitsVerification')}`,
       tab: 'users',
     });
   }
@@ -952,7 +951,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
   if (dashboardStats?.pendingProducts) {
     overviewPendingActions.push({
       type: t('admin.overview.productApproval'),
-      desc: `${dashboardStats.pendingProducts} ${t('admin.overview.needsApproval', 'products need approval')}`,
+      desc: `${dashboardStats.pendingProducts} ${t('admin.overview.needsApproval')}`,
       tab: 'approvals',
     });
   }
@@ -961,7 +960,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
   if (!dashboardStats && pendingQuoteReviews[0]) {
     overviewPendingActions.push({
       type: t('admin.overview.pendingActions'),
-      desc: `${pendingQuoteReviews.length} ${t('admin.margins.quotesAwaitingApproval', 'quotes awaiting approval')}`,
+      desc: `${pendingQuoteReviews.length} ${t('admin.margins.quotesAwaitingApproval')}`,
       tab: 'margins',
     });
   }
@@ -1033,7 +1032,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
                 result.reason instanceof Error ? result.reason.message : String(result.reason)
               )),
             });
-            toast.error(t('admin.loadingTabDataFailed', 'Some dashboard data failed to load. Please refresh again.'));
+            toast.error(t('admin.loadingTabDataFailed'));
           }
         } finally {
           if (!isCancelled) {
@@ -1293,10 +1292,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ activeTab, onNavigate 
         <div className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
           <span className="material-symbols-outlined mb-3 inline-flex animate-spin text-4xl text-slate-400">progress_activity</span>
           <h3 className="text-lg font-semibold text-slate-900">
-            {t('common.loading', 'Loading...')}
+            {t('common.loading')}
           </h3>
           <p className="mt-1 text-sm text-slate-500">
-            {t('admin.loadingTabData', 'Fetching latest dashboard data...')}
+            {t('admin.loadingTabData')}
           </p>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mockContext = vi.hoisted(() => {
   const state = {
     activeAuthUserId: 'client-1',
+    acceptQuoteRpcResultMode: 'ORDER_ROW' as 'ORDER_ROW' | 'JSONB_WITH_ORDER_ID',
     users: [] as Array<{ id: string; role: string }>,
     quotes: [] as Array<Record<string, any>>,
     orders: [] as Array<Record<string, any>>,
@@ -12,6 +13,7 @@ const mockContext = vi.hoisted(() => {
 
   const reset = () => {
     state.activeAuthUserId = 'client-1';
+    state.acceptQuoteRpcResultMode = 'ORDER_ROW';
     state.users = [
       { id: 'client-1', role: 'CLIENT' },
       { id: 'supplier-1', role: 'SUPPLIER' },
@@ -180,6 +182,17 @@ const mockContext = vi.hoisted(() => {
           updated_at: new Date().toISOString(),
         };
         state.orders.push(order);
+        if (state.acceptQuoteRpcResultMode === 'JSONB_WITH_ORDER_ID') {
+          return {
+            data: {
+              success: true,
+              order_id: order.id,
+              quote_id: quote.id,
+              amount: quote.final_price,
+            },
+            error: null,
+          };
+        }
         return { data: order, error: null };
       }
 
@@ -318,6 +331,17 @@ describe('RFQ -> Quote -> Order -> Payment confirmation integration', () => {
     expect(mockContext.state.payment_audit_logs).toHaveLength(2);
     expect(mockContext.state.payment_audit_logs[0].action).toBe('REFERENCE_SUBMITTED');
     expect(mockContext.state.payment_audit_logs[1].action).toBe('PAYMENT_CONFIRMED');
+  });
+
+  it('accepts quotes when RPC returns a JSON payload with order_id', async () => {
+    mockContext.state.acceptQuoteRpcResultMode = 'JSONB_WITH_ORDER_ID';
+
+    const accepted = await api.acceptQuote('quote-1');
+
+    expect(accepted.quote?.status).toBe('ACCEPTED');
+    expect(accepted.order?.id).toBeTruthy();
+    expect(accepted.order?.quoteId).toBe('quote-1');
+    expect(accepted.order?.status).toBe('PENDING_PAYMENT');
   });
 
   it('blocks non-admin users from confirming payment', async () => {

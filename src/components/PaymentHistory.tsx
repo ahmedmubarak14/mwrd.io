@@ -75,7 +75,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ clientId }) => {
                   .filter(p => p.status === PaymentStatus.PAID)
                   .reduce((sum, p) => sum + p.amount, 0)
                   .toFixed(2)}{' '}
-                {t('common.currency', 'SAR')}
+                {t('common.currency')}
               </p>
             </div>
           </div>
@@ -161,7 +161,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ clientId }) => {
                           {payment.card_brand && ` • ${payment.card_brand}`}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
-                          {new Date(payment.created_at).toLocaleDateString()} {t('common.at', 'at')}{' '}
+                          {new Date(payment.created_at).toLocaleDateString()} {t('common.at')}{' '}
                           {new Date(payment.created_at).toLocaleTimeString()}
                         </p>
                       </div>
@@ -223,7 +223,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ clientId }) => {
 
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="font-bold text-gray-900">{invoice.total_amount.toFixed(2)} {t('common.currency', 'SAR')}</p>
+                        <p className="font-bold text-gray-900">{invoice.total_amount.toFixed(2)} {t('common.currency')}</p>
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
                             invoice.status

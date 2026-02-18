@@ -124,7 +124,7 @@ export const AdminSupplierPerformanceView: React.FC<AdminSupplierPerformanceView
     <div data-testid="admin-supplier-performance-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
+          portalLabel={t('sidebar.adminPortal')}
           title={t('admin.supplierPerformance.title')}
           subtitle={t('admin.supplierPerformance.subtitle')}
         />

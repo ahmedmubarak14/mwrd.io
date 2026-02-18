@@ -90,16 +90,16 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ exportToCSV })
       client_id: order.clientId,
     }));
     exportToCSV(rows, 'admin_orders');
-    toast.success(t('admin.orders.exported', 'Orders exported'));
+    toast.success(t('admin.orders.exported'));
   };
 
   return (
     <div data-testid="admin-orders-view">
       <PortalPageShell className="animate-in fade-in duration-300">
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
+          portalLabel={t('sidebar.adminPortal')}
           title={t('sidebar.orders')}
-          subtitle={t('admin.orders.subtitle', 'Track statuses, payment links, and payment confirmations')}
+          subtitle={t('admin.orders.subtitle')}
         />
 
         {focusedOrderId && (

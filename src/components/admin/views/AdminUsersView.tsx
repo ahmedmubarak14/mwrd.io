@@ -153,7 +153,7 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
     <div data-testid="admin-users-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
+          portalLabel={t('sidebar.adminPortal')}
           title={t('sidebar.users')}
           subtitle={userViewMode === 'suppliers'
             ? t('admin.users.supplierManagement')
@@ -176,10 +176,10 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
               <button
                 onClick={() => setIsIdentityLookupOpen(true)}
                 className="inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors"
-                title={t('admin.users.identityLookup', 'Identity Lookup')}
+                title={t('admin.users.identityLookup')}
               >
                 <span className="material-symbols-outlined text-xl">person_search</span>
-                <span className="text-sm font-semibold hidden sm:inline">{t('admin.users.identityLookup', 'Identity Lookup')}</span>
+                <span className="text-sm font-semibold hidden sm:inline">{t('admin.users.identityLookup')}</span>
               </button>
               <button
                 onClick={onOpenAdminNotifications}
@@ -245,11 +245,11 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                     onChange={(event) => onSupplierStatusFilterChange(event.target.value as 'ALL' | 'APPROVED' | 'PENDING' | 'REJECTED' | 'REQUIRES_ATTENTION')}
                     className="h-10 appearance-none rounded-lg bg-gray-100 pl-3 pr-8 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                   >
-                    <option value="ALL">{t('admin.users.filter')} - {t('common.all', 'All')}</option>
-                    <option value="APPROVED">{t('common.approved', 'Approved')}</option>
-                    <option value="PENDING">{t('common.pending', 'Pending')}</option>
-                    <option value="REJECTED">{t('common.rejected', 'Rejected')}</option>
-                    <option value="REQUIRES_ATTENTION">{t('admin.users.requiresAttention', 'Requires Attention')}</option>
+                    <option value="ALL">{t('admin.users.filter')} - {t('common.all')}</option>
+                    <option value="APPROVED">{t('common.approved')}</option>
+                    <option value="PENDING">{t('common.pending')}</option>
+                    <option value="REJECTED">{t('common.rejected')}</option>
+                    <option value="REQUIRES_ATTENTION">{t('admin.users.requiresAttention')}</option>
                   </select>
                   <span className="material-symbols-outlined pointer-events-none absolute right-2 top-2 text-xl text-gray-500 dark:text-gray-300">expand_more</span>
                 </div>
@@ -298,7 +298,7 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                             <button
                               onClick={(e) => { e.stopPropagation(); onConvertRole(user.id, UserRole.CLIENT); }}
                               className="p-1 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
-                              title={t('admin.users.convertToClient', 'Convert to Client')}
+                              title={t('admin.users.convertToClient')}
                             >
                               <span className="material-symbols-outlined text-[20px]">switch_account</span>
                             </button>
@@ -309,7 +309,7 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                     {filteredSupplierUsers.length === 0 && (
                       <tr>
                         <td colSpan={6} className="px-4 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
-                          {t('common.noResults', 'No matching suppliers')}
+                          {t('common.noResults')}
                         </td>
                       </tr>
                     )}
@@ -357,9 +357,9 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                     className="h-10 appearance-none rounded-lg border border-border-light bg-transparent pl-3 pr-8 text-sm font-medium text-subtext-light hover:bg-primary/10 dark:border-border-dark dark:text-subtext-dark"
                   >
                     <option value="ALL">{t('admin.users.statusAll')}</option>
-                    <option value="ACTIVE">{t('admin.users.active', 'Active')}</option>
-                    <option value="PENDING">{t('common.pending', 'Pending')}</option>
-                    <option value="DEACTIVATED">{t('admin.users.deactivated', 'Deactivated')}</option>
+                    <option value="ACTIVE">{t('admin.users.active')}</option>
+                    <option value="PENDING">{t('common.pending')}</option>
+                    <option value="DEACTIVATED">{t('admin.users.deactivated')}</option>
                   </select>
                   <span className="material-symbols-outlined pointer-events-none absolute right-2 top-2 !text-xl">expand_more</span>
                 </div>
@@ -370,9 +370,9 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                     className="h-10 appearance-none rounded-lg border border-border-light bg-transparent pl-3 pr-8 text-sm font-medium text-subtext-light hover:bg-primary/10 dark:border-border-dark dark:text-subtext-dark"
                   >
                     <option value="ALL">{t('admin.users.dateRange')}</option>
-                    <option value="LAST_30_DAYS">{t('common.dateFilter.last30Days', 'Last 30 days')}</option>
-                    <option value="LAST_90_DAYS">{t('common.dateFilter.last90Days', 'Last 90 days')}</option>
-                    <option value="THIS_YEAR">{t('common.dateFilter.thisYear', 'This year')}</option>
+                    <option value="LAST_30_DAYS">{t('common.dateFilter.last30Days')}</option>
+                    <option value="LAST_90_DAYS">{t('common.dateFilter.last90Days')}</option>
+                    <option value="THIS_YEAR">{t('common.dateFilter.thisYear')}</option>
                   </select>
                   <span className="material-symbols-outlined pointer-events-none absolute right-2 top-2 !text-xl">expand_more</span>
                 </div>
@@ -395,8 +395,8 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                       <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark">{t('admin.users.company')}</th>
                       <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark">{t('admin.users.email')}</th>
                       <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark">{t('admin.users.status')}</th>
-                      <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark">{t('admin.users.creditLimit', 'Credit Limit')}</th>
-                      <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark">{t('admin.users.margin', 'Client Margin')}</th>
+                      <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark">{t('admin.users.creditLimit')}</th>
+                      <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark">{t('admin.users.margin')}</th>
                       <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark">{t('admin.users.dateJoined')}</th>
                       <th className="px-4 py-3 text-sm font-medium text-subtext-light dark:text-subtext-dark text-right">{t('admin.users.actions')}</th>
                     </tr>
@@ -425,22 +425,22 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                             <button
                               onClick={() => onOpenClientMarginModal(client)}
                               className="px-2.5 py-1.5 text-xs font-semibold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
-                              title={t('admin.users.setClientMargin', 'Set Client Margin')}
+                              title={t('admin.users.setClientMargin')}
                             >
-                              {t('admin.margins.margin', 'Margin')}
+                              {t('admin.margins.margin')}
                             </button>
                             <button
                               data-testid={`admin-client-credit-set-${client.id}`}
                               onClick={() => onOpenCreditAdjustModal(client, 'SET')}
                               className="px-2.5 py-1.5 text-xs font-semibold rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
                             >
-                              {t('common.set', 'Set')}
+                              {t('common.set')}
                             </button>
                             <button
                               data-testid={`admin-client-credit-increase-${client.id}`}
                               onClick={() => onOpenCreditAdjustModal(client, 'INCREASE')}
                               className="p-1.5 rounded-md border border-emerald-300 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-700 dark:text-emerald-300 dark:hover:bg-emerald-900/20"
-                              title={t('admin.users.increaseCredit', 'Increase credit')}
+                              title={t('admin.users.increaseCredit')}
                             >
                               <span className="material-symbols-outlined text-base">add</span>
                             </button>
@@ -448,7 +448,7 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                               data-testid={`admin-client-credit-decrease-${client.id}`}
                               onClick={() => onOpenCreditAdjustModal(client, 'DECREASE')}
                               className="p-1.5 rounded-md border border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20"
-                              title={t('admin.users.decreaseCredit', 'Decrease credit')}
+                              title={t('admin.users.decreaseCredit')}
                             >
                               <span className="material-symbols-outlined text-base">remove</span>
                             </button>
@@ -456,7 +456,7 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                               data-testid={`admin-client-credit-history-${client.id}`}
                               onClick={() => onOpenCreditHistoryModal(client)}
                               className="p-1.5 rounded-md border border-sky-300 text-sky-700 hover:bg-sky-50 dark:border-sky-700 dark:text-sky-300 dark:hover:bg-sky-900/20"
-                              title={t('admin.users.creditLimitHistory', 'Credit limit history')}
+                              title={t('admin.users.creditLimitHistory')}
                             >
                               <span className="material-symbols-outlined text-base">history</span>
                             </button>
@@ -469,7 +469,7 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                             <button
                               onClick={() => onConvertRole(client.id, UserRole.SUPPLIER)}
                               className="p-1 rounded-lg text-orange-600 hover:bg-orange-50 transition-colors"
-                              title={t('admin.users.convertToSupplier', 'Convert to Supplier')}
+                              title={t('admin.users.convertToSupplier')}
                             >
                               <span className="material-symbols-outlined text-[20px]">switch_account</span>
                             </button>
@@ -480,7 +480,7 @@ export const AdminUsersView: React.FC<AdminUsersViewProps> = ({
                     {paginatedClientUsers.length === 0 && (
                       <tr>
                         <td colSpan={9} className="h-[72px] px-4 py-2 text-center text-sm text-subtext-light dark:text-subtext-dark">
-                          {t('common.noResults', 'No matching clients')}
+                          {t('common.noResults')}
                         </td>
                       </tr>
                     )}
@@ -617,10 +617,10 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
             </div>
             <div>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                {t('admin.users.identityLookup', 'Identity Lookup')}
+                {t('admin.users.identityLookup')}
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {t('admin.users.identityLookupDesc', 'Search by user ID, public ID, email, or name')}
+                {t('admin.users.identityLookupDesc')}
               </p>
             </div>
           </div>
@@ -642,7 +642,7 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
               <input
                 type="text"
                 className="flex-1 px-3 py-2.5 bg-transparent border-none outline-none text-sm text-gray-900 dark:text-white placeholder:text-gray-400"
-                placeholder={t('admin.users.identitySearchPlaceholder', 'Enter public ID, user ID, email, or name...')}
+                placeholder={t('admin.users.identitySearchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -653,7 +653,7 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
               onClick={handleSearch}
               className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              {t('common.search', 'Search')}
+              {t('common.search')}
             </button>
           </div>
         </div>
@@ -664,7 +664,7 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
             <div className="text-center py-12">
               <span className="material-symbols-outlined text-5xl text-gray-300 mb-3">manage_search</span>
               <p className="text-sm text-gray-500">
-                {t('admin.users.identitySearchHint', 'Enter a public ID or other identifier to look up a user\'s identity.')}
+                {t('admin.users.identitySearchHint')}
               </p>
             </div>
           )}
@@ -673,10 +673,10 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
             <div className="text-center py-12">
               <span className="material-symbols-outlined text-5xl text-amber-300 mb-3">person_off</span>
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                {t('admin.users.identityNotFound', 'No user found')}
+                {t('admin.users.identityNotFound')}
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                {t('admin.users.identityNotFoundHint', 'Try a different public ID, email, or name.')}
+                {t('admin.users.identityNotFoundHint')}
               </p>
             </div>
           )}
@@ -720,20 +720,20 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                 <div className="grid grid-cols-2 gap-4 mt-5">
                   <div>
                     <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                      {t('admin.users.email', 'Email')}
+                      {t('admin.users.email')}
                     </p>
                     <p className="text-sm font-medium text-gray-900 dark:text-white mt-0.5 truncate">{selectedUser.email}</p>
                   </div>
                   <div>
                     <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                      {t('admin.users.identityUserId', 'User ID')}
+                      {t('admin.users.identityUserId')}
                     </p>
                     <p className="text-sm font-mono text-gray-900 dark:text-white mt-0.5 truncate">{selectedUser.id}</p>
                   </div>
                   {selectedUser.publicId && (
                     <div>
                       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                        {t('admin.users.identityPublicId', 'Public ID')}
+                        {t('admin.users.identityPublicId')}
                       </p>
                       <p className="text-sm font-mono text-gray-900 dark:text-white mt-0.5">{selectedUser.publicId}</p>
                     </div>
@@ -741,21 +741,21 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                   {selectedUser.phone && (
                     <div>
                       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                        {t('common.phone', 'Phone')}
+                        {t('common.phone')}
                       </p>
                       <p className="text-sm text-gray-900 dark:text-white mt-0.5">{selectedUser.phone}</p>
                     </div>
                   )}
                   <div>
                     <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                      {t('admin.users.kycStatus', 'KYC Status')}
+                      {t('admin.users.kycStatus')}
                     </p>
                     <div className="mt-1">{getKycBadge(selectedUser.kycStatus || 'INCOMPLETE')}</div>
                   </div>
                   {selectedUser.dateJoined && (
                     <div>
                       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                        {t('admin.users.dateJoined', 'Date Joined')}
+                        {t('admin.users.dateJoined')}
                       </p>
                       <p className="text-sm text-gray-900 dark:text-white mt-0.5">{selectedUser.dateJoined}</p>
                     </div>
@@ -764,7 +764,7 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                     <>
                       <div>
                         <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                          {t('admin.users.creditLimit', 'Credit Limit')}
+                          {t('admin.users.creditLimit')}
                         </p>
                         <p className="text-sm font-semibold text-gray-900 dark:text-white mt-0.5">
                           {creditLimitFormatter.format(Number(selectedUser.creditLimit || 0))}
@@ -773,7 +773,7 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                       {selectedUser.creditUsed !== undefined && (
                         <div>
                           <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                            {t('admin.users.identityCreditUsed', 'Credit Used')}
+                            {t('admin.users.identityCreditUsed')}
                           </p>
                           <p className="text-sm font-semibold text-gray-900 dark:text-white mt-0.5">
                             {creditLimitFormatter.format(Number(selectedUser.creditUsed || 0))}
@@ -785,7 +785,7 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                   {selectedUser.rating !== undefined && (
                     <div>
                       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                        {t('admin.users.identityRating', 'Rating')}
+                        {t('admin.users.identityRating')}
                       </p>
                       <div className="flex items-center gap-1 mt-0.5">
                         <span className="material-symbols-outlined text-amber-500 text-base" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
@@ -796,7 +796,7 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                   {selectedUser.role === UserRole.SUPPLIER && selectedUser.paymentSettings && (
                     <div className="col-span-2">
                       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                        {t('supplier.settings.paymentSettings', 'Payment Settings')}
+                        {t('supplier.settings.paymentSettings')}
                       </p>
                       <div className="mt-1 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-900 dark:text-white">
                         <p>{selectedUser.paymentSettings.bankName || '-'}</p>
@@ -809,7 +809,7 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                   {selectedUser.role === UserRole.SUPPLIER && selectedUser.kycDocuments && Object.keys(selectedUser.kycDocuments).length > 0 && (
                     <div className="col-span-2">
                       <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-                        {t('supplier.settings.kycDocuments', 'KYC Documents')}
+                        {t('supplier.settings.kycDocuments')}
                       </p>
                       <div className="mt-1 space-y-1">
                         {Object.entries(selectedUser.kycDocuments).map(([documentType, documentPath]) => (
@@ -836,14 +836,14 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                 <div className="flex items-center gap-2 mb-4">
                   <span className="material-symbols-outlined text-lg text-gray-600 dark:text-gray-300">receipt_long</span>
                   <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                    {t('admin.users.identityOrderSummary', 'Order History Summary')}
+                    {t('admin.users.identityOrderSummary')}
                   </h4>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl">
                     <p className="text-2xl font-bold text-blue-600 dark:text-blue-300">{orderSummary.count}</p>
                     <p className="text-xs text-blue-600/70 dark:text-blue-300/70 font-medium mt-1">
-                      {t('admin.users.identityTotalOrders', 'Total Orders')}
+                      {t('admin.users.identityTotalOrders')}
                     </p>
                   </div>
                   <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-xl">
@@ -851,13 +851,13 @@ const IdentityLookupModal: React.FC<IdentityLookupModalProps> = ({ users, orders
                       {creditLimitFormatter.format(orderSummary.totalAmount)}
                     </p>
                     <p className="text-xs text-emerald-600/70 dark:text-emerald-300/70 font-medium mt-1">
-                      {t('admin.users.identityTotalAmount', 'Total Amount')}
+                      {t('admin.users.identityTotalAmount')}
                     </p>
                   </div>
                 </div>
                 {userOrders.length === 0 && (
                   <p className="text-xs text-gray-400 mt-3 text-center">
-                    {t('admin.users.identityNoOrders', 'No orders found for this user.')}
+                    {t('admin.users.identityNoOrders')}
                   </p>
                 )}
               </div>

@@ -186,13 +186,13 @@ export const QuoteComparison: React.FC<QuoteComparisonProps> = ({ quotes, onAcce
                           </div>
                           {quote.supplier?.orderCount !== undefined && (
                             <span className="text-xs text-neutral-500">
-                              {quote.supplier.orderCount} {t('client.quotes.ordersCompleted', 'Orders')}
+                              {quote.supplier.orderCount} {t('client.quotes.ordersCompleted')}
                             </span>
                           )}
                           {quote.supplier?.rating !== undefined && (
                             <span className="text-xs text-neutral-500 inline-flex items-center gap-1">
                               <span className="material-symbols-outlined text-[14px] text-yellow-500">star</span>
-                              {t('client.quotes.supplierRating', 'Rating')}: {Number(quote.supplier.rating).toFixed(1)}
+                              {t('client.quotes.supplierRating')}: {Number(quote.supplier.rating).toFixed(1)}
                             </span>
                           )}
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium w-fit ${quoteType === 'auto' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
@@ -284,7 +284,7 @@ export const QuoteComparison: React.FC<QuoteComparisonProps> = ({ quotes, onAcce
                                     {quoteItem.alternativeProductName || quoteItem.productName}
                                     {quoteItem.isAlternative && (
                                       <span className="ms-1 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-orange-100 text-orange-700 border border-orange-200">
-                                        {t('client.quotes.alternative', 'Alternative')}
+                                        {t('client.quotes.alternative')}
                                       </span>
                                     )}
                                   </span>

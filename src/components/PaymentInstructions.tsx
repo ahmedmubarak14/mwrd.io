@@ -70,7 +70,7 @@ export const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
       toast.success(`${label} ${t('toast.copiedToClipboard')}`);
     } catch (error) {
       logger.error('Clipboard write failed:', error);
-      toast.error(t('common.copyFailed', 'Failed to copy'));
+      toast.error(t('common.copyFailed'));
     }
   };
 
@@ -223,7 +223,7 @@ export const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
           <h4 className="font-semibold text-gray-900 mb-4">{t('paymentInstructions.afterTransfer')}</h4>
           <p className="text-sm text-gray-600 mb-4">
             {isAwaitingAdminReview
-              ? t('paymentInstructions.awaitingAdminReview', 'Reference submitted. Waiting for admin verification.')
+              ? t('paymentInstructions.awaitingAdminReview')
               : t('paymentInstructions.referenceInstructions')}
           </p>
 
@@ -273,7 +273,7 @@ export const PaymentInstructions: React.FC<PaymentInstructionsProps> = ({
                   <span className="material-symbols-outlined">{isAwaitingAdminReview ? 'hourglass_top' : 'save'}</span>
                   <span>
                     {isAwaitingAdminReview
-                      ? t('paymentInstructions.referenceSubmitted', 'Reference submitted')
+                      ? t('paymentInstructions.referenceSubmitted')
                       : t('paymentInstructions.submitReference')}
                   </span>
                 </>

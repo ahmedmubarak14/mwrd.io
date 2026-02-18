@@ -63,7 +63,7 @@ const NotificationEventMatrix: React.FC = () => {
               : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
           }`}
         >
-          {t('common.all', 'All')} ({NOTIFICATION_EVENT_TYPES.length})
+          {t('common.all')} ({NOTIFICATION_EVENT_TYPES.length})
         </button>
         {categories.map(cat => {
           const count = NOTIFICATION_EVENT_TYPES.filter(e => e.category === cat).length;
@@ -110,7 +110,7 @@ const NotificationEventMatrix: React.FC = () => {
                 </span>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-green-50 text-green-600">
                   <span className="material-symbols-outlined text-xs">check_circle</span>
-                  {t('admin.settings.notifActive', 'Active')}
+                  {t('admin.settings.notifActive')}
                 </span>
               </div>
             </div>
@@ -119,7 +119,7 @@ const NotificationEventMatrix: React.FC = () => {
       </div>
 
       <p className="text-xs text-gray-400 mt-3">
-        {t('admin.settings.notifReadOnlyHint', 'Notification templates are managed via the database. This view is read-only.')}
+        {t('admin.settings.notifReadOnlyHint')}
       </p>
     </div>
   );
@@ -140,12 +140,12 @@ export const AdminSettingsView: React.FC = () => {
     try {
       const success = await updateSystemConfig(localConfig);
       if (success) {
-        toast.success(t('admin.settings.saved', 'Settings Saved'));
+        toast.success(t('admin.settings.saved'));
         return;
       }
-      toast.error(t('admin.settings.saveFailed', 'Failed to save settings.'));
+      toast.error(t('admin.settings.saveFailed'));
     } catch {
-      toast.error(t('admin.settings.saveFailed', 'Failed to save settings.'));
+      toast.error(t('admin.settings.saveFailed'));
     }
   };
 
@@ -153,15 +153,15 @@ export const AdminSettingsView: React.FC = () => {
     <div data-testid="admin-settings-view">
       <PortalPageShell className="animate-in fade-in duration-300">
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
-          title={t('admin.settings.title', 'Platform Settings')}
-          subtitle={t('admin.settings.subtitle', 'Configure system-wide parameters and automation rules')}
+          portalLabel={t('sidebar.adminPortal')}
+          title={t('admin.settings.title')}
+          subtitle={t('admin.settings.subtitle')}
           actions={(
             <button
               onClick={handleSave}
               className="px-6 py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors shadow-lg shadow-blue-500/20"
             >
-              {t('common.saveChanges', 'Save Changes')}
+              {t('common.saveChanges')}
             </button>
           )}
         />
@@ -173,8 +173,8 @@ export const AdminSettingsView: React.FC = () => {
               <span className="material-symbols-outlined text-2xl">bolt</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900">{t('admin.settings.autoQuote', 'Auto-Quote System')}</h3>
-              <p className="text-sm text-gray-400">{t('admin.settings.autoQuoteDesc', 'Automated pricing for expired RFQs')}</p>
+              <h3 className="text-lg font-bold text-gray-900">{t('admin.settings.autoQuote')}</h3>
+              <p className="text-sm text-gray-400">{t('admin.settings.autoQuoteDesc')}</p>
             </div>
           </div>
 
@@ -183,10 +183,10 @@ export const AdminSettingsView: React.FC = () => {
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
               <div className="flex-1">
                 <label className="block text-sm font-bold text-gray-700">
-                  {t('admin.settings.autoQuoteEnabled', 'Enable Auto-Quote')}
+                  {t('admin.settings.autoQuoteEnabled')}
                 </label>
                 <p className="text-xs text-gray-400 mt-1">
-                  {t('admin.settings.autoQuoteEnabledDesc', 'When enabled, the system will automatically generate quotes for RFQs that receive no supplier response within the configured delay.')}
+                  {t('admin.settings.autoQuoteEnabledDesc')}
                 </p>
               </div>
               <button
@@ -212,10 +212,10 @@ export const AdminSettingsView: React.FC = () => {
                 <span className="material-symbols-outlined text-amber-600">warning</span>
                 <div>
                   <p className="text-sm font-bold text-amber-800">
-                    {t('admin.settings.autoQuoteDisabled', 'Auto-Quote Disabled')}
+                    {t('admin.settings.autoQuoteDisabled')}
                   </p>
                   <p className="text-xs text-amber-600">
-                    {t('admin.settings.autoQuoteDisabledDesc', 'The auto-quote system is currently turned off. RFQs will not be automatically quoted.')}
+                    {t('admin.settings.autoQuoteDisabledDesc')}
                   </p>
                 </div>
               </div>
@@ -224,7 +224,7 @@ export const AdminSettingsView: React.FC = () => {
             <div className={localConfig.autoQuoteEnabled === false ? 'opacity-50 pointer-events-none' : ''}>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  {t('admin.settings.timerDelay', 'Auto-Quote Delay (Minutes)')}
+                  {t('admin.settings.timerDelay')}
                 </label>
                 <div className="flex items-center gap-4">
                   <select
@@ -232,13 +232,13 @@ export const AdminSettingsView: React.FC = () => {
                     onChange={(e) => setLocalConfig({ ...localConfig, autoQuoteDelayMinutes: Number(e.target.value) })}
                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl font-bold text-lg text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                   >
-                    <option value={15}>15 {t('admin.settings.min', 'min')}</option>
-                    <option value={30}>30 {t('admin.settings.min', 'min')}</option>
-                    <option value={60}>60 {t('admin.settings.min', 'min')}</option>
+                    <option value={15}>15 {t('admin.settings.min')}</option>
+                    <option value={30}>30 {t('admin.settings.min')}</option>
+                    <option value={60}>60 {t('admin.settings.min')}</option>
                   </select>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">
-                  {t('admin.settings.autoQuoteHelp', 'RFQs will be automatically quoted if no suppliers respond within this time.')}
+                  {t('admin.settings.autoQuoteHelp')}
                 </p>
               </div>
 
@@ -246,10 +246,10 @@ export const AdminSettingsView: React.FC = () => {
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200 mt-4">
                 <div className="flex-1">
                   <label className="block text-sm font-bold text-gray-700">
-                    {t('admin.settings.limitedStockToggle', 'Include Limited Stock Items')}
+                    {t('admin.settings.limitedStockToggle')}
                   </label>
                   <p className="text-xs text-gray-400 mt-1">
-                    {t('admin.settings.limitedStockDesc', 'When enabled, auto-quotes will include items with limited stock availability.')}
+                    {t('admin.settings.limitedStockDesc')}
                   </p>
                 </div>
                 <button
@@ -271,7 +271,7 @@ export const AdminSettingsView: React.FC = () => {
 
               <div className="mt-6">
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  {t('admin.settings.defaultMargin', 'Default Automation Margin')}
+                  {t('admin.settings.defaultMargin')}
                 </label>
                 <div className="flex items-center gap-4">
                   <input
@@ -282,16 +282,16 @@ export const AdminSettingsView: React.FC = () => {
                     onChange={(e) => setLocalConfig({ ...localConfig, defaultMarginPercent: Number(e.target.value) })}
                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl font-bold text-lg text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                   />
-                  <span className="text-gray-400 font-medium">{t('admin.settings.percent', '%')}</span>
+                  <span className="text-gray-400 font-medium">{t('admin.settings.percent')}</span>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">
-                  {t('admin.settings.marginHelp', "Margin applied to the supplier's selling price for auto-generated quotes. Category-specific margins will override this if higher.")}
+                  {t('admin.settings.marginHelp')}
                 </p>
               </div>
 
               <div className="mt-6">
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  {t('admin.settings.rfqDefaultExpiryDays', 'RFQ Default Expiry (Days)')}
+                  {t('admin.settings.rfqDefaultExpiryDays')}
                 </label>
                 <input
                   type="number"
@@ -302,7 +302,7 @@ export const AdminSettingsView: React.FC = () => {
                   className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl font-bold text-lg text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"
                 />
                 <p className="text-xs text-gray-400 mt-2">
-                  {t('admin.settings.rfqDefaultExpiryDaysHelp', 'Client RFQs automatically use this expiry window. Clients can view it but cannot override it.')}
+                  {t('admin.settings.rfqDefaultExpiryDaysHelp')}
                 </p>
               </div>
 
@@ -311,10 +311,10 @@ export const AdminSettingsView: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-bold text-blue-800">
-                      {t('admin.settings.runAutoQuoteNow', 'Run Auto-Quote Now')}
+                      {t('admin.settings.runAutoQuoteNow')}
                     </p>
                     <p className="text-xs text-blue-600 mt-1">
-                      {t('admin.settings.runAutoQuoteNowDesc', 'Manually trigger the auto-quote check for all eligible RFQs immediately.')}
+                      {t('admin.settings.runAutoQuoteNowDesc')}
                     </p>
                   </div>
                   <button
@@ -322,9 +322,9 @@ export const AdminSettingsView: React.FC = () => {
                       setIsRunningAutoQuote(true);
                       try {
                         await triggerAutoQuoteCheck();
-                        toast.success(t('admin.settings.autoQuoteTriggered', 'Auto-quote check completed'));
+                        toast.success(t('admin.settings.autoQuoteTriggered'));
                       } catch {
-                        toast.error(t('admin.settings.autoQuoteError', 'Failed to run auto-quote check'));
+                        toast.error(t('admin.settings.autoQuoteError'));
                       } finally {
                         setIsRunningAutoQuote(false);
                       }
@@ -335,12 +335,12 @@ export const AdminSettingsView: React.FC = () => {
                     {isRunningAutoQuote ? (
                       <>
                         <span className="material-symbols-outlined text-lg animate-spin">sync</span>
-                        {t('admin.settings.running', 'Running...')}
+                        {t('admin.settings.running')}
                       </>
                     ) : (
                       <>
                         <span className="material-symbols-outlined text-lg">bolt</span>
-                        {t('admin.settings.runNow', 'Run Now')}
+                        {t('admin.settings.runNow')}
                       </>
                     )}
                   </button>
@@ -356,8 +356,8 @@ export const AdminSettingsView: React.FC = () => {
               <span className="material-symbols-outlined text-2xl">notifications</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900">{t('admin.settings.notifications', 'Notification Rules')}</h3>
-              <p className="text-sm text-gray-400">{t('admin.settings.notificationsDesc', 'Event types that trigger platform notifications')}</p>
+              <h3 className="text-lg font-bold text-gray-900">{t('admin.settings.notifications')}</h3>
+              <p className="text-sm text-gray-400">{t('admin.settings.notificationsDesc')}</p>
             </div>
           </div>
 

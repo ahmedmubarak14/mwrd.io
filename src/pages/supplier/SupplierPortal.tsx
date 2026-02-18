@@ -285,7 +285,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
 
     const normalizedSupplierPrice = Number(editingProduct.supplierPrice ?? 0);
     if (!Number.isFinite(normalizedSupplierPrice) || normalizedSupplierPrice <= 0) {
-      toast.error(t('supplier.products.pricePositiveRequired', 'Supplier price must be greater than 0'));
+      toast.error(t('supplier.products.pricePositiveRequired'));
       return;
     }
 
@@ -405,14 +405,14 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
 
     const getClientLabel = (clientId: string) => {
       const client = users.find((user) => user.id === clientId);
-      return client?.publicId || t('admin.overview.unknownClient', 'Unknown Client');
+      return client?.publicId || t('admin.overview.unknownClient');
     };
 
     return (
       <div data-testid="supplier-dashboard-view">
         <PortalPageShell className="animate-in fade-in duration-500">
           <PortalPageHeader
-            portalLabel={t('sidebar.supplierPortal', 'Supplier Portal')}
+            portalLabel={t('sidebar.supplierPortal')}
             title={t('supplier.dashboard.title')}
             subtitle={t('supplier.dashboard.welcomeMessage', { company: currentUser?.companyName || currentUser?.name || '' })}
             actions={(
@@ -641,7 +641,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
         await loadProducts();
       } catch (error) {
         logger.error('Failed to refresh products after stock update:', error);
-        toast.error(t('supplier.products.loadError', 'Failed to refresh products'));
+        toast.error(t('supplier.products.loadError'));
       }
     };
 
@@ -728,7 +728,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
 
     // Helper to map category to translation key
     const getCategoryLabel = (cat: string) => {
-      if (cat === 'All') return t('common.all', 'All');
+      if (cat === 'All') return t('common.all');
       const keyMap: Record<string, string> = {
         'Office': 'office',
         'IT Supplies': 'itSupplies',
@@ -743,7 +743,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
 
     // Helper to map subcategory to translation key
     const getSubCategoryLabel = (sub: string) => {
-      if (sub === 'All') return t('common.all', 'All');
+      if (sub === 'All') return t('common.all');
       const keyMap: Record<string, string> = {
         'All': 'all',
         'Tools': 'tools',
@@ -1083,8 +1083,8 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
               name: pendingRemoveProduct?.name || ''
             }) || `Remove ${pendingRemoveProduct?.name || 'this product'}?`
           }
-          confirmText={t('common.delete', 'Delete')}
-          cancelText={t('common.cancel', 'Cancel')}
+          confirmText={t('common.delete')}
+          cancelText={t('common.cancel')}
           type="danger"
           isLoading={isRemovingProduct}
         />
@@ -1443,7 +1443,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
           || item.quantity <= 0
         ));
         if (hasInvalidQuoteValues) {
-          toast.error(t('supplier.quotes.invalidItemValues', 'Quoted items must include valid quantity and price values.'));
+          toast.error(t('supplier.quotes.invalidItemValues'));
           return;
         }
 
@@ -1481,7 +1481,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
           if (!updatedQuote) {
             throw new Error('Failed to override auto quote');
           }
-          toast.success(t('supplier.quotes.autoQuoteOverridden', 'Your custom quote has replaced the auto-generated quote.'));
+          toast.success(t('supplier.quotes.autoQuoteOverridden'));
         } else {
           const createdQuote = await api.createQuote({
             rfqId: selectedRFQ,
@@ -1646,11 +1646,11 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                             </div>
                           </div>
                           <div className="mt-2">
-                            <label className="block text-xs font-medium text-neutral-500 mb-1">{t('supplier.quotes.itemNotes', 'Item Notes')}</label>
+                            <label className="block text-xs font-medium text-neutral-500 mb-1">{t('supplier.quotes.itemNotes')}</label>
                             <input
                               type="text"
                               className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg focus:ring-2 focus:ring-[#137fec] focus:border-[#137fec]"
-                              placeholder={t('supplier.quotes.itemNotesPlaceholder', 'Optional notes for this item')}
+                              placeholder={t('supplier.quotes.itemNotesPlaceholder')}
                               value={pricing.notes}
                               onChange={(e) => updateItemField(idx, 'notes', e.target.value)}
                             />
@@ -1667,15 +1667,15 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                                 }))}
                                 className="rounded border-amber-300 text-amber-600 focus:ring-amber-500"
                               />
-                              <span className="text-xs font-medium text-amber-800">{t('supplier.quotes.suggestAlternative', 'Suggest an alternative product')}</span>
-                              <span className="text-xs text-amber-600 ml-auto">{t('supplier.quotes.smartMatch', '✨ Smart Match')}</span>
+                              <span className="text-xs font-medium text-amber-800">{t('supplier.quotes.suggestAlternative')}</span>
+                              <span className="text-xs text-amber-600 ml-auto">{t('supplier.quotes.smartMatch')}</span>
                             </label>
                             {alternativeItems[idx]?.isAlternative && (
                               <div className="mt-2 space-y-2">
                                 <input
                                   type="text"
                                   className="w-full px-3 py-2 text-sm border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 bg-white"
-                                  placeholder={t('supplier.quotes.searchCatalog', 'Search master catalog or type a custom name...')}
+                                  placeholder={t('supplier.quotes.searchCatalog')}
                                   value={alternativeItems[idx]?.alternativeName || ''}
                                   onChange={(e) => setAlternativeItems(prev => ({
                                     ...prev,
@@ -1690,7 +1690,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                                   return (
                                     <div className="bg-white border border-amber-200 rounded-lg overflow-hidden shadow-sm">
                                       <p className="text-xs font-medium text-amber-700 px-3 py-1.5 bg-amber-50 border-b border-amber-100">
-                                        {t('supplier.quotes.catalogMatches', 'Catalog Matches')}
+                                        {t('supplier.quotes.catalogMatches')}
                                       </p>
                                       {matches.map((matchedProduct) => (
                                         <button
@@ -1750,20 +1750,20 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-neutral-600 mb-2">{t('supplier.quotes.quoteValidity', 'Quote Validity Period')}</label>
+                    <label className="block text-sm font-medium text-neutral-600 mb-2">{t('supplier.quotes.quoteValidity')}</label>
                     <div className="flex items-center gap-3">
                       <select
                         value={quoteValidityDays}
                         onChange={(e) => setQuoteValidityDays(e.target.value)}
                         className="px-4 py-2.5 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-[#137fec] focus:border-[#137fec] bg-white"
                       >
-                        <option value="3">3 {t('common.days', 'days')}</option>
-                        <option value="5">5 {t('common.days', 'days')}</option>
-                        <option value="7">7 {t('common.days', 'days')}</option>
-                        <option value="14">14 {t('common.days', 'days')}</option>
-                        <option value="30">30 {t('common.days', 'days')}</option>
+                        <option value="3">3 {t('common.days')}</option>
+                        <option value="5">5 {t('common.days')}</option>
+                        <option value="7">7 {t('common.days')}</option>
+                        <option value="14">14 {t('common.days')}</option>
+                        <option value="30">30 {t('common.days')}</option>
                       </select>
-                      <p className="text-xs text-neutral-400">{t('supplier.quotes.validityHelp', 'How long this quote remains valid for the client')}</p>
+                      <p className="text-xs text-neutral-400">{t('supplier.quotes.validityHelp')}</p>
                     </div>
                   </div>
 
@@ -1901,7 +1901,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
     const orderDateValue = (order: Order) => order.createdAt || order.updatedAt || order.date;
 
     const getClientLabel = (clientId?: string) => {
-      if (!clientId) return t('admin.overview.unknownClient', 'Unknown Client');
+      if (!clientId) return t('admin.overview.unknownClient');
       const client = users.find((user) => user.id === clientId);
       return client?.publicId || `Client-${clientId.slice(0, 8)}`;
     };
@@ -1957,7 +1957,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
 
       const printWindow = window.open('', '_blank', 'width=800,height=600');
       if (!printWindow) {
-        toast.error(t('supplier.orders.printBlocked', 'Pop-up blocked. Please allow pop-ups to print.'));
+        toast.error(t('supplier.orders.printBlocked'));
         return;
       }
 
@@ -2212,7 +2212,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
             </button>
           </div>
           <div className="border-b border-slate-200 dark:border-slate-800 mb-6">
-            <nav aria-label="Tabs" className="-mb-px flex space-x-6">
+            <nav aria-label={t('supplier.orders.tabsNavigation')} className="-mb-px flex space-x-6">
               <button
                 onClick={() => setActiveOrderTab('won')}
                 className={`shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold ${activeOrderTab === 'won' ? 'border-[#137fec] text-[#137fec]' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:text-slate-300'}`}
@@ -2254,11 +2254,11 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                       className="h-11 appearance-none rounded-lg border border-slate-200 bg-white pl-4 pr-8 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                       <option value="ALL">{t('supplier.orders.status')} - {t('common.all') || 'All'}</option>
-                      <option value="PAYMENT_CONFIRMED">{t('status.paymentConfirmed', 'Payment Confirmed')}</option>
-                      <option value="PROCESSING">{t('status.processing', 'Processing')}</option>
-                      <option value="READY_FOR_PICKUP">{t('status.readyForPickup', 'Ready for Pickup')}</option>
-                      <option value="SHIPPED">{t('status.shipped', 'Shipped')}</option>
-                      <option value="IN_TRANSIT">{t('status.inTransit', 'In Transit')}</option>
+                      <option value="PAYMENT_CONFIRMED">{t('status.paymentConfirmed')}</option>
+                      <option value="PROCESSING">{t('status.processing')}</option>
+                      <option value="READY_FOR_PICKUP">{t('status.readyForPickup')}</option>
+                      <option value="SHIPPED">{t('status.shipped')}</option>
+                      <option value="IN_TRANSIT">{t('status.inTransit')}</option>
                     </select>
                     <span className="material-symbols-outlined pointer-events-none absolute right-2 top-2.5" style={{ fontSize: '20px' }}>expand_more</span>
                   </div>
@@ -2269,9 +2269,9 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                       className="h-11 appearance-none rounded-lg border border-slate-200 bg-white pl-4 pr-8 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                       <option value="ALL">{t('supplier.orders.dateRange')}</option>
-                      <option value="LAST_30_DAYS">{t('admin.users.last30Days', 'Last 30 days')}</option>
-                      <option value="LAST_90_DAYS">{t('admin.users.last90Days', 'Last 90 days')}</option>
-                      <option value="THIS_YEAR">{t('admin.users.thisYear', 'This year')}</option>
+                      <option value="LAST_30_DAYS">{t('admin.users.last30Days')}</option>
+                      <option value="LAST_90_DAYS">{t('admin.users.last90Days')}</option>
+                      <option value="THIS_YEAR">{t('admin.users.thisYear')}</option>
                     </select>
                     <span className="material-symbols-outlined pointer-events-none absolute right-2 top-2.5" style={{ fontSize: '20px' }}>expand_more</span>
                   </div>
@@ -2323,7 +2323,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                               <button
                                 onClick={() => handlePrintShippingLabel(order)}
                                 className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-700 px-2 py-1 rounded hover:bg-slate-100 transition-colors"
-                                title={t('supplier.orders.printLabel', 'Print Shipping Label')}
+                                title={t('supplier.orders.printLabel')}
                               >
                                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>print</span>
                               </button>
@@ -2381,9 +2381,9 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                       className="h-11 appearance-none rounded-lg border border-slate-200 bg-white pl-4 pr-8 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                       <option value="ALL">{t('supplier.orders.dateRange')}</option>
-                      <option value="LAST_30_DAYS">{t('admin.users.last30Days', 'Last 30 days')}</option>
-                      <option value="LAST_90_DAYS">{t('admin.users.last90Days', 'Last 90 days')}</option>
-                      <option value="THIS_YEAR">{t('admin.users.thisYear', 'This year')}</option>
+                      <option value="LAST_30_DAYS">{t('admin.users.last30Days')}</option>
+                      <option value="LAST_90_DAYS">{t('admin.users.last90Days')}</option>
+                      <option value="THIS_YEAR">{t('admin.users.thisYear')}</option>
                     </select>
                     <span className="material-symbols-outlined pointer-events-none absolute right-2 top-2.5" style={{ fontSize: '20px' }}>expand_more</span>
                   </div>
@@ -2419,7 +2419,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                               <button
                                 onClick={() => handlePrintShippingLabel(order)}
                                 className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-700 px-2 py-1 rounded hover:bg-slate-100 transition-colors"
-                                title={t('supplier.orders.printLabel', 'Print Shipping Label')}
+                                title={t('supplier.orders.printLabel')}
                               >
                                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>print</span>
                               </button>
@@ -2444,7 +2444,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                     </tbody>
                   </table>
                 </div>
-                <nav aria-label="Table navigation" className="flex items-center justify-between p-4">
+                <nav aria-label={t('supplier.orders.tableNavigation')} className="flex items-center justify-between p-4">
                   <span className="text-sm font-normal text-slate-500 dark:text-slate-400">{t('supplier.orders.showing')} <span className="font-semibold text-slate-900 dark:text-white">{wonStart}-{wonEnd}</span> {t('supplier.orders.of')} <span className="font-semibold text-slate-900 dark:text-white">{filteredWonOrders.length}</span></span>
                   <div className="inline-flex items-center -space-x-px">
                     <button
@@ -2496,8 +2496,8 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                       className="h-11 appearance-none rounded-lg border border-slate-200 bg-white pl-4 pr-8 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                       <option value="ALL">{t('supplier.orders.status')} - {t('common.all') || 'All'}</option>
-                      <option value="DELIVERED">{t('status.delivered', 'Delivered')}</option>
-                      <option value="CLOSED">{t('status.closed', 'Closed')}</option>
+                      <option value="DELIVERED">{t('status.delivered')}</option>
+                      <option value="CLOSED">{t('status.closed')}</option>
                     </select>
                     <span className="material-symbols-outlined pointer-events-none absolute right-2 top-2.5" style={{ fontSize: '20px' }}>expand_more</span>
                   </div>
@@ -2508,9 +2508,9 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                       className="h-11 appearance-none rounded-lg border border-slate-200 bg-white pl-4 pr-8 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                       <option value="ALL">{t('supplier.orders.dateRange')}</option>
-                      <option value="LAST_30_DAYS">{t('admin.users.last30Days', 'Last 30 days')}</option>
-                      <option value="LAST_90_DAYS">{t('admin.users.last90Days', 'Last 90 days')}</option>
-                      <option value="THIS_YEAR">{t('admin.users.thisYear', 'This year')}</option>
+                      <option value="LAST_30_DAYS">{t('admin.users.last30Days')}</option>
+                      <option value="LAST_90_DAYS">{t('admin.users.last90Days')}</option>
+                      <option value="THIS_YEAR">{t('admin.users.thisYear')}</option>
                     </select>
                     <span className="material-symbols-outlined pointer-events-none absolute right-2 top-2.5" style={{ fontSize: '20px' }}>expand_more</span>
                   </div>
@@ -2544,7 +2544,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                               : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
                               }`}>
                               <span className={`size-1.5 rounded-full ${order.status === 'DELIVERED' ? 'bg-green-500' : 'bg-slate-500'}`}></span>
-                              {order.status === 'DELIVERED' ? (t('status.delivered', 'Delivered')) : (t('status.closed', 'Closed'))}
+                              {order.status === 'DELIVERED' ? (t('status.delivered')) : (t('status.closed'))}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-right">
@@ -2552,7 +2552,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                               <button
                                 onClick={() => handlePrintShippingLabel(order)}
                                 className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-700 px-2 py-1 rounded hover:bg-slate-100 transition-colors"
-                                title={t('supplier.orders.printLabel', 'Print Shipping Label')}
+                                title={t('supplier.orders.printLabel')}
                               >
                                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>print</span>
                               </button>
@@ -2577,7 +2577,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                     </tbody>
                   </table>
                 </div>
-                <nav aria-label="Table navigation" className="flex items-center justify-between p-4">
+                <nav aria-label={t('supplier.orders.tableNavigation')} className="flex items-center justify-between p-4">
                   <span className="text-sm font-normal text-slate-500 dark:text-slate-400">{t('supplier.orders.showing')} <span className="font-semibold text-slate-900 dark:text-white">{completedStart}-{completedEnd}</span> {t('supplier.orders.of')} <span className="font-semibold text-slate-900 dark:text-white">{filteredCompletedOrders.length}</span></span>
                   <div className="inline-flex items-center -space-x-px">
                     <button
@@ -2678,17 +2678,17 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                     <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-2">
                       <div className="flex items-center gap-2 mb-3">
                         <span className="material-symbols-outlined text-blue-600">local_shipping</span>
-                        <h4 className="font-bold text-blue-800">{t('supplier.orders.pickupDetails', 'Pickup Details')}</h4>
+                        <h4 className="font-bold text-blue-800">{t('supplier.orders.pickupDetails')}</h4>
                       </div>
                       {fullOrderDetails.pickupDetails.driverName && (
                         <p>
-                          <span className="font-semibold">{t('supplier.orders.driverName', 'Driver Name')}:</span>{' '}
+                          <span className="font-semibold">{t('supplier.orders.driverName')}:</span>{' '}
                           {fullOrderDetails.pickupDetails.driverName}
                         </p>
                       )}
                       {fullOrderDetails.pickupDetails.driverContact && (
                         <p>
-                          <span className="font-semibold">{t('supplier.orders.driverContact', 'Driver Contact')}:</span>{' '}
+                          <span className="font-semibold">{t('supplier.orders.driverContact')}:</span>{' '}
                           <a href={`tel:${fullOrderDetails.pickupDetails.driverContact}`} className="text-blue-600 hover:underline">
                             {fullOrderDetails.pickupDetails.driverContact}
                           </a>
@@ -2696,13 +2696,13 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                       )}
                       {fullOrderDetails.pickupDetails.scheduledPickupTime && (
                         <p>
-                          <span className="font-semibold">{t('supplier.orders.scheduledPickupTime', 'Scheduled Pickup')}:</span>{' '}
+                          <span className="font-semibold">{t('supplier.orders.scheduledPickupTime')}:</span>{' '}
                           {new Date(fullOrderDetails.pickupDetails.scheduledPickupTime).toLocaleString()}
                         </p>
                       )}
                       {fullOrderDetails.pickupDetails.pickupNotes && (
                         <p>
-                          <span className="font-semibold">{t('supplier.orders.pickupNotes', 'Notes')}:</span>{' '}
+                          <span className="font-semibold">{t('supplier.orders.pickupNotes')}:</span>{' '}
                           {fullOrderDetails.pickupDetails.pickupNotes}
                         </p>
                       )}
@@ -2720,7 +2720,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="material-symbols-outlined text-green-600">location_on</span>
-                            <h4 className="font-bold text-green-800">{t('supplier.orders.deliveryLocation', 'Delivery Location')}</h4>
+                            <h4 className="font-bold text-green-800">{t('supplier.orders.deliveryLocation')}</h4>
                           </div>
                           <p className="text-green-700">{relatedRfq.deliveryLocation}</p>
                         </div>
@@ -2736,7 +2736,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0A2540] text-white hover:bg-[#0A2540]/90 font-medium text-sm transition-colors"
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>print</span>
-                      {t('supplier.orders.printLabel', 'Print Shipping Label')}
+                      {t('supplier.orders.printLabel')}
                     </button>
                   )}
                   <button
@@ -2781,7 +2781,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
         setFinancials(bal);
       } catch (error) {
         logger.error('Failed to load financials', error);
-        toast.error(t('supplier.financials.loadError', 'Failed to load financial data'));
+        toast.error(t('supplier.financials.loadError'));
       } finally {
         setLoading(false);
       }
@@ -2925,12 +2925,12 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
       const trimmedSwift = paymentSettings.swiftCode.trim();
 
       if (trimmedIban && !/^SA\d{22}$/i.test(trimmedIban)) {
-        toast.error(t('supplier.settings.invalidIban', 'Please enter a valid Saudi IBAN (SA followed by 22 digits).'));
+        toast.error(t('supplier.settings.invalidIban'));
         return;
       }
 
       if (trimmedSwift && !/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/i.test(trimmedSwift)) {
-        toast.error(t('supplier.settings.invalidSwift', 'Please enter a valid SWIFT code (8 or 11 characters).'));
+        toast.error(t('supplier.settings.invalidSwift'));
         return;
       }
 
@@ -2946,10 +2946,10 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
         if (!updatedUser) {
           throw new Error('Unable to persist payment settings');
         }
-        toast.success(t('supplier.settings.paymentSaved', 'Payment settings saved'));
+        toast.success(t('supplier.settings.paymentSaved'));
       } catch (error) {
         logger.error('Error saving payment settings:', error);
-        toast.error(t('supplier.settings.paymentSaveFailed', 'Failed to save payment settings'));
+        toast.error(t('supplier.settings.paymentSaveFailed'));
       } finally {
         setIsSavingPayment(false);
       }
@@ -2961,7 +2961,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
 
       const maxSize = 10 * 1024 * 1024; // 10MB
       if (file.size > maxSize) {
-        toast.error(t('supplier.settings.fileTooLarge', 'File must be under 10MB'));
+        toast.error(t('supplier.settings.fileTooLarge'));
         return;
       }
 
@@ -2983,11 +2983,10 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
         if (!updatedUser) {
           throw new Error('Unable to persist document URL to user profile');
         }
-
-        toast.success(t('supplier.settings.fileUploaded', 'Document uploaded successfully'));
+        toast.success(t('supplier.settings.fileUploaded'));
       } catch (error: any) {
         logger.error(`Failed to upload KYC document (${docType}):`, error);
-        toast.error(getUserFacingError(error, t('supplier.settings.uploadFailed', 'Failed to upload document')));
+        toast.error(getUserFacingError(error, t('supplier.settings.uploadFailed')));
       } finally {
         setKycUploading(prev => ({ ...prev, [docType]: false }));
       }
@@ -3166,14 +3165,14 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
 
         {/* KYC Documents */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          <h3 className="text-lg font-bold text-slate-900 mb-2">{t('supplier.settings.kycDocuments', 'KYC Documents')}</h3>
-          <p className="text-sm text-slate-500 mb-6">{t('supplier.settings.kycDocumentsDesc', 'Upload your business documents for verification')}</p>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">{t('supplier.settings.kycDocuments')}</h3>
+          <p className="text-sm text-slate-500 mb-6">{t('supplier.settings.kycDocumentsDesc')}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
-              { key: 'cr', label: t('supplier.settings.commercialRegistration', 'Commercial Registration (CR)') },
-              { key: 'tax', label: t('supplier.settings.taxCertificate', 'VAT/Tax Certificate') },
-              { key: 'license', label: t('supplier.settings.businessLicense', 'Business License') },
-              { key: 'bank_letter', label: t('supplier.settings.bankLetter', 'Bank Account Letter') },
+              { key: 'cr', label: t('supplier.settings.commercialRegistration') },
+              { key: 'tax', label: t('supplier.settings.taxCertificate') },
+              { key: 'license', label: t('supplier.settings.businessLicense') },
+              { key: 'bank_letter', label: t('supplier.settings.bankLetter') },
             ].map(({ key, label }) => (
               <div key={key} className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors ${kycUploaded[key] ? 'border-green-300 bg-green-50' : 'border-slate-200 hover:border-blue-300'
                 }`}>
@@ -3182,9 +3181,9 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                 </span>
                 <p className="text-sm font-medium text-slate-700">{label}</p>
                 {kycUploaded[key] ? (
-                  <p className="text-xs text-green-600 mt-1">{t('supplier.settings.uploaded', 'Uploaded')}</p>
+                  <p className="text-xs text-green-600 mt-1">{t('supplier.settings.uploaded')}</p>
                 ) : (
-                  <p className="text-xs text-slate-400 mt-1">{t('supplier.settings.uploadPdf', 'Upload PDF or image')}</p>
+                  <p className="text-xs text-slate-400 mt-1">{t('supplier.settings.uploadPdf')}</p>
                 )}
                 <input
                   type="file"
@@ -3201,10 +3200,10 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                     : 'text-blue-600 bg-blue-50 hover:bg-blue-100'
                   }`}>
                   {kycUploading[key]
-                    ? t('supplier.settings.uploading', 'Uploading...')
+                    ? t('supplier.settings.uploading')
                     : kycUploaded[key]
-                      ? t('supplier.settings.replace', 'Replace File')
-                      : t('supplier.settings.chooseFile', 'Choose File')}
+                      ? t('supplier.settings.replace')
+                      : t('supplier.settings.chooseFile')}
                 </label>
               </div>
             ))}
@@ -3213,27 +3212,27 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
 
         {/* Payment Settings */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          <h3 className="text-lg font-bold text-slate-900 mb-2">{t('supplier.settings.paymentSettings', 'Payment Settings')}</h3>
-          <p className="text-sm text-slate-500 mb-6">{t('supplier.settings.paymentSettingsDesc', 'Configure your bank account for receiving payouts')}</p>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">{t('supplier.settings.paymentSettings')}</h3>
+          <p className="text-sm text-slate-500 mb-6">{t('supplier.settings.paymentSettingsDesc')}</p>
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('supplier.settings.bankName', 'Bank Name')}</label>
-                <input type="text" name="bankName" value={paymentSettings.bankName} onChange={handlePaymentChange} placeholder={t('supplier.settings.bankNamePlaceholder', 'e.g. Al Rajhi Bank')} className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('supplier.settings.bankName')}</label>
+                <input type="text" name="bankName" value={paymentSettings.bankName} onChange={handlePaymentChange} placeholder={t('supplier.settings.bankNamePlaceholder')} className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('supplier.settings.accountHolder', 'Account Holder Name')}</label>
-                <input type="text" name="accountHolder" value={paymentSettings.accountHolder} onChange={handlePaymentChange} placeholder={t('supplier.settings.accountHolderPlaceholder', 'Full name as on bank account')} className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('supplier.settings.accountHolder')}</label>
+                <input type="text" name="accountHolder" value={paymentSettings.accountHolder} onChange={handlePaymentChange} placeholder={t('supplier.settings.accountHolderPlaceholder')} className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('supplier.settings.iban', 'IBAN')}</label>
-                <input type="text" name="iban" value={paymentSettings.iban} onChange={handlePaymentChange} placeholder={t('supplier.settings.ibanPlaceholder', 'SA...')} className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('supplier.settings.iban')}</label>
+                <input type="text" name="iban" value={paymentSettings.iban} onChange={handlePaymentChange} placeholder={t('supplier.settings.ibanPlaceholder')} className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">{t('supplier.settings.swiftCode', 'SWIFT/BIC Code')}</label>
-                <input type="text" name="swiftCode" value={paymentSettings.swiftCode} onChange={handlePaymentChange} placeholder={t('supplier.settings.swiftPlaceholder', 'e.g. RJHISARI')} className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <label className="block text-sm font-medium text-slate-700 mb-2">{t('supplier.settings.swiftCode')}</label>
+                <input type="text" name="swiftCode" value={paymentSettings.swiftCode} onChange={handlePaymentChange} placeholder={t('supplier.settings.swiftPlaceholder')} className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
               </div>
             </div>
             <div className="mt-4 pt-4 border-t border-slate-200 flex justify-end">
@@ -3243,7 +3242,7 @@ export const SupplierPortal: React.FC<SupplierPortalProps> = ({ activeTab, onNav
                 className="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
               >
                 {isSavingPayment && <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>}
-                {t('common.save', 'Save')}
+                {t('common.save')}
               </button>
             </div>
           </div>

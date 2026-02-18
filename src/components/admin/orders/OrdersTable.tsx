@@ -124,7 +124,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                           data-testid="admin-orders-review-payment-button"
                           className="text-emerald-700 hover:underline text-sm font-semibold"
                         >
-                          {t('admin.orders.reviewPayment', 'Review Payment')}
+                          {t('admin.orders.reviewPayment')}
                         </button>
                       )}
                       {enableExternalPaymentLinks && order.paymentLinkUrl ? (
@@ -132,7 +132,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                           onClick={() => onCopyPaymentLink(order.paymentLinkUrl!)}
                           className="text-emerald-600 hover:underline text-sm font-medium"
                         >
-                          {t('admin.orders.copyPaymentLink', 'Copy Payment Link')}
+                          {t('admin.orders.copyPaymentLink')}
                         </button>
                       ) : null}
                       {enableExternalPaymentLinks && (
@@ -141,8 +141,8 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                           className="text-blue-600 hover:underline text-sm font-medium"
                         >
                           {order.paymentLinkUrl
-                            ? t('admin.orders.editPaymentLink', 'Edit Payment Link')
-                            : t('admin.orders.setPaymentLink', 'Set Payment Link')}
+                            ? t('admin.orders.editPaymentLink')
+                            : t('admin.orders.setPaymentLink')}
                         </button>
                       )}
                       <button

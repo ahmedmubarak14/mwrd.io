@@ -233,14 +233,14 @@ export const AdminCustomRequestsView: React.FC = () => {
     if (!selectedRequest || !assignSupplierId) return;
     const supplier = suppliers.find((item) => item.id === assignSupplierId);
     if (!supplier) {
-      toast.error(t('admin.customRequests.invalidSupplier', 'Please select an active supplier.'));
+      toast.error(t('admin.customRequests.invalidSupplier'));
       return;
     }
 
     try {
       setSubmitting(true);
       await assignCustomRequestToSupplier(selectedRequest.id, assignSupplierId, assignNotes);
-      toast.success(t('admin.customRequests.assigned', 'Request assigned to supplier'));
+      toast.success(t('admin.customRequests.assigned'));
       setShowAssignModal(false);
       setAssignSupplierId('');
       setAssignNotes('');
@@ -249,7 +249,7 @@ export const AdminCustomRequestsView: React.FC = () => {
       await loadStats();
     } catch (err) {
       logger.error('Failed to assign request', err);
-      toast.error(t('admin.customRequests.assignError', 'Failed to assign request'));
+      toast.error(t('admin.customRequests.assignError'));
     } finally {
       setSubmitting(false);
     }
@@ -260,7 +260,7 @@ export const AdminCustomRequestsView: React.FC = () => {
     try {
       setSubmitting(true);
       await rejectCustomRequest(selectedRequest.id, rejectReason);
-      toast.success(t('admin.customRequests.rejected', 'Request rejected'));
+      toast.success(t('admin.customRequests.rejected'));
       setShowRejectModal(false);
       setRejectReason('');
       setSelectedRequest(null);
@@ -268,7 +268,7 @@ export const AdminCustomRequestsView: React.FC = () => {
       await loadStats();
     } catch (err) {
       logger.error('Failed to reject request', err);
-      toast.error(t('admin.customRequests.rejectError', 'Failed to reject request'));
+      toast.error(t('admin.customRequests.rejectError'));
     } finally {
       setSubmitting(false);
     }
@@ -279,14 +279,14 @@ export const AdminCustomRequestsView: React.FC = () => {
     try {
       setSubmitting(true);
       await updateAdminNotes(selectedRequest.id, adminNotesText);
-      toast.success(t('admin.customRequests.notesSaved', 'Notes saved'));
+      toast.success(t('admin.customRequests.notesSaved'));
       setShowNotesModal(false);
       setAdminNotesText('');
       setSelectedRequest(null);
       await fetchRequests();
     } catch (err) {
       logger.error('Failed to save notes', err);
-      toast.error(t('admin.customRequests.notesError', 'Failed to save notes'));
+      toast.error(t('admin.customRequests.notesError'));
     } finally {
       setSubmitting(false);
     }
@@ -295,12 +295,12 @@ export const AdminCustomRequestsView: React.FC = () => {
   const handleStatusChange = async (requestId: string, newStatus: CustomRequestStatus) => {
     try {
       await updateCustomRequestStatus(requestId, newStatus);
-      toast.success(t('admin.customRequests.statusUpdated', 'Status updated'));
+      toast.success(t('admin.customRequests.statusUpdated'));
       await fetchRequests();
       await loadStats();
     } catch (err) {
       logger.error('Failed to update status', err);
-      toast.error(t('admin.customRequests.statusError', 'Failed to update status'));
+      toast.error(t('admin.customRequests.statusError'));
     }
   };
 
@@ -349,28 +349,28 @@ export const AdminCustomRequestsView: React.FC = () => {
     <div data-testid="admin-custom-requests-view">
       <PortalPageShell className="animate-in fade-in duration-300">
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
-          title={t('sidebar.customRequests', 'Custom Item Requests')}
-          subtitle={t('admin.customRequests.subtitle', 'Manage custom item requests from clients')}
+          portalLabel={t('sidebar.adminPortal')}
+          title={t('sidebar.customRequests')}
+          subtitle={t('admin.customRequests.subtitle')}
         />
 
       {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-xl border border-gray-200 p-4">
-            <p className="text-xs font-bold text-gray-400 uppercase">{t('admin.customRequests.total', 'Total')}</p>
+            <p className="text-xs font-bold text-gray-400 uppercase">{t('admin.customRequests.total')}</p>
             <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
           </div>
           <div className="bg-yellow-50 rounded-xl border border-yellow-200 p-4">
-            <p className="text-xs font-bold text-yellow-600 uppercase">{t('admin.customRequests.pending', 'Pending')}</p>
+            <p className="text-xs font-bold text-yellow-600 uppercase">{t('admin.customRequests.pending')}</p>
             <p className="text-2xl font-bold text-yellow-800 mt-1">{stats.byStatus.pending}</p>
           </div>
           <div className="bg-purple-50 rounded-xl border border-purple-200 p-4">
-            <p className="text-xs font-bold text-purple-600 uppercase">{t('admin.customRequests.assignedCount', 'Assigned')}</p>
+            <p className="text-xs font-bold text-purple-600 uppercase">{t('admin.customRequests.assignedCount')}</p>
             <p className="text-2xl font-bold text-purple-800 mt-1">{stats.byStatus.assigned}</p>
           </div>
           <div className="bg-red-50 rounded-xl border border-red-200 p-4">
-            <p className="text-xs font-bold text-red-600 uppercase">{t('admin.customRequests.urgent', 'Urgent')}</p>
+            <p className="text-xs font-bold text-red-600 uppercase">{t('admin.customRequests.urgent')}</p>
             <p className="text-2xl font-bold text-red-800 mt-1">{stats.byPriority.urgent}</p>
           </div>
         </div>
@@ -388,7 +388,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                 : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
             }`}
           >
-            {status === 'ALL' ? t('common.all', 'All') : status.replace(/_/g, ' ')}
+            {status === 'ALL' ? t('common.all') : status.replace(/_/g, ' ')}
           </button>
         ))}
       </div>
@@ -399,20 +399,20 @@ export const AdminCustomRequestsView: React.FC = () => {
           <table className="w-full text-left text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.date', 'Date')}</th>
-                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.item', 'Item')}</th>
-                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.client', 'Client')}</th>
-                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.priority', 'Priority')}</th>
-                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.status', 'Status')}</th>
-                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.assignedTo', 'Assigned To')}</th>
-                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.actions', 'Actions')}</th>
+                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.date')}</th>
+                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.item')}</th>
+                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.client')}</th>
+                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.priority')}</th>
+                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.status')}</th>
+                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.assignedTo')}</th>
+                <th className="px-6 py-4 font-semibold text-gray-500">{t('admin.customRequests.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredRequests.length === 0 && !loading && (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                    {t('admin.customRequests.noRequestsFound', 'No requests found')}
+                    {t('admin.customRequests.noRequestsFound')}
                   </td>
                 </tr>
               )}
@@ -429,8 +429,8 @@ export const AdminCustomRequestsView: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 text-gray-600">
                     <div className="flex flex-col">
-                      <span className="font-medium">{req.client?.company_name || t('admin.customRequests.unknownCompany', 'Unknown')}</span>
-                      <span className="text-xs">{req.client?.name || t('admin.customRequests.unknownUser', 'Unknown')}</span>
+                      <span className="font-medium">{req.client?.company_name || t('admin.customRequests.unknownCompany')}</span>
+                      <span className="text-xs">{req.client?.name || t('admin.customRequests.unknownUser')}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -456,7 +456,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                             setShowAssignModal(true);
                           }}
                           className="p-1.5 rounded-lg text-purple-600 hover:bg-purple-50 transition-colors"
-                          title={t('admin.customRequests.assignToSupplier', 'Assign to Supplier')}
+                          title={t('admin.customRequests.assignToSupplier')}
                         >
                           <span className="material-symbols-outlined text-lg">person_add</span>
                         </button>
@@ -468,7 +468,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                           setShowDetailsModal(true);
                         }}
                         className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
-                        title={t('common.view', 'View')}
+                        title={t('common.view')}
                       >
                         <span className="material-symbols-outlined text-lg">visibility</span>
                       </button>
@@ -482,7 +482,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                         className={`p-1.5 rounded-lg transition-colors ${
                           req.admin_notes ? 'text-blue-600 hover:bg-blue-50' : 'text-gray-400 hover:bg-gray-50'
                         }`}
-                        title={t('admin.customRequests.adminNotes', 'Admin Notes')}
+                        title={t('admin.customRequests.adminNotes')}
                       >
                         <span className="material-symbols-outlined text-lg">sticky_note_2</span>
                       </button>
@@ -491,7 +491,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                         <button
                           onClick={() => handleStatusChange(req.id, CustomRequestStatus.UNDER_REVIEW)}
                           className="p-1.5 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors"
-                          title={t('admin.customRequests.markUnderReview', 'Mark Under Review')}
+                          title={t('admin.customRequests.markUnderReview')}
                         >
                           <span className="material-symbols-outlined text-lg">visibility</span>
                         </button>
@@ -504,7 +504,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                             setShowRejectModal(true);
                           }}
                           className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
-                          title={t('admin.customRequests.reject', 'Reject')}
+                          title={t('admin.customRequests.reject')}
                         >
                           <span className="material-symbols-outlined text-lg">block</span>
                         </button>
@@ -523,7 +523,7 @@ export const AdminCustomRequestsView: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowDetailsModal(false)}>
           <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900">{t('admin.customRequests.requestDetails', 'Request Details')}</h3>
+              <h3 className="text-lg font-bold text-gray-900">{t('admin.customRequests.requestDetails')}</h3>
               <button onClick={() => setShowDetailsModal(false)} className="text-gray-400 hover:text-gray-600">
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -532,27 +532,27 @@ export const AdminCustomRequestsView: React.FC = () => {
             <div className="space-y-4 text-sm">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.item', 'Item')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.item')}</p>
                   <p className="font-medium text-gray-900">{selectedRequest.item_name}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.category', 'Category')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.category')}</p>
                   <p className="font-medium text-gray-900">{selectedRequest.category || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.client', 'Client')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.client')}</p>
                   <p className="font-medium text-gray-900">{selectedRequest.client?.company_name || selectedRequest.client?.name || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.assignedTo', 'Assigned To')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.assignedTo')}</p>
                   <p className="font-medium text-gray-900">{selectedRequest.supplier?.company_name || selectedRequest.supplier?.name || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.quantity', 'Quantity')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.quantity')}</p>
                   <p className="font-medium text-gray-900">{selectedRequest.quantity}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.targetPrice', 'Target Price')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.targetPrice')}</p>
                   <p className="font-medium text-gray-900">
                     {selectedRequest.target_price !== null
                       ? `${selectedRequest.currency || 'SAR'} ${Number(selectedRequest.target_price).toFixed(2)}`
@@ -560,23 +560,23 @@ export const AdminCustomRequestsView: React.FC = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.priority', 'Priority')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.priority')}</p>
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${getPriorityColorClass(selectedRequest.priority as any)}`}>
                     {getPriorityText(selectedRequest.priority as any)}
                   </span>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.status', 'Status')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.status')}</p>
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${getStatusColorClass(selectedRequest.status as any)}`}>
                     {getRequestStatusText(selectedRequest.status as any)}
                   </span>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.date', 'Date')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.date')}</p>
                   <p className="font-medium text-gray-900">{new Date(selectedRequest.created_at).toLocaleString()}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.deadline', 'Deadline')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.deadline')}</p>
                   <p className="font-medium text-gray-900">
                     {selectedRequest.deadline ? new Date(selectedRequest.deadline).toLocaleDateString() : '-'}
                   </p>
@@ -584,34 +584,34 @@ export const AdminCustomRequestsView: React.FC = () => {
               </div>
 
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase mb-1">{t('admin.customRequests.description', 'Description')}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase mb-1">{t('admin.customRequests.description')}</p>
                 <p className="text-gray-800 whitespace-pre-wrap">{selectedRequest.description}</p>
               </div>
 
               {selectedRequest.specifications && (
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase mb-1">{t('admin.customRequests.specifications', 'Specifications')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase mb-1">{t('admin.customRequests.specifications')}</p>
                   <p className="text-gray-800 whitespace-pre-wrap">{selectedRequest.specifications}</p>
                 </div>
               )}
 
               {selectedRequest.admin_notes && (
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase mb-1">{t('admin.customRequests.adminNotes', 'Admin Notes')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase mb-1">{t('admin.customRequests.adminNotes')}</p>
                   <p className="text-gray-800 whitespace-pre-wrap">{selectedRequest.admin_notes}</p>
                 </div>
               )}
 
               {selectedRequest.rejection_reason && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                  <p className="text-xs font-semibold text-red-600 uppercase mb-1">{t('admin.customRequests.rejectionReason', 'Rejection Reason')}</p>
+                  <p className="text-xs font-semibold text-red-600 uppercase mb-1">{t('admin.customRequests.rejectionReason')}</p>
                   <p className="text-red-700 whitespace-pre-wrap">{selectedRequest.rejection_reason}</p>
                 </div>
               )}
 
               {(selectedRequest.reference_images?.length || selectedRequest.attachment_urls?.length) && (
                 <div className="space-y-2">
-                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.attachments', 'Attachments')}</p>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">{t('admin.customRequests.attachments')}</p>
                   <div className="flex flex-wrap gap-2">
                     {[...(selectedRequest.reference_images || []), ...(selectedRequest.attachment_urls || [])].map((url, idx) => (
                       <a
@@ -622,7 +622,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                         className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-gray-100 text-xs font-medium text-gray-700 hover:bg-gray-200"
                       >
                         <span className="material-symbols-outlined text-sm">attachment</span>
-                        {t('admin.customRequests.openAttachment', 'Open attachment')} #{idx + 1}
+                        {t('admin.customRequests.openAttachment')} #{idx + 1}
                       </a>
                     ))}
                   </div>
@@ -635,7 +635,7 @@ export const AdminCustomRequestsView: React.FC = () => {
                 onClick={() => setShowDetailsModal(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50"
               >
-                {t('common.close', 'Close')}
+                {t('common.close')}
               </button>
             </div>
           </div>
@@ -647,20 +647,20 @@ export const AdminCustomRequestsView: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowAssignModal(false)}>
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-900">{t('admin.customRequests.assignToSupplier', 'Assign to Supplier')}</h3>
+              <h3 className="text-lg font-bold text-gray-900">{t('admin.customRequests.assignToSupplier')}</h3>
               <button onClick={() => setShowAssignModal(false)} className="text-gray-400 hover:text-gray-600">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
             <p className="text-sm text-gray-500">
-              {t('admin.customRequests.assignDesc', 'Select a supplier to handle this custom request:')} <strong>{selectedRequest.item_name}</strong>
+              {t('admin.customRequests.assignDesc')} <strong>{selectedRequest.item_name}</strong>
             </p>
             <div>
               <input
                 type="text"
                 value={supplierSearch}
                 onChange={(e) => setSupplierSearch(e.target.value)}
-                placeholder={t('admin.customRequests.searchSuppliers', 'Search suppliers...')}
+                placeholder={t('admin.customRequests.searchSuppliers')}
                 className="w-full p-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500 mb-2"
               />
               <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
@@ -685,13 +685,13 @@ export const AdminCustomRequestsView: React.FC = () => {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.customRequests.notesOptional', 'Notes (optional)')}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.customRequests.notesOptional')}</label>
               <textarea
                 value={assignNotes}
                 onChange={(e) => setAssignNotes(e.target.value)}
                 rows={2}
                 className="w-full p-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder={t('admin.customRequests.assignNotesPlaceholder', 'Add any instructions for the supplier...')}
+                placeholder={t('admin.customRequests.assignNotesPlaceholder')}
               />
             </div>
             <div className="flex justify-end gap-3 pt-2">
@@ -699,14 +699,14 @@ export const AdminCustomRequestsView: React.FC = () => {
                 onClick={() => setShowAssignModal(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50"
               >
-                {t('common.cancel', 'Cancel')}
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleAssign}
                 disabled={!assignSupplierId || submitting}
                 className="px-4 py-2 text-sm font-bold text-white bg-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
               >
-                {submitting ? t('common.assigning', 'Assigning...') : t('admin.customRequests.assign', 'Assign')}
+                {submitting ? t('common.assigning') : t('admin.customRequests.assign')}
               </button>
             </div>
           </div>
@@ -718,34 +718,34 @@ export const AdminCustomRequestsView: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowRejectModal(false)}>
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-900">{t('admin.customRequests.rejectRequest', 'Reject Request')}</h3>
+              <h3 className="text-lg font-bold text-gray-900">{t('admin.customRequests.rejectRequest')}</h3>
               <button onClick={() => setShowRejectModal(false)} className="text-gray-400 hover:text-gray-600">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
             <p className="text-sm text-gray-500">
-              {t('admin.customRequests.rejectDesc', 'Provide a reason for rejecting')} <strong>{selectedRequest.item_name}</strong>
+              {t('admin.customRequests.rejectDesc')} <strong>{selectedRequest.item_name}</strong>
             </p>
             <textarea
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               rows={3}
               className="w-full p-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-500"
-              placeholder={t('admin.customRequests.rejectReasonPlaceholder', 'Enter rejection reason...')}
+              placeholder={t('admin.customRequests.rejectReasonPlaceholder')}
             />
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={() => setShowRejectModal(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50"
               >
-                {t('common.cancel', 'Cancel')}
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleReject}
                 disabled={!rejectReason.trim() || submitting}
                 className="px-4 py-2 text-sm font-bold text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors"
               >
-                {submitting ? t('common.rejecting', 'Rejecting...') : t('admin.customRequests.confirmReject', 'Reject Request')}
+                {submitting ? t('common.rejecting') : t('admin.customRequests.confirmReject')}
               </button>
             </div>
           </div>
@@ -757,34 +757,34 @@ export const AdminCustomRequestsView: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowNotesModal(false)}>
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-900">{t('admin.customRequests.adminNotes', 'Admin Notes')}</h3>
+              <h3 className="text-lg font-bold text-gray-900">{t('admin.customRequests.adminNotes')}</h3>
               <button onClick={() => setShowNotesModal(false)} className="text-gray-400 hover:text-gray-600">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
             <p className="text-sm text-gray-500">
-              {t('admin.customRequests.notesFor', 'Notes for:')} <strong>{selectedRequest.item_name}</strong>
+              {t('admin.customRequests.notesFor')} <strong>{selectedRequest.item_name}</strong>
             </p>
             <textarea
               value={adminNotesText}
               onChange={(e) => setAdminNotesText(e.target.value)}
               rows={4}
               className="w-full p-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder={t('admin.customRequests.notesPlaceholder', 'Add internal notes about this request...')}
+              placeholder={t('admin.customRequests.notesPlaceholder')}
             />
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={() => setShowNotesModal(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50"
               >
-                {t('common.cancel', 'Cancel')}
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleSaveNotes}
                 disabled={submitting}
                 className="px-4 py-2 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
               >
-                {submitting ? t('common.saving', 'Saving...') : t('common.save', 'Save')}
+                {submitting ? t('common.saving') : t('common.save')}
               </button>
             </div>
           </div>

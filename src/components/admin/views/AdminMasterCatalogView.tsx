@@ -10,9 +10,9 @@ export const AdminMasterCatalogView: React.FC = () => {
     <div data-testid="admin-master-catalog-view">
       <PortalPageShell>
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
-          title={t('sidebar.masterCatalog', 'Master Catalog')}
-          subtitle={t('admin.masterCatalog.subtitle', 'Manage the platform product master catalog')}
+          portalLabel={t('sidebar.adminPortal')}
+          title={t('sidebar.masterCatalog')}
+          subtitle={t('admin.masterCatalog.subtitle')}
         />
         <MasterProductManagement />
       </PortalPageShell>

@@ -38,14 +38,14 @@ export const AdminLeadsView: React.FC = () => {
     <div data-testid="admin-leads-view">
       <PortalPageShell className="animate-in fade-in duration-300">
         <PortalPageHeader
-          portalLabel={t('sidebar.adminPortal', 'Admin Portal')}
+          portalLabel={t('sidebar.adminPortal')}
           title={t('sidebar.leads') || 'Leads & Signups'}
-          subtitle={t('admin.leads.subtitle', 'Review landing-page interest form submissions')}
+          subtitle={t('admin.leads.subtitle')}
           actions={(
             <button
               onClick={loadLeads}
               className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 transition-colors"
-              aria-label={t('common.refresh', 'Refresh')}
+              aria-label={t('common.refresh')}
             >
               <span className="material-symbols-outlined">refresh</span>
             </button>

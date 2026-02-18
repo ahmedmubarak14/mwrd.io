@@ -51,10 +51,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             items: [
               { id: 'dashboard', label: t('sidebar.dashboard'), icon: 'home' },
               { id: 'browse', label: t('sidebar.browse'), icon: 'search' },
-              { id: 'custom-request', label: t('sidebar.customRequest', 'Custom Request'), icon: 'design_services' },
+              { id: 'custom-request', label: t('sidebar.customRequest'), icon: 'design_services' },
               { id: 'rfqs', label: t('sidebar.rfqs'), icon: 'request_quote' },
               { id: 'orders', label: t('sidebar.orders'), icon: 'receipt_long' },
-              { id: 'financials', label: t('sidebar.financials', 'Financials'), icon: 'account_balance_wallet' },
+              { id: 'financials', label: t('sidebar.financials'), icon: 'account_balance_wallet' },
             ]
           },
           {
@@ -72,11 +72,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             items: [
               { id: 'dashboard', label: t('sidebar.dashboard'), icon: 'home' },
               { id: 'products', label: t('sidebar.products'), icon: 'inventory_2' },
-              { id: 'custom-requests', label: t('sidebar.customRequests', 'Custom Requests'), icon: 'design_services' },
+              { id: 'custom-requests', label: t('sidebar.customRequests'), icon: 'design_services' },
               { id: 'requests', label: t('sidebar.requests'), icon: 'inbox' },
               { id: 'quotes', label: t('sidebar.quotes'), icon: 'send' },
               { id: 'orders', label: t('sidebar.ordersManagement'), icon: 'receipt_long' },
-              { id: 'financials', label: t('sidebar.financials', 'Financials'), icon: 'payments' },
+              { id: 'financials', label: t('sidebar.financials'), icon: 'payments' },
             ]
           },
           {
@@ -93,19 +93,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
             title: t('sidebar.sections.management'),
             items: [
               { id: 'overview', label: t('sidebar.overview'), icon: 'analytics' },
-              { id: 'leads', label: t('sidebar.leads', 'Leads'), icon: 'person_add' },
-              { id: 'custom-requests', label: t('sidebar.customRequests', 'Custom Requests'), icon: 'design_services' },
+              { id: 'leads', label: t('sidebar.leads'), icon: 'person_add' },
+              { id: 'custom-requests', label: t('sidebar.customRequests'), icon: 'design_services' },
               { id: 'orders', label: t('sidebar.orders'), icon: 'receipt_long' },
-              { id: 'po-verification', label: t('sidebar.poVerification', 'PO Verification'), icon: 'fact_check' },
-              { id: 'inventory', label: t('sidebar.categoriesManagement', 'Category Management'), icon: 'category' },
-              { id: 'master-catalog', label: t('sidebar.masterCatalog', 'Master Catalog'), icon: 'library_books' },
+              { id: 'po-verification', label: t('sidebar.poVerification'), icon: 'fact_check' },
+              { id: 'inventory', label: t('sidebar.categoriesManagement'), icon: 'category' },
+              { id: 'master-catalog', label: t('sidebar.masterCatalog'), icon: 'library_books' },
               { id: 'approvals', label: t('sidebar.approvalsLink'), icon: 'verified_user' },
               { id: 'margins', label: t('sidebar.margins'), icon: 'currency_exchange' },
               { id: 'logistics', label: t('sidebar.logistics'), icon: 'local_shipping' },
               { id: 'users', label: t('sidebar.users'), icon: 'group' },
               { id: 'supplier-performance', label: t('sidebar.supplierPerformance'), icon: 'insights' },
               { id: 'credit-utilization', label: t('sidebar.creditUtilization'), icon: 'account_balance' },
-              { id: 'payouts', label: t('sidebar.payouts', 'Payouts'), icon: 'payments' },
+              { id: 'payouts', label: t('sidebar.payouts'), icon: 'payments' },
             ]
           },
           {
@@ -125,7 +125,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       case UserRole.CLIENT: return t('sidebar.clientPortal');
       case UserRole.SUPPLIER: return t('sidebar.supplierPortal');
       case UserRole.ADMIN: return t('sidebar.adminPortal');
-      default: return t('sidebar.portal', 'Portal');
+      default: return t('sidebar.portal');
     }
   };
 
@@ -205,7 +205,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {/* Hamburger toggle - desktop */}
           <div className="hidden md:flex items-center gap-1">
-            <NotificationBell onNavigate={handleNotificationNavigate} className="hidden md:block" />
+            <NotificationBell onNavigate={handleNotificationNavigate} align="left" className="hidden md:block" />
             {!isCollapsed && (
               <button
                 onClick={() => setIsCollapsed(true)}

@@ -135,12 +135,12 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
 
         const parsedRequestedLimit = Number(requestedLimit);
         if (!Number.isFinite(parsedRequestedLimit) || parsedRequestedLimit <= stats.creditLimit) {
-            toast.error(t('client.financials.requestValidationLimit', 'Requested limit must be higher than your current credit limit.'));
+            toast.error(t('client.financials.requestValidationLimit'));
             return;
         }
 
         if (creditRequestReason.trim().length < 5) {
-            toast.error(t('client.financials.requestValidationReason', 'Please provide a reason (minimum 5 characters).'));
+            toast.error(t('client.financials.requestValidationReason'));
             return;
         }
 
@@ -159,15 +159,15 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
             });
 
             if (!result.success) {
-                toast.error(result.error || t('client.financials.requestFailed', 'Failed to submit credit increase request.'));
+                toast.error(result.error || t('client.financials.requestFailed'));
                 return;
             }
 
-            toast.success(t('client.financials.requestSubmitted', 'Credit increase request sent to admin'));
+            toast.success(t('client.financials.requestSubmitted'));
             setIsCreditRequestModalOpen(false);
         } catch (error) {
             logger.error('Error submitting credit increase request:', error);
-            toast.error(t('client.financials.requestFailed', 'Failed to submit credit increase request.'));
+            toast.error(t('client.financials.requestFailed'));
         } finally {
             setIsSubmittingCreditRequest(false);
         }
@@ -177,7 +177,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
         <div className="p-4 md:p-8 space-y-8 animate-in fade-in zoom-in-95 duration-300 transition-all">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-neutral-800">{t('sidebar.financials', 'Financial Overview')}</h1>
+                    <h1 className="text-2xl font-bold text-neutral-800">{t('sidebar.financials')}</h1>
                     <p className="text-neutral-500">{t('client.financials.subtitle')}</p>
                 </div>
                 <button
@@ -239,7 +239,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                                 onMakePayment();
                                 return;
                             }
-                            toast.info(t('client.financials.noPayableOrders', 'No orders are currently awaiting payment.'));
+                            toast.info(t('client.financials.noPayableOrders'));
                         }}
                         className="mt-4 text-sm font-bold text-blue-600 hover:underline"
                     >
@@ -277,7 +277,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                             <button
                                 onClick={() => {
                                     exportTransactionsToCsv(transactions);
-                                    toast.success(t('client.financials.statementExported', 'Statement exported'));
+                                    toast.success(t('client.financials.statementExported'));
                                 }}
                                 className="text-blue-600 text-sm font-bold hover:underline flex items-center gap-1"
                             >
@@ -360,7 +360,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                         try {
                             const ref = `MWRD-${payableOrder.id}-${Date.now().toString(36).toUpperCase()}`;
                             await addPaymentReference(payableOrder.id, ref);
-                            toast.success(t('client.financials.paymentSubmitted', 'Payment submitted — awaiting admin confirmation.'));
+                            toast.success(t('client.financials.paymentSubmitted'));
                             setIsPaymentModalOpen(false);
                             await Promise.allSettled([
                               loadOrders(),
@@ -368,7 +368,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                             ]);
                         } catch (err) {
                             logger.error('Payment reference submission failed', err);
-                            toast.error(t('client.financials.paymentFailed', 'Failed to submit payment. Please try again.'));
+                            toast.error(t('client.financials.paymentFailed'));
                             setIsPaymentModalOpen(false);
                         }
                     }}
@@ -385,7 +385,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                             <button
                                 onClick={() => setIsCreditRequestModalOpen(false)}
                                 className="p-2 hover:bg-gray-100 rounded-lg"
-                                aria-label={t('common.close', 'Close')}
+                                aria-label={t('common.close')}
                             >
                                 <span className="material-symbols-outlined">close</span>
                             </button>
@@ -393,14 +393,14 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
 
                         <div className="space-y-4">
                             <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 text-sm text-blue-800">
-                                <p>{t('client.financials.currentLimit', 'Current limit')}: {formatCurrency(stats.creditLimit)}</p>
+                                <p>{t('client.financials.currentLimit')}: {formatCurrency(stats.creditLimit)}</p>
                                 <p>{t('client.financials.creditUsed')}: {formatCurrency(stats.balance)}</p>
                                 <p>{t('client.financials.availableCredit')}: {formatCurrency(stats.available)}</p>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    {t('client.financials.requestedLimit', 'Requested limit (SAR)')}
+                                    {t('client.financials.requestedLimit')}
                                 </label>
                                 <input
                                     type="number"
@@ -414,13 +414,13 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    {t('client.financials.requestReason', 'Reason for increase')}
+                                    {t('client.financials.requestReason')}
                                 </label>
                                 <textarea
                                     rows={4}
                                     value={creditRequestReason}
                                     onChange={(event) => setCreditRequestReason(event.target.value)}
-                                    placeholder={t('client.financials.requestReasonPlaceholder', 'Provide context for the requested increase')}
+                                    placeholder={t('client.financials.requestReasonPlaceholder')}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A2540] focus:border-transparent outline-none"
                                 />
                             </div>
@@ -439,8 +439,8 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                                 className="px-4 py-2 bg-[#0A2540] text-white rounded-lg hover:bg-[#0A2540]/90 disabled:opacity-50"
                             >
                                 {isSubmittingCreditRequest
-                                    ? t('common.loading', 'Loading...')
-                                    : t('client.financials.submitCreditRequest', 'Submit Request')}
+                                    ? t('common.loading')
+                                    : t('client.financials.submitCreditRequest')}
                             </button>
                         </div>
                     </div>

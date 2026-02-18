@@ -63,6 +63,7 @@
     "all": "الكل",
     "allStatus": "جميع الحالات",
     "submitting": "جاري الإرسال...",
+    "uploading": "جاري الرفع...",
     "saving": "جاري الحفظ...",
     "error": "خطأ",
     "statusUpdated": "تم تحديث الحالة",
@@ -85,7 +86,23 @@
       "last90Days": "آخر 90 يوم",
       "thisYear": "هذا العام"
     },
-    "toBeDetermined": "سيتم التحديد لاحقًا"
+    "toBeDetermined": "سيتم التحديد لاحقًا",
+    "remove": "Remove",
+    "copyFailed": "Failed to copy",
+    "select": "Select",
+    "assigning": "Assigning...",
+    "rejecting": "Rejecting...",
+    "type": "Type",
+    "cancelling": "Cancelling...",
+    "items": "items",
+    "showing": "Showing",
+    "of": "of",
+    "products": "products",
+    "previousPage": "Previous page is not available yet",
+    "nextPage": "Next page is not available yet",
+    "category": "Category",
+    "apply": "Apply",
+    "days": "days"
   },
   "about": {
     "clients": {
@@ -218,8 +235,14 @@
       "phone": "يرجى إدخال رقم هاتف صحيح",
       "name": "الاسم مطلوب",
       "invalidAccountType": "يرجى اختيار نوع حساب صحيح",
-      "submitFailed": "فشل إرسال الطلب. يرجى المحاولة مرة أخرى."
-    }
+      "submitFailed": "فشل إرسال الطلب. يرجى المحاولة مرة أخرى.",
+      "cr": "CR number is required",
+      "taxId": "Tax ID is required"
+    },
+    "commercialRegistration": "Commercial Registration (CR)",
+    "crPlaceholder": "e.g. 1010XXXXXX",
+    "taxId": "Tax ID (VAT Number)",
+    "taxIdPlaceholder": "e.g. 3XXXXXXXXXX0003"
   },
   "sidebar": {
     "clientPortal": "بوابة العميل",
@@ -264,7 +287,8 @@
     "supplierPerformance": "أداء الموردين",
     "creditUtilization": "استخدام الائتمان",
     "categories": "الفئات",
-    "payouts": "المدفوعات"
+    "payouts": "المدفوعات",
+    "portal": "Portal"
   },
   "client": {
     "dashboard": {
@@ -312,7 +336,8 @@
       "marketAnonymityDesc": "تتعامل فقط مع معرفات الموردين المجهولة (Supplier-XXXX).",
       "viewFinancials": "عرض المالية",
       "noRfqsYet": "لا توجد طلبات عروض بعد. ابدأ بإنشاء أول طلب.",
-      "noOrdersYet": "لا توجد طلبات بعد."
+      "noOrdersYet": "لا توجد طلبات بعد.",
+      "client": "Client"
     },
     "rfq": {
       "title": "تقديم طلب عرض جديد",
@@ -411,7 +436,15 @@
       "noOrdersForFilter": "لا توجد طلبات تطابق الفلاتر المحددة.",
       "rateOrder": "قيّم الطلب",
       "reviewed": "تم التقييم",
-      "invalidQuoteAmount": "عرض السعر المحدد يحتوي على قيمة غير صالحة."
+      "invalidQuoteAmount": "عرض السعر المحدد يحتوي على قيمة غير صالحة.",
+      "resumePoMissingQuote": "This order is missing its source quote.",
+      "resumePoQuoteNotFound": "Unable to load quote details for this order.",
+      "resumePoError": "Failed to continue PO submission",
+      "rate": "Rate Order",
+      "rated": "Rated",
+      "continuePoSubmission": "Continue PO Submission",
+      "poSubmissionPendingTitle": "PO submission still required",
+      "poSubmissionPendingDesc": "Complete your stamped PO upload to move this order forward."
     },
     "browse": {
       "title": "كتالوج المنتجات",
@@ -457,7 +490,9 @@
       "clearFilters": "مسح الفلاتر",
       "searchResultsFor": "نتائج البحث عن",
       "noSearchResults": "لم يتم العثور على منتجات تطابق بحثك.",
-      "allBrands": "كل العلامات التجارية"
+      "allBrands": "كل العلامات التجارية",
+      "removeFromRfq": "Remove from RFQ",
+      "addToRfq": "Add to RFQ"
     },
     "financials": {
       "subtitle": "إدارة حد الائتمان والمدفوعات والفواتير",
@@ -496,7 +531,9 @@
         "invoice": "فاتورة",
         "adjustment": "تعديل",
         "commission": "عمولة"
-      }
+      },
+      "requestSubmitted": "Credit increase request sent to admin",
+      "statementExported": "Statement exported"
     },
     "rfqs": {
       "title": "سجل الطلبات",
@@ -653,7 +690,9 @@
       "contactManager": "تواصل مع مدير الحساب",
       "low": "منخفض",
       "moderate": "متوسط",
-      "healthy": "جيد"
+      "healthy": "جيد",
+      "requestIncrease": "Request Increase",
+      "requestCreditHint": "Click \"Request Increase\" above to apply for a credit line."
     }
   },
   "supplier": {
@@ -771,7 +810,9 @@
       "bulkUploadNoValidRows": "لم يتم العثور على صفوف منتجات صالحة في ملف CSV.",
       "bulkUploadCreated": "تم استيراد {{count}} منتج بنجاح",
       "bulkUploadPartialFailure": "فشل استيراد {{count}} منتج",
-      "pricePositiveRequired": "يجب أن يكون سعر المورد أكبر من 0"
+      "pricePositiveRequired": "يجب أن يكون سعر المورد أكبر من 0",
+      "loadError": "Failed to refresh products",
+      "selectCategory": "Select Category"
     },
     "rfqs": {
       "title": "طلبات العروض المستلمة",
@@ -828,7 +869,13 @@
       "itemsQuotedSummary": "تم تسعير {{quoted}} من أصل {{total}} صنف",
       "partialQuoteAllowed": "العروض الجزئية مسموحة. ستظهر الأصناف غير المسعّرة على أنها غير مُسعّرة.",
       "atLeastOneItemRequired": "قم بتسعير صنف واحد على الأقل مع سعر الوحدة ومدة التسليم.",
-      "invalidItemValues": "يجب أن تحتوي بنود عرض السعر على كمية وسعر صالحين."
+      "invalidItemValues": "يجب أن تحتوي بنود عرض السعر على كمية وسعر صالحين.",
+      "suggestAlternative": "Suggest an alternative product",
+      "smartMatch": "✨ Smart Match",
+      "searchCatalog": "Search master catalog or type a custom name...",
+      "catalogMatches": "Catalog Matches",
+      "quoteValidity": "Quote Validity Period",
+      "validityHelp": "How long this quote remains valid for the client"
     },
     "orders": {
       "title": "إدارة الطلبات",
@@ -857,6 +904,8 @@
       "of": "من",
       "previous": "السابق",
       "next": "التالي",
+      "tabsNavigation": "تبويبات الطلبات",
+      "tableNavigation": "التنقل في الجدول",
       "wonDescription": "يعرض هذا القسم جميع طلبات الشراء التي تم قبول عرضك فيها. أسماء العملاء مخفية للخصوصية. يمكنك البحث والتصفية وعرض المعلومات التفصيلية لكل طلب.",
       "completedDescription": "يعرض هذا القسم جميع الطلبات المسلمة والمغلقة بنجاح. يمكنك البحث والتصفية وعرض المعلومات التفصيلية لكل طلب مكتمل. أسماء العملاء مخفية للخصوصية.",
       "noPendingOrders": "لا توجد طلبات معلقة.",
@@ -872,7 +921,9 @@
       "statusUpdateError": "فشل تحديث حالة الطلب",
       "itemsSummary": "{{itemCount}} منتج / {{unitCount}} وحدة",
       "chatAvailableMessage": "دردشة الدعم متاحة خلال ساعات العمل.",
-      "chatLinkedMessage": "الرسائل مرتبطة بسجل كل طلب."
+      "chatLinkedMessage": "الرسائل مرتبطة بسجل كل طلب.",
+      "printBlocked": "Pop-up blocked. Please allow pop-ups to print.",
+      "printLabel": "Print Shipping Label"
     },
     "settings": {
       "title": "إعدادات الحساب",
@@ -907,7 +958,33 @@
       "passwordUpdated": "تم تحديث كلمة المرور بنجاح",
       "passwordUpdateFailed": "فشل تحديث كلمة المرور",
       "invalidIban": "يرجى إدخال رقم آيبان سعودي صحيح (SA متبوعًا بـ 22 رقمًا).",
-      "invalidSwift": "يرجى إدخال رمز SWIFT صحيح (8 أو 11 حرفًا)."
+      "invalidSwift": "يرجى إدخال رمز SWIFT صحيح (8 أو 11 حرفًا).",
+      "paymentSettings": "Payment Settings",
+      "kycDocuments": "KYC Documents",
+      "paymentSaved": "Payment settings saved",
+      "paymentSaveFailed": "Failed to save payment settings",
+      "fileTooLarge": "File must be under 10MB",
+      "fileUploaded": "Document uploaded successfully",
+      "uploadFailed": "Failed to upload document",
+      "kycDocumentsDesc": "Upload your business documents for verification",
+      "commercialRegistration": "Commercial Registration (CR)",
+      "taxCertificate": "VAT/Tax Certificate",
+      "businessLicense": "Business License",
+      "bankLetter": "Bank Account Letter",
+      "uploaded": "Uploaded",
+      "uploadPdf": "Upload PDF or image",
+      "uploading": "Uploading...",
+      "replace": "Replace File",
+      "chooseFile": "Choose File",
+      "paymentSettingsDesc": "Configure your bank account for receiving payouts",
+      "bankName": "Bank Name",
+      "bankNamePlaceholder": "e.g. Al Rajhi Bank",
+      "accountHolder": "Account Holder Name",
+      "accountHolderPlaceholder": "Full name as on bank account",
+      "iban": "IBAN",
+      "ibanPlaceholder": "SA...",
+      "swiftCode": "SWIFT/BIC Code",
+      "swiftPlaceholder": "e.g. RJHISARI"
     },
     "fallback": {
       "comingSoon": "القسم قريباً",
@@ -967,7 +1044,31 @@
       "daysToShip": "أيام الشحن بعد استلام الطلب",
       "listingAgreement": "بإدراج هذا المنتج، فإنك توافق على تنفيذ الطلبات باستخدام أوصاف المنتج الرئيسية والصور والمواصفات الفنية المقدمة من مشرف السوق.",
       "saveAndList": "حفظ وإدراج المنتج",
-      "masterId": "المعرف الرئيسي: {{id}}"
+      "masterId": "المعرف الرئيسي: {{id}}",
+      "productListTitle": "Master Product List",
+      "sortNewest": "Newest Added",
+      "sortName": "Product Name (A-Z)",
+      "standardLeadTime": "Standard Lead Time: 3-5 Days"
+    },
+    "customRequests": {
+      "title": "Custom Requests",
+      "subtitle": "Custom item requests assigned to you by the platform",
+      "noRequests": "No custom requests assigned",
+      "noRequestsDesc": "When the platform assigns custom item requests to you, they will appear here.",
+      "platformNotes": "Platform Notes"
+    },
+    "inventory": {
+      "loadError": "Failed to load inventory",
+      "updateSuccess": "Stock updated successfully",
+      "updateError": "Failed to update stock",
+      "subtitle": "Manage your product stock levels",
+      "searchPlaceholder": "Search products...",
+      "product": "Product",
+      "sku": "SKU",
+      "category": "Category",
+      "currentStock": "Current Stock",
+      "status": "Status",
+      "noProducts": "No products found"
     }
   },
   "admin": {
@@ -1020,7 +1121,11 @@
       "uncategorized": "غير مصنف",
       "noRevenueData": "لا توجد بيانات إيرادات متاحة",
       "noProductData": "لا توجد بيانات منتجات متاحة",
-      "customRangeTitle": "نطاق زمني مخصص"
+      "customRangeTitle": "نطاق زمني مخصص",
+      "unknownClient": "Unknown Client",
+      "revenueByCategory": "Revenue by Category",
+      "topSellingProducts": "Top Selling Products",
+      "noOrders": "No orders found"
     },
     "approvals": {
       "title": "الموافقات",
@@ -1052,7 +1157,11 @@
       "thisYear": "هذا العام",
       "nameLabel": "الاسم",
       "skuLabel": "رمز المنتج",
-      "descriptionLabel": "الوصف"
+      "descriptionLabel": "الوصف",
+      "approved": "Product approved",
+      "rejected": "Product rejected",
+      "bulkApproved": "All pending products approved",
+      "bulkRejected": "All pending products rejected"
     },
     "margins": {
       "title": "مدير العروض",
@@ -1178,6 +1287,16 @@
       "requiresAttention": "يتطلب اهتماماً",
       "clientManagement": "إدارة العملاء",
       "addClient": "إضافة عميل",
+      "contactName": "اسم جهة الاتصال",
+      "contactNamePlaceholder": "مثال: محمد أحمد",
+      "companyNamePlaceholder": "مثال: شركة أكمي",
+      "emailPlaceholder": "john@example.com",
+      "phonePlaceholder": "+966 50 123 4567",
+      "creditLimitPlaceholder": "0",
+      "initialPassword": "كلمة المرور المبدئية",
+      "initialPasswordPlaceholder": "عيّن كلمة مرور مؤقتة",
+      "initialPasswordHint": "الحد الأدنى 6 أحرف. يمكن للمستخدم تغييرها لاحقًا.",
+      "createUser": "إنشاء مستخدم",
       "searchClients": "البحث عن عملاء...",
       "clientId": "معرف العميل",
       "email": "البريد الإلكتروني",
@@ -1259,7 +1378,9 @@
       "identityOrderSummary": "ملخص سجل الطلبات",
       "identityTotalOrders": "إجمالي الطلبات",
       "identityTotalAmount": "إجمالي المبلغ",
-      "identityNoOrders": "لم يتم العثور على طلبات لهذا المستخدم."
+      "identityNoOrders": "لم يتم العثور على طلبات لهذا المستخدم.",
+      "margin": "Client Margin",
+      "roleUpdateFailed": "Failed to update user role"
     },
     "payments": {
       "title": "إدارة المدفوعات",
@@ -1301,7 +1422,8 @@
       "auditActionPOGenerated": "تم إنشاء أمر شراء النظام",
       "auditActionClientPOUploaded": "تم رفع أمر شراء العميل",
       "auditActionPOVerified": "تم التحقق من أمر الشراء",
-      "auditActionPORejected": "تم رفض أمر الشراء"
+      "auditActionPORejected": "تم رفض أمر الشراء",
+      "pendingReviewQueue": "Pending review queue"
     },
     "settings": {
       "title": "إعدادات المنصة",
@@ -1386,7 +1508,13 @@
         "order_shipped": "يُطلق عند شحن الطلب",
         "order_delivered": "يُطلق عند تسليم الطلب",
         "payment_received": "يُطلق عند استلام الدفع وتأكيده"
-      }
+      },
+      "runAutoQuoteNow": "Run Auto-Quote Now",
+      "runAutoQuoteNowDesc": "Manually trigger the auto-quote check for all eligible RFQs immediately.",
+      "autoQuoteTriggered": "Auto-quote check completed",
+      "autoQuoteError": "Failed to run auto-quote check",
+      "running": "Running...",
+      "runNow": "Run Now"
     },
     "masterProducts": {
       "title": "كتالوج المنتجات الرئيسي",
@@ -1409,10 +1537,14 @@
         "title": "هوية المنتج",
         "description": "تحديد الهوية الأساسية لهذا السجل الرئيسي.",
         "globalName": "اسم المنتج العالمي",
+        "globalNamePlaceholder": "مثال: مضخة طرد مركزي صناعية عالية الضغط",
         "sku": "رقم المصنع / الموديل",
+        "autoGenerated": "يُنشأ تلقائيًا",
+        "autoBadge": "تلقائي",
         "category": "الفئة",
         "subCategory": "فئة فرعية",
         "brand": "العلامة التجارية",
+        "brandPlaceholder": "مثال: Bosch",
         "searchCategories": "البحث عن الفئات...",
         "selectCategory": "اختر الفئة",
         "selectSubCategory": "اختر الفئة الفرعية"
@@ -1422,6 +1554,9 @@
         "description": "صور عالية الدقة ستكون متاحة لجميع البائعين.",
         "bulkUpload": "رفع جماعي",
         "primaryUrl": "رابط الصورة الرئيسية",
+        "primaryUrlPlaceholder": "https://... أو ارفع صورة بالأعلى",
+        "uploadImage": "رفع صورة",
+        "imageAlt": "صورة المنتج",
         "dragDrop": "سحب وإفلات الصور",
         "primary": "رئيسي",
         "slot": "فتحة"
@@ -1440,15 +1575,18 @@
       },
       "errors": {
         "nameCategoryRequired": "الاسم والفئة مطلوبان",
+        "loadFailed": "فشل تحميل المنتجات",
         "saveFailed": "فشل حفظ المنتج",
         "deleteFailed": "فشل حذف المنتج"
       },
       "success": {
+        "imageUploaded": "تم رفع الصورة بنجاح",
         "productUpdated": "تم تحديث المنتج بنجاح",
         "productCreated": "تم إنشاء المنتج بنجاح",
         "productDeleted": "تم حذف المنتج بنجاح"
       },
-      "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا المنتج؟"
+      "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا المنتج؟",
+      "confirmDeleteTitle": "Delete Product"
     },
     "leads": {
       "title": "العملاء المحتملين والتسجيلات",
@@ -1465,7 +1603,8 @@
       "pending": "قيد الانتظار",
       "contacted": "تم التواصل",
       "converted": "تم التحويل",
-      "rejected": "مرفوض"
+      "rejected": "مرفوض",
+      "subtitle": "Review landing-page interest form submissions"
     },
     "customRequests": {
       "title": "طلبات المنتجات المخصصة",
@@ -1486,7 +1625,39 @@
       "status": "الحالة",
       "unknownCompany": "شركة غير معروفة",
       "unknownUser": "مستخدم غير معروف",
-      "noRequestsFound": "لم يتم العثور على طلبات"
+      "noRequestsFound": "لم يتم العثور على طلبات",
+      "invalidSupplier": "Please select an active supplier.",
+      "assigned": "Request assigned to supplier",
+      "assignError": "Failed to assign request",
+      "rejected": "Request rejected",
+      "rejectError": "Failed to reject request",
+      "notesSaved": "Notes saved",
+      "notesError": "Failed to save notes",
+      "statusUpdated": "Status updated",
+      "statusError": "Failed to update status",
+      "subtitle": "Manage custom item requests from clients",
+      "total": "Total",
+      "pending": "Pending",
+      "assignedCount": "Assigned",
+      "urgent": "Urgent",
+      "priority": "Priority",
+      "assignedTo": "Assigned To",
+      "actions": "Actions",
+      "assignToSupplier": "Assign to Supplier",
+      "adminNotes": "Admin Notes",
+      "markUnderReview": "Mark Under Review",
+      "reject": "Reject",
+      "assignDesc": "Select a supplier to handle this custom request:",
+      "searchSuppliers": "Search suppliers...",
+      "notesOptional": "Notes (optional)",
+      "assignNotesPlaceholder": "Add any instructions for the supplier...",
+      "assign": "Assign",
+      "rejectRequest": "Reject Request",
+      "rejectDesc": "Provide a reason for rejecting",
+      "rejectReasonPlaceholder": "Enter rejection reason...",
+      "confirmReject": "Reject Request",
+      "notesFor": "Notes for:",
+      "notesPlaceholder": "Add internal notes about this request..."
     },
     "orders": {
       "title": "إدارة الطلبات",
@@ -1502,6 +1673,7 @@
       "noOrdersFound": "لم يتم العثور على طلبات",
       "reviewPayment": "مراجعة الدفع",
       "reviewPaymentDesc": "قم بتأكيد أو رفض طلب التحويل البنكي قبل بدء التنفيذ.",
+      "paymentLink": "رابط الدفع",
       "paymentReference": "مرجع الدفع",
       "paymentSubmittedAt": "وقت الإرسال",
       "paymentNotes": "ملاحظات المدير",
@@ -1521,7 +1693,25 @@
       "auditActionReferenceResubmitted": "تم إعادة إرسال المرجع",
       "auditActionPaymentConfirmed": "تم تأكيد الدفع",
       "auditActionPaymentRejected": "تم رفض الدفع",
-      "focusedOrderBanner": "تمت تصفية العرض على الطلب {{orderId}} من ويدجت الجاهز للاستلام."
+      "focusedOrderBanner": "تمت تصفية العرض على الطلب {{orderId}} من ويدجت الجاهز للاستلام.",
+      "setPaymentLink": "تعيين رابط الدفع",
+      "setPaymentLinkDesc": "احفظ رابط الدفع الخارجي لهذا الطلب. يمكن للمديرين فقط تعديله.",
+      "paymentLinkPlaceholder": "https://...",
+      "paymentLinkSentAt": "آخر إرسال",
+      "openPaymentLink": "Open payment link",
+      "copyPaymentLink": "Copy Payment Link",
+      "editPaymentLink": "Edit Payment Link",
+      "pendingPaymentHint": "No client reference is currently submitted. Confirm only after external verification or keep waiting.",
+      "invalidPaymentReviewStatus": "This order is not in a payment review state",
+      "invalidStatusTransition": "Invalid status transition for this order",
+      "paymentTransitionLocked": "Use payment review actions to manage payment states",
+      "paymentLinkRequired": "Payment link is required",
+      "paymentLinkSaved": "Payment link saved",
+      "paymentLinkSaveFailed": "Failed to save payment link",
+      "paymentLinkCopied": "Payment link copied",
+      "paymentLinkCopyFailed": "Failed to copy payment link",
+      "exported": "Orders exported",
+      "subtitle": "Track statuses, payment links, and payment confirmations"
     },
     "logistics": {
       "title": "الخدمات اللوجستية والشحن",
@@ -1566,6 +1756,7 @@
       "trackingNumber": "رقم التتبع",
       "trackingNumberPlaceholder": "أدخل رقم التتبع",
       "trackingUrl": "رابط التتبع",
+      "trackingUrlPlaceholder": "https://",
       "notes": "ملاحظات",
       "notesPlaceholder": "ملاحظات إرسال اختيارية",
       "createShipment": "إنشاء الشحنة",
@@ -1699,11 +1890,32 @@
       "confirmDelete": "تأكيد الحذف",
       "deleteWarning": "هل أنت متأكد من حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
       "deleteSubcategoriesWarning": "سيتم أيضاً حذف جميع الفئات الفرعية ضمن هذه الفئة.",
+      "iconCategoryPlaceholder": "folder",
+      "iconSubcategoryPlaceholder": "label",
       "moveUp": "تحريك للأعلى",
       "moveDown": "تحريك للأسفل",
       "toggleActive": "تبديل النشاط",
       "expand": "توسيع",
-      "collapse": "طي"
+      "collapse": "طي",
+      "loadError": "Failed to load categories",
+      "created": "Category created",
+      "createFailed": "Failed to create category",
+      "subcategoryCreated": "Subcategory created",
+      "subcategoryCreateFailed": "Failed to create subcategory",
+      "updated": "Category updated",
+      "updateFailed": "Failed to update category",
+      "subcategoryUpdated": "Subcategory updated",
+      "subcategoryUpdateFailed": "Failed to update subcategory",
+      "statusUpdated": "Category status updated",
+      "statusUpdateFailed": "Failed to update category status",
+      "deleted": "Category deleted",
+      "deleteFailed": "Failed to delete category",
+      "orderUpdated": "Category order updated",
+      "orderUpdateFailed": "Failed to update category order",
+      "seededDefaults": "Default categories restored",
+      "seedFailed": "Failed to restore defaults",
+      "restoreDefaults": "Restore Defaults",
+      "active": "Active"
     },
     "loadingTabData": "يتم جلب أحدث بيانات لوحة التحكم...",
     "loadingTabDataFailed": "تعذر تحميل بعض بيانات لوحة التحكم. يرجى إعادة التحديث.",
@@ -1741,7 +1953,16 @@
       "referenceNumber": "رقم المرجع",
       "referenceNumberPlaceholder": "مرجع العملية (اختياري)",
       "notesPlaceholder": "ملاحظات اختيارية حول هذه الدفعة...",
-      "loadError": "فشل تحميل الدفعات"
+      "loadError": "فشل تحميل الدفعات",
+      "supplier": "Supplier",
+      "selectSupplier": "Select a supplier...",
+      "selectOrder": "Select an order..."
+    },
+    "inventory": {
+      "subtitle": "Monitor inventory and stock movement across suppliers"
+    },
+    "masterCatalog": {
+      "subtitle": "Manage the platform product master catalog"
     }
   },
   "inventory": {
@@ -1753,7 +1974,11 @@
     "outOfStock": "نفد المخزون",
     "units": "وحدات",
     "stock": "المخزون",
-    "status": "الحالة",
+    "status": {
+      "in_stock": "In Stock",
+      "low_stock": "Low Stock",
+      "out_of_stock": "Out of Stock"
+    },
     "productName": "اسم المنتج",
     "supplier": "المورد",
     "category": "الفئة",
@@ -1842,7 +2067,10 @@
     "disputed": "متنازع عليه",
     "refunded": "تم الاسترداد",
     "processing": "قيد المعالجة",
-    "confirmed": "مؤكد"
+    "confirmed": "مؤكد",
+    "pendingadmin": "Pending Admin",
+    "senttoclient": "Sent to Client",
+    "shipped": "Shipped"
   },
   "categories": {
     "office": {
@@ -2344,7 +2572,11 @@
     "copiedToClipboard": "تم نسخ {{label}} إلى الحافظة",
     "enterTransferReference": "يرجى إدخال رقم مرجع التحويل البنكي",
     "transferSubmitted": "تم إرسال تفاصيل التحويل البنكي. سنتحقق من دفعك ونؤكد قريباً.",
-    "transferSubmitFailed": "فشل إرسال تفاصيل الدفع. يرجى المحاولة مرة أخرى."
+    "transferSubmitFailed": "فشل إرسال تفاصيل الدفع. يرجى المحاولة مرة أخرى.",
+    "paymentSetupError": "Unable to load payment setup. Please try again.",
+    "bankDetailsMissing": "Bank details are not configured yet. Please contact support.",
+    "paymentLinkUnavailable": "No payment link is available for this order yet.",
+    "paymentMethod": "Payment Method"
   },
   "customRequest": {
     "title": "طلب منتج مخصص",
@@ -2372,7 +2604,25 @@
     "step3": "ستتلقى عرض سعر مع التسعير ووقت التسليم",
     "step4": "وافق على العرض للمتابعة في طلبك",
     "submitting": "جاري الإرسال...",
-    "submitRequest": "إرسال الطلب"
+    "submitRequest": "إرسال الطلب",
+    "fileTooLarge": "Each file must be smaller than 10MB.",
+    "imagesOnly": "Please select image files only.",
+    "partialUploadWarning": "Some files could not be uploaded and were skipped.",
+    "referenceImages": "Reference Images",
+    "attachments": "Attachments",
+    "loadError": "Failed to load requests",
+    "cancelled": "Request cancelled",
+    "cancelError": "Failed to cancel request",
+    "myRequests": "My Custom Requests",
+    "myRequestsDesc": "Track and manage your custom item requests",
+    "newRequest": "New Request",
+    "noRequests": "No custom requests yet",
+    "noRequestsDesc": "Need a product not in our catalog? Submit a custom request and we'll source it for you.",
+    "createFirst": "Create your first request",
+    "qty": "Qty",
+    "deadline": "Deadline",
+    "rejectionReason": "Rejection Reason",
+    "cancelRequest": "Cancel Request"
   },
   "paymentHistory": {
     "totalPaid": "إجمالي المدفوعات",
@@ -2408,7 +2658,9 @@
     "helpTip3": "تواصل مع support@mwrd.com إذا كانت لديك أي أسئلة",
     "helpTip4": "احتفظ بإيصال المعاملة لسجلاتك",
     "bankNotConfigured": "لم يتم تكوين تفاصيل البنك",
-    "contactSupport": "يرجى التواصل مع الدعم للحصول على تعليمات الدفع."
+    "contactSupport": "يرجى التواصل مع الدعم للحصول على تعليمات الدفع.",
+    "awaitingAdminReview": "Reference submitted. Waiting for admin verification.",
+    "referenceSubmitted": "Reference submitted"
   },
   "bankConfig": {
     "title": "تكوين تفاصيل البنك",
@@ -2424,6 +2676,14 @@
     "currency": "العملة",
     "branchName": "اسم الفرع",
     "branchCode": "رمز الفرع",
+    "bankNamePlaceholder": "مصرف الراجحي",
+    "accountNamePlaceholder": "شركة MWRD التجارية",
+    "accountNumberPlaceholder": "123456789012",
+    "ibanPlaceholder": "SA00XXXX0000000000000000",
+    "swiftCodePlaceholder": "BANKSA00",
+    "currencyPlaceholder": "SAR",
+    "branchNamePlaceholder": "فرع الرياض الرئيسي",
+    "branchCodePlaceholder": "001",
     "notes": "ملاحظات",
     "notesPlaceholder": "يرجى تضمين رقم الطلب في مرجع التحويل",
     "update": "تحديث",
@@ -2432,7 +2692,8 @@
     "active": "نشط",
     "noBankDetails": "لم يتم تكوين تفاصيل بنكية بعد",
     "addFirstAccount": "أضف حسابك البنكي الأول لبدء استلام المدفوعات",
-    "deleteConfirm": "هل أنت متأكد من حذف تفاصيل البنك هذه؟"
+    "deleteConfirm": "هل أنت متأكد من حذف تفاصيل البنك هذه؟",
+    "deleteTitle": "Delete bank account"
   },
   "markAsPaid": {
     "paymentConfirmed": "تم تأكيد الدفع",
@@ -2555,6 +2816,7 @@
     }
   },
   "pagination": {
+    "navigation": "التنقل بين الصفحات",
     "first": "الصفحة الأولى",
     "previous": "الصفحة السابقة",
     "next": "الصفحة التالية",
@@ -2568,7 +2830,12 @@
       "description": "قم برفع صورة لتخصيص حسابك",
       "upload": "رفع صورة",
       "remove": "إزالة",
-      "fileTooLarge": "حجم الملف كبير جداً (أقصى حد 5 ميجابايت)"
+      "fileTooLarge": "حجم الملف كبير جداً (أقصى حد 5 ميجابايت)",
+      "invalidFileType": "Please select an image file",
+      "uploadFailed": "Failed to upload profile picture",
+      "saved": "Profile picture updated",
+      "removeFailed": "Failed to remove profile picture",
+      "removed": "Profile picture removed"
     }
   },
   "subcategories": {
@@ -2670,5 +2937,11 @@
     "poConfirmedTitle": "تم تأكيد أمر الشراء",
     "poConfirmedMessage": "تم تأكيد الطلب {{orderId}} وإرساله إلى المورد.",
     "region": "الإشعارات"
+  },
+  "product": {
+    "description": "Description",
+    "availability": "Availability",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock"
   }
 }
