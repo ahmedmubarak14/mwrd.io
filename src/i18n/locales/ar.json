@@ -504,6 +504,7 @@
       "requestedLimit": "الحد المطلوب (ر.س)",
       "requestReason": "سبب الزيادة",
       "requestReasonPlaceholder": "اكتب تفاصيل داعمة لطلب الزيادة",
+      "requestReasonAuto": "تم الطلب من لوحة العميل",
       "submitCreditRequest": "إرسال الطلب",
       "availableCredit": "الائتمان المتاح",
       "approvedLimit": "الحد المعتمد",

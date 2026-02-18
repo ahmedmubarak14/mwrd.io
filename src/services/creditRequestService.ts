@@ -11,7 +11,7 @@ export interface CreditIncreaseRequestPayload {
   currentLimit: number;
   currentUsed: number;
   requestedLimit: number;
-  reason: string;
+  reason?: string;
 }
 
 export interface CreditIncreaseRequestResult {
@@ -36,9 +36,9 @@ export const creditRequestService = {
     const requestedLimit = toRoundedAmount(Number(payload.requestedLimit || 0));
     const currentLimit = toRoundedAmount(Number(payload.currentLimit || 0));
     const currentUsed = toRoundedAmount(Math.max(0, Number(payload.currentUsed || 0)));
-    const reason = payload.reason.trim();
+    const reason = payload.reason?.trim() || 'Client requested credit limit increase via dashboard';
 
-    if (!payload.clientId || !Number.isFinite(requestedLimit) || requestedLimit <= currentLimit || reason.length < 5) {
+    if (!payload.clientId || !Number.isFinite(requestedLimit) || requestedLimit <= currentLimit) {
       return { success: false, channel: 'credit_increase_requests', error: 'Invalid request payload' };
     }
 
@@ -57,9 +57,9 @@ export const creditRequestService = {
       return { success: true, channel: 'credit_increase_requests' };
     }
 
+    // Fallback to leads on any insert failure to avoid losing client requests.
     if (!isSchemaCompatibilityError(insertError)) {
       logger.error('Failed to submit credit increase request', insertError);
-      return { success: false, channel: 'credit_increase_requests', error: insertError.message };
     }
 
     try {
@@ -84,7 +84,7 @@ export const creditRequestService = {
       return {
         success: false,
         channel: 'leads',
-        error: fallbackError?.message || insertError.message,
+        error: fallbackError?.message || insertError.message || 'Failed to submit request',
       };
     }
   },

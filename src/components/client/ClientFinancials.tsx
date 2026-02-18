@@ -57,6 +57,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
     const [isCreditRequestModalOpen, setIsCreditRequestModalOpen] = useState(false);
     const [requestedLimit, setRequestedLimit] = useState('');
     const [creditRequestReason, setCreditRequestReason] = useState('');
+    const [creditRequestError, setCreditRequestError] = useState('');
     const [isSubmittingCreditRequest, setIsSubmittingCreditRequest] = useState(false);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
@@ -127,6 +128,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
         const suggestedLimit = Math.max(stats.creditLimit + baseIncrease, stats.creditLimit + 1);
         setRequestedLimit(suggestedLimit.toFixed(2));
         setCreditRequestReason('');
+        setCreditRequestError('');
         setIsCreditRequestModalOpen(true);
     };
 
@@ -135,17 +137,16 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
 
         const parsedRequestedLimit = Number(requestedLimit);
         if (!Number.isFinite(parsedRequestedLimit) || parsedRequestedLimit <= stats.creditLimit) {
-            toast.error(t('client.financials.requestValidationLimit'));
+            const errorMessage = t('client.financials.requestValidationLimit');
+            setCreditRequestError(errorMessage);
+            toast.error(errorMessage);
             return;
         }
 
-        if (creditRequestReason.trim().length < 5) {
-            toast.error(t('client.financials.requestValidationReason'));
-            return;
-        }
-
+        setCreditRequestError('');
         setIsSubmittingCreditRequest(true);
         try {
+            const normalizedReason = creditRequestReason.trim() || t('client.financials.requestReasonAuto');
             const result = await creditRequestService.submitCreditIncreaseRequest({
                 clientId: currentUser.id,
                 clientName: currentUser.name,
@@ -155,19 +156,25 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                 currentLimit: stats.creditLimit,
                 currentUsed: stats.balance,
                 requestedLimit: parsedRequestedLimit,
-                reason: creditRequestReason,
+                reason: normalizedReason,
             });
 
             if (!result.success) {
-                toast.error(result.error || t('client.financials.requestFailed'));
+                const errorMessage = result.error || t('client.financials.requestFailed');
+                setCreditRequestError(errorMessage);
+                toast.error(errorMessage);
                 return;
             }
 
             toast.success(t('client.financials.requestSubmitted'));
+            setCreditRequestError('');
             setIsCreditRequestModalOpen(false);
+            setCreditRequestReason('');
         } catch (error) {
             logger.error('Error submitting credit increase request:', error);
-            toast.error(t('client.financials.requestFailed'));
+            const errorMessage = t('client.financials.requestFailed');
+            setCreditRequestError(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setIsSubmittingCreditRequest(false);
         }
@@ -383,7 +390,10 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                                 {t('client.financials.requestCreditIncrease')}
                             </h2>
                             <button
-                                onClick={() => setIsCreditRequestModalOpen(false)}
+                                onClick={() => {
+                                    setIsCreditRequestModalOpen(false);
+                                    setCreditRequestError('');
+                                }}
                                 className="p-2 hover:bg-gray-100 rounded-lg"
                                 aria-label={t('common.close')}
                             >
@@ -414,7 +424,7 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    {t('client.financials.requestReason')}
+                                    {t('client.financials.requestReason')} ({t('common.optional')})
                                 </label>
                                 <textarea
                                     rows={4}
@@ -426,9 +436,18 @@ export const ClientFinancials: React.FC<ClientFinancialsProps> = ({ onMakePaymen
                             </div>
                         </div>
 
+                        {creditRequestError && (
+                            <p className="mt-4 text-sm text-red-600" role="alert">
+                                {creditRequestError}
+                            </p>
+                        )}
+
                         <div className="mt-6 flex justify-end gap-3">
                             <button
-                                onClick={() => setIsCreditRequestModalOpen(false)}
+                                onClick={() => {
+                                    setIsCreditRequestModalOpen(false);
+                                    setCreditRequestError('');
+                                }}
                                 className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
                             >
                                 {t('common.cancel')}

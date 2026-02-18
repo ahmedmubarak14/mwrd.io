@@ -504,6 +504,7 @@
       "requestedLimit": "Requested limit (SAR)",
       "requestReason": "Reason for increase",
       "requestReasonPlaceholder": "Provide context for the requested increase",
+      "requestReasonAuto": "Requested via client dashboard",
       "submitCreditRequest": "Submit Request",
       "availableCredit": "Available Credit",
       "approvedLimit": "Approved Limit",
