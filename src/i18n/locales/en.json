@@ -546,6 +546,7 @@
       "items": "Items",
       "status": "Status",
       "action": "Action",
+      "compare": "Compare",
       "reviewQuotes": "Review Quotes",
       "noQuotes": "No Quotes",
       "awaitingSuppliers": "Awaiting Suppliers",
