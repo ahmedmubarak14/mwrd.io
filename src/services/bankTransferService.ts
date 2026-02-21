@@ -135,6 +135,7 @@ async function logPaymentAuditEvent(entry: PaymentAuditLogInsert): Promise<void>
 
   if (error) {
     logger.error('Failed to create payment audit log:', error);
+    throw new Error(`Critical audit logging failure: ${error.message}`);
   }
 }
 
@@ -339,6 +340,7 @@ export async function rejectPaymentSubmission(
   orderId: string,
   reason: string
 ): Promise<Order> {
+  await requireAuthenticatedUserRole('ADMIN');
   const currentOrder = await getOrderById(orderId);
   if (!currentOrder) {
     throw new Error('Order not found');
