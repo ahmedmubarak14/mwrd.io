@@ -170,25 +170,37 @@ export async function incrementStock(
     userId: string,
     reason: 'restock' | 'order_cancelled' = 'restock'
 ): Promise<{ success: boolean; newStock: number }> {
-    const currentStock = await getStockLevel(productId);
-    const newStock = currentStock + quantity;
-
-    const { error } = await supabase
-        .from('products')
-        .update({
-            stock_quantity: newStock,
-            updated_at: new Date().toISOString()
-        })
-        .eq('id', productId);
+    const { data, error } = await supabase.rpc('increment_stock_atomic', {
+        p_product_id: productId,
+        p_quantity: quantity
+    });
 
     if (error) {
-        logger.error('Error incrementing stock_quantity:', error);
+        logger.error('Error incrementing stock atomically:', error);
         throw error;
     }
 
-    logger.info('Stock incremented', {
+    const result = Array.isArray(data) ? data[0] : null;
+    if (!result) {
+        return {
+            success: false,
+            newStock: 0,
+        };
+    }
+
+    if (!result.success) {
+        return {
+            success: false,
+            newStock: result.new_stock ?? result.previous_stock ?? 0,
+        };
+    }
+
+    const previousStock = result.previous_stock ?? 0;
+    const newStock = result.new_stock ?? 0;
+
+    logger.info('Stock incremented atomically', {
         productId,
-        previousStock: currentStock,
+        previousStock,
         newStock,
         incrementedBy: quantity,
         reason,

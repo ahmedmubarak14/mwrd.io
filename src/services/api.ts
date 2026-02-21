@@ -1630,7 +1630,10 @@ export class ApiService {
       throw new Error(`Failed to fetch quotes: ${error.message || 'Unknown error'}`);
     }
 
-    return data.map((row: any) => this.mapDbQuoteToQuote(row));
+    const actor = await this.getCurrentActorIdentity();
+    const isClient = actor?.role === UserRole.CLIENT;
+
+    return data.map((row: any) => this.mapDbQuoteToQuote(row, isClient));
   }
 
   // New: Get quotes with related data for comparison
@@ -1734,11 +1737,15 @@ export class ApiService {
       return acc;
     }, new Map<string, any[]>());
 
+    const actor = await this.getCurrentActorIdentity();
+    const isClient = actor?.role === UserRole.CLIENT;
+
     return quoteRows.map((quote: any) => ({
       id: quote.id,
       rfq_id: quote.rfq_id,
       supplier_id: quote.supplier_id,
-      price: Number(quote.supplier_price ?? quote.price ?? 0),
+      price: isClient ? 0 : Number(quote.supplier_price ?? quote.price ?? 0),
+      // MWRD: Clients only see finalPrice (supplierPrice + margin), suppliers/admin see both
       finalPrice: Number(quote.final_price ?? quote.finalPrice ?? quote.supplier_price ?? 0),
       leadTime: quote.lead_time || quote.leadTime || '',
       warranty: quote.warranty || undefined,
@@ -1747,7 +1754,16 @@ export class ApiService {
       created_at: quote.created_at,
       type: quote.type === 'auto' ? 'auto' : 'custom',
       quoteItems: quoteItemsByQuoteId.get(quote.id) || [],
-      supplier: {
+      supplier: isClient ? {
+        // C1 Fix: For clients, anonymize the supplier.
+        id: `anon-${quote.supplier_id?.substring(0, 8)}`,
+        companyName: `Supplier ${quote.supplier?.public_id || 'ID'}`,
+        name: `Supplier ${quote.supplier?.public_id || 'ID'}`,
+        publicId: quote.supplier?.public_id || undefined,
+        rating: quote.supplier?.rating || undefined,
+        orderCount: orderCountBySupplierId.get(quote.supplier_id) || 0,
+      } : {
+        // For admin/supplier, show full details
         id: quote.supplier?.id || quote.supplier_id,
         companyName: quote.supplier?.company_name || undefined,
         name: quote.supplier?.name || undefined,
@@ -1771,7 +1787,10 @@ export class ApiService {
       return null;
     }
 
-    return this.mapDbQuoteToQuote(data);
+    const actor = await this.getCurrentActorIdentity();
+    const isClient = actor?.role === UserRole.CLIENT;
+
+    return this.mapDbQuoteToQuote(data, isClient);
   }
 
   async createQuote(quote: Omit<Quote, 'id'>): Promise<Quote | null> {
@@ -3378,14 +3397,15 @@ export class ApiService {
     return null;
   }
 
-  private mapDbQuoteToQuote(dbQuote: any): Quote {
+  private mapDbQuoteToQuote(dbQuote: any, isClient: boolean = false): Quote {
     return {
       id: dbQuote.id,
       rfqId: dbQuote.rfq_id,
       supplierId: dbQuote.supplier_id,
-      supplierPrice: dbQuote.supplier_price,
+      // C1/H3 Fix: Clients never see raw supplier price or margins
+      supplierPrice: isClient ? undefined : dbQuote.supplier_price,
       leadTime: dbQuote.lead_time,
-      marginPercent: dbQuote.margin_percent,
+      marginPercent: isClient ? undefined : dbQuote.margin_percent,
       finalPrice: dbQuote.final_price,
       status: dbQuote.status,
       type: dbQuote.type === 'auto' ? 'auto' : 'custom',
@@ -3400,9 +3420,10 @@ export class ApiService {
             productId: item.product_id,
             productName: item.product_name || item.product?.name || item.product_id,
             brand: item.product?.brand || undefined,
-            unitPrice: Number(item.final_unit_price ?? item.unit_price ?? 0),
+            // C1/H3 Fix: Clients only see final pricing
+            unitPrice: isClient ? Number(item.final_unit_price ?? item.unit_price ?? 0) : Number(item.unit_price ?? 0),
             quantity: Number(item.quantity ?? 0),
-            lineTotal: Number(item.final_line_total ?? item.line_total ?? 0),
+            lineTotal: isClient ? Number(item.final_line_total ?? item.line_total ?? 0) : Number(item.line_total ?? 0),
             leadTime: item.lead_time || undefined,
             notes: item.notes || undefined,
             isAlternative: Boolean(item.alternative_product_id),
