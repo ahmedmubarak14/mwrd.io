@@ -454,7 +454,21 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
       return false;
     }
 
-    const { order } = await api.acceptQuote(quoteId);
+    let order: Order | null;
+    try {
+      const result = await api.acceptQuote(quoteId);
+      order = result.order;
+    } catch (acceptError: any) {
+      logger.error('RPC accept_quote_and_deduct_credit failed:', acceptError);
+      toast.error(
+        getUserFacingError(
+          acceptError,
+          t('client.orders.createError') || 'Failed to initialize order'
+        )
+      );
+      return false;
+    }
+
     let resolvedOrder = order;
 
     if (!resolvedOrder && currentUser?.id) {
@@ -470,8 +484,13 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
     }
 
     if (!resolvedOrder) {
-      toast.error(t('client.orders.createError') || 'Failed to initialize order');
-      return false;
+      // Order was likely created in the DB but we can't fetch it yet — navigate
+      // to orders so the user can see it after the page refreshes.
+      logger.warn('acceptQuote succeeded but order could not be resolved locally; navigating to orders', { quoteId });
+      toast.success(t('client.orders.quoteAcceptedSuccess'));
+      try { await loadOrders(); } catch (_) { /* non-blocking */ }
+      onNavigate('orders');
+      return true;
     }
 
     setCreatedOrderId(resolvedOrder.id);
