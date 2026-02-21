@@ -1075,6 +1075,18 @@ export interface Database {
           error: string | null
         }[]
       }
+      increment_stock_atomic: {
+        Args: {
+          p_product_id: string
+          p_quantity: number
+        }
+        Returns: {
+          success: boolean
+          previous_stock: number | null
+          new_stock: number | null
+          error: string | null
+        }[]
+      }
       verify_client_po_and_confirm_order: {
         Args: {
           p_document_id: string

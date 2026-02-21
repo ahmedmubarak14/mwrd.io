@@ -393,6 +393,22 @@ export async function addPaymentReference(
     throw new Error('Payment reference is required');
   }
 
+  // H1 Fix: Ensure the payment reference is unique across the system
+  if (normalizedReference !== currentOrder.paymentReference) {
+    const { data: existingRefOrder, error: existingRefError } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('payment_reference', normalizedReference)
+      .limit(1)
+      .maybeSingle();
+
+    if (existingRefError) {
+      logger.error('Error checking payment reference uniqueness:', existingRefError);
+    } else if (existingRefOrder) {
+      throw new Error(`This payment reference has already been used on another order.`);
+    }
+  }
+
   const auditAction: PaymentAuditAction =
     currentOrder.status === 'AWAITING_CONFIRMATION'
       ? 'REFERENCE_RESUBMITTED'
