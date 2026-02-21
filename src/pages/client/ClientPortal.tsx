@@ -2083,6 +2083,8 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                   const rfqQuotes = quotes.filter(q => q.rfqId === rfq.id);
                   const quoteCount = rfqQuotes.length;
                   const hasQuotes = quoteCount > 0;
+                  const isAccepted = rfqQuotes.some(q => q.status === 'ACCEPTED')
+                    || orders.some(o => rfqQuotes.some(q => q.id === o.quoteId));
 
                   return (
                     <tr key={rfq.id} className="hover:bg-slate-50/50 transition-colors group">
@@ -2102,12 +2104,20 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                       </td>
                       <td className="px-8 py-6">
                         <StatusBadge
-                          status={hasQuotes ? 'quoted' : (rfq.status === 'OPEN' ? 'pending' : rfq.status.toLowerCase())}
+                          status={isAccepted ? 'closed' : hasQuotes ? 'quoted' : (rfq.status === 'OPEN' ? 'pending' : rfq.status.toLowerCase())}
                           size="md"
                         />
                       </td>
                       <td className="px-8 py-6 text-right">
-                        {hasQuotes ? (
+                        {isAccepted ? (
+                          <button
+                            onClick={() => onNavigate('orders')}
+                            className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-600/20 transition-all"
+                          >
+                            <span className="material-symbols-outlined text-sm">check_circle</span>
+                            {t('client.rfqs.orderConfirmed') || 'Order Confirmed'}
+                          </button>
+                        ) : hasQuotes ? (
                           <div className="flex items-center justify-end gap-4">
                             <div className="text-right">
                               <p className="font-bold text-slate-900 text-sm">{quoteCount}</p>
