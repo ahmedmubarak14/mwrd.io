@@ -9,7 +9,6 @@ import { ToastContainer } from './components/ui/Toast';
 import { Sidebar } from './components/Sidebar';
 import { NotificationBell } from './components/NotificationBell';
 import { LoadingSpinner } from './components/ui/LoadingSpinner';
-import { authService } from './services/authService';
 
 // Lazy-load all page-level components to reduce initial bundle size
 const Landing = lazy(() =>
@@ -50,7 +49,7 @@ const AdminPortal = lazy(() =>
 
 function App() {
   const { t } = useTranslation();
-  const { currentUser, isAuthenticated, isLoading, login, logout, initializeAuth, addNotification } = useStore();
+  const { currentUser, isAuthenticated, isLoading, logout, initializeAuth } = useStore();
   const toast = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -95,57 +94,11 @@ function App() {
     navigate(`/app?tab=${encodeURIComponent(defaultTab)}`, { replace: true });
   }, [currentUser?.role, location.pathname, location.search, navigate]);
 
-  const handleLogin = async (email: string, password: string) => {
-    const user = await login(email, password);
-    if (user) {
-      const initialTab = getDefaultTabForRole(user.role);
-      setActiveTab(initialTab);
-      navigate(`/app?tab=${encodeURIComponent(initialTab)}`, { replace: true });
-      toast.success(t('toast.welcomeBack', { name: user.name }));
-      addNotification({
-        type: 'system',
-        title: t('notifications.loginTitle'),
-        message: t('notifications.loginMessage', { name: user.name }),
-        actionUrl: `/app?tab=${encodeURIComponent(initialTab)}`,
-      });
-      return user.role;
-    } else {
-      toast.error(t('toast.invalidCredentials'));
-      return null;
-    }
-  };
-
   const handleLogout = async () => {
     await logout();
     setSidebarOpen(false);
     navigate('/', { replace: true });
     toast.info(t('toast.loggedOut'));
-  };
-
-  const handleRequestPasswordReset = async (email: string) => {
-    const redirectTo = `${window.location.origin}/login`;
-    const result = await authService.requestPasswordReset(email, redirectTo);
-
-    if (result.success) {
-      toast.success(t('login.resetEmailSent'));
-    } else {
-      toast.error(result.error || t('login.resetEmailFailed'));
-    }
-
-    return result;
-  };
-
-  const handleCompletePasswordReset = async (newPassword: string) => {
-    const result = await authService.updatePassword(newPassword);
-
-    if (result.success) {
-      toast.success(t('login.passwordResetSuccess'));
-      navigate('/login', { replace: true });
-    } else {
-      toast.error(result.error || t('login.passwordResetFailed'));
-    }
-
-    return result;
   };
 
   const handleTabNavigate = (tab: string) => {
@@ -188,29 +141,8 @@ function App() {
         }
       >
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Landing
-              onNavigateToLogin={() => navigate('/login')}
-              onNavigateToGetStarted={() => navigate('/get-started')}
-              onNavigateToAboutClients={() => navigate('/about/clients')}
-              onNavigateToAboutSuppliers={() => navigate('/about/suppliers')}
-            />
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <Login
-              onLogin={handleLogin}
-              onBack={() => navigate('/')}
-              onNavigateToGetStarted={() => navigate('/get-started')}
-              onRequestPasswordReset={handleRequestPasswordReset}
-              onCompletePasswordReset={handleCompletePasswordReset}
-            />
-          }
-        />
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
         <Route
           path="/get-started"
           element={<GetStarted onBack={() => navigate('/')} />}

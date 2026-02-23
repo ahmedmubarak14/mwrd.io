@@ -1,28 +1,19 @@
 import { logger } from '@/src/utils/logger';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { UserRole } from '../types/types';
 import { LanguageToggle } from '../components/LanguageToggle';
-import type { ActionResponse } from '../services/authService';
-
-interface LoginProps {
-  onLogin: (email: string, password: string) => Promise<UserRole | null>;
-  onBack: () => void;
-  onNavigateToGetStarted: () => void;
-  onRequestPasswordReset: (email: string) => Promise<ActionResponse>;
-  onCompletePasswordReset: (newPassword: string) => Promise<ActionResponse>;
-}
+import { useStore } from '../store/useStore';
+import { authService } from '../services/authService';
+import { useToast } from '../hooks/useToast';
 
 type LoginMode = 'login' | 'request-reset' | 'recovery';
 
-export const Login: React.FC<LoginProps> = ({
-  onLogin,
-  onBack,
-  onNavigateToGetStarted,
-  onRequestPasswordReset,
-  onCompletePasswordReset,
-}) => {
+export const Login: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { login, addNotification } = useStore();
+  const toast = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -43,7 +34,18 @@ export const Login: React.FC<LoginProps> = ({
     setIsLoading(true);
 
     try {
-      await onLogin(email, password);
+      const user = await login(email, password);
+      if (user) {
+        toast.success(t('toast.welcomeBack', { name: user.name }));
+        addNotification({
+          type: 'system',
+          title: t('notifications.loginTitle'),
+          message: t('notifications.loginMessage', { name: user.name }),
+          actionUrl: '/app?tab=dashboard',
+        });
+      } else {
+        toast.error(t('toast.invalidCredentials'));
+      }
     } catch (error) {
       logger.error('Login error:', error);
     } finally {
@@ -59,9 +61,13 @@ export const Login: React.FC<LoginProps> = ({
 
     setIsLoading(true);
     try {
-      const result = await onRequestPasswordReset(email.trim());
+      const redirectTo = `${window.location.origin}/login`;
+      const result = await authService.requestPasswordReset(email.trim(), redirectTo);
       if (result.success) {
+        toast.success(t('login.resetEmailSent'));
         setMode('login');
+      } else {
+        toast.error(result.error || t('login.resetEmailFailed'));
       }
     } finally {
       setIsLoading(false);
@@ -77,12 +83,16 @@ export const Login: React.FC<LoginProps> = ({
 
     setIsLoading(true);
     try {
-      const result = await onCompletePasswordReset(newPassword);
+      const result = await authService.updatePassword(newPassword);
       if (result.success) {
+        toast.success(t('login.passwordResetSuccess'));
         setMode('login');
         setNewPassword('');
         setConfirmPassword('');
         setPassword('');
+        navigate('/login', { replace: true });
+      } else {
+        toast.error(result.error || t('login.passwordResetFailed'));
       }
     } finally {
       setIsLoading(false);
@@ -98,9 +108,9 @@ export const Login: React.FC<LoginProps> = ({
             <LanguageToggle />
           </div>
 
-          <button 
+          <button
             data-testid="login-back-button"
-            onClick={onBack}
+            onClick={() => navigate('/')}
             className="flex items-center gap-3 mb-8 sm:mb-12 hover:opacity-80 transition-opacity min-h-[44px]"
           >
             <div className="size-8 bg-[#0A2540] rounded-lg flex items-center justify-center text-white">
@@ -253,7 +263,7 @@ export const Login: React.FC<LoginProps> = ({
             {mode === 'login' ? (
               <p className="text-slate-500 text-sm">
                 {t('login.noAccount')}{' '}
-                <button onClick={onNavigateToGetStarted} className="text-blue-600 font-bold hover:underline min-h-[44px] inline-flex items-center">
+                <button onClick={() => navigate('/get-started')} className="text-blue-600 font-bold hover:underline min-h-[44px] inline-flex items-center">
                   {t('login.signUp')}
                 </button>
               </p>

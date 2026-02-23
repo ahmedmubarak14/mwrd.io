@@ -1,18 +1,13 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { LanguageToggle } from '../components/LanguageToggle';
 
-interface LandingProps {
-  onNavigateToLogin: () => void;
-  onNavigateToGetStarted: () => void;
-  onNavigateToAboutClients: () => void;
-  onNavigateToAboutSuppliers: () => void;
-}
-
-export const Landing: React.FC<LandingProps> = ({ onNavigateToLogin, onNavigateToGetStarted, onNavigateToAboutClients, onNavigateToAboutSuppliers }) => {
+export const Landing: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,20 +82,20 @@ export const Landing: React.FC<LandingProps> = ({ onNavigateToLogin, onNavigateT
               <h2 className="text-[#0A2540] text-lg md:text-xl font-bold leading-tight tracking-[-0.015em]">{t('brand.name')}</h2>
             </div>
             <nav className="hidden md:flex flex-1 justify-center items-center gap-8">
-              <button onClick={onNavigateToAboutClients} className="text-[#4A4A4A] text-sm font-medium leading-normal hover:text-[#0A2540]">{t('landing.forClients')}</button>
-              <button onClick={onNavigateToAboutSuppliers} className="text-[#4A4A4A] text-sm font-medium leading-normal hover:text-[#0A2540]">{t('landing.forSuppliers')}</button>
+              <button onClick={() => navigate('/about/clients')} className="text-[#4A4A4A] text-sm font-medium leading-normal hover:text-[#0A2540]">{t('landing.forClients')}</button>
+              <button onClick={() => navigate('/about/suppliers')} className="text-[#4A4A4A] text-sm font-medium leading-normal hover:text-[#0A2540]">{t('landing.forSuppliers')}</button>
             </nav>
             <div className="flex gap-1.5 md:gap-2 items-center">
               <LanguageToggle variant="minimal" />
-              <button 
+              <button
                 data-testid="landing-login-button"
-                onClick={onNavigateToLogin}
+                onClick={() => navigate('/login')}
                 className="hidden sm:flex min-w-[60px] md:min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 md:h-10 px-2.5 md:px-4 bg-gray-200 text-[#4A4A4A] text-xs md:text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 transition-colors"
               >
                 <span className="truncate">{t('common.login')}</span>
               </button>
-              <button 
-                onClick={onNavigateToGetStarted}
+              <button
+                onClick={() => navigate('/get-started')}
                 className="hidden sm:flex min-w-[70px] md:min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 md:h-10 px-2.5 md:px-4 bg-[#0A2540] text-white text-xs md:text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#0A2540]/90 transition-colors"
               >
                 <span className="truncate">{t('landing.getStarted')}</span>
@@ -122,28 +117,28 @@ export const Landing: React.FC<LandingProps> = ({ onNavigateToLogin, onNavigateT
           <div className="md:hidden bg-white border-b border-gray-200 shadow-lg animate-in slide-in-from-top-2 duration-200">
             <div className="container mx-auto px-4 py-4">
               <nav className="flex flex-col gap-1 mb-4">
-                <button 
-                  onClick={() => { onNavigateToAboutClients(); setMobileMenuOpen(false); }}
+                <button
+                  onClick={() => { navigate('/about/clients'); setMobileMenuOpen(false); }}
                   className="text-[#4A4A4A] text-base font-medium py-3 px-3 rounded-lg hover:bg-gray-100 hover:text-[#0A2540] transition-colors text-start min-h-[44px]"
                 >
                   {t('landing.forClients')}
                 </button>
-                <button 
-                  onClick={() => { onNavigateToAboutSuppliers(); setMobileMenuOpen(false); }}
+                <button
+                  onClick={() => { navigate('/about/suppliers'); setMobileMenuOpen(false); }}
                   className="text-[#4A4A4A] text-base font-medium py-3 px-3 rounded-lg hover:bg-gray-100 hover:text-[#0A2540] transition-colors text-start min-h-[44px]"
                 >
                   {t('landing.forSuppliers')}
                 </button>
               </nav>
               <div className="flex flex-col gap-2 pt-3 border-t border-gray-100">
-                <button 
-                  onClick={() => { onNavigateToLogin(); setMobileMenuOpen(false); }}
+                <button
+                  onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}
                   className="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-gray-200 text-[#4A4A4A] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 transition-colors"
                 >
                   {t('common.login')}
                 </button>
-                <button 
-                  onClick={() => { onNavigateToGetStarted(); setMobileMenuOpen(false); }}
+                <button
+                  onClick={() => { navigate('/get-started'); setMobileMenuOpen(false); }}
                   className="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 px-4 bg-[#0A2540] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#0A2540]/90 transition-colors"
                 >
                   {t('landing.getStarted')}
@@ -168,15 +163,15 @@ export const Landing: React.FC<LandingProps> = ({ onNavigateToLogin, onNavigateT
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start rtl:lg:justify-end">
-                  <button 
-                    onClick={onNavigateToGetStarted}
+                  <button
+                    onClick={() => navigate('/get-started')}
                     className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-[#0A2540] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#0A2540]/90 transition-all duration-300 hover:scale-105 hover:shadow-lg"
                   >
                     <span className="truncate">{t('landing.getStarted')}</span>
                   </button>
-                  <button 
+                  <button
                     data-testid="landing-hero-login-button"
-                    onClick={onNavigateToLogin}
+                    onClick={() => navigate('/login')}
                     className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-gray-200 text-[#4A4A4A] text-base font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 transition-all duration-300 hover:scale-105"
                   >
                     <span className="truncate">{t('common.login')}</span>
@@ -248,8 +243,8 @@ export const Landing: React.FC<LandingProps> = ({ onNavigateToLogin, onNavigateT
               </div>
               <div className="flex flex-col gap-4">
                 <h4 className="font-bold text-white">{t('footer.platform')}</h4>
-                <button onClick={onNavigateToAboutClients} className="text-sm text-gray-300 hover:text-white">{t('landing.forClients')}</button>
-                <button onClick={onNavigateToAboutSuppliers} className="text-sm text-gray-300 hover:text-white">{t('landing.forSuppliers')}</button>
+                <button onClick={() => navigate('/about/clients')} className="text-sm text-gray-300 hover:text-white">{t('landing.forClients')}</button>
+                <button onClick={() => navigate('/about/suppliers')} className="text-sm text-gray-300 hover:text-white">{t('landing.forSuppliers')}</button>
               </div>
             </div>
             <div className="mt-12 border-t border-gray-100/20 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-300">
