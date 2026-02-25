@@ -65,6 +65,34 @@ function applyPagination<T>(query: T, pagination?: PaginationOptions): T {
   return (query as any).range(from, to) as T;
 }
 
+async function maybeSingleCompat<T = any>(query: {
+  maybeSingle?: () => any;
+  single?: () => any;
+}): Promise<{ data: T | null; error: any }> {
+  if (typeof query?.maybeSingle === 'function') {
+    return await query.maybeSingle();
+  }
+
+  if (typeof query?.single === 'function') {
+    const result = await query.single();
+    const message = String(result?.error?.message || '').toLowerCase();
+    const code = String(result?.error?.code || '').toUpperCase();
+    const isNoRowsError =
+      code === 'PGRST116'
+      || message.includes('no rows')
+      || message.includes('0 rows')
+      || message.includes('multiple (or no) rows');
+
+    if (isNoRowsError) {
+      return { data: null, error: null };
+    }
+
+    return result;
+  }
+
+  return { data: null, error: new Error('Query does not support single-row selection') };
+}
+
 function mapDbBankDetailsToModel(row: BankDetailsRow): BankDetails {
   return {
     id: row.id,
@@ -397,12 +425,11 @@ export async function addPaymentReference(
 
   // H1 Fix: Ensure the payment reference is unique across the system
   if (normalizedReference !== currentOrder.paymentReference) {
-    const { data: existingRefOrder, error: existingRefError } = await supabase
+    const { data: existingRefOrder, error: existingRefError } = await maybeSingleCompat(supabase
       .from('orders')
       .select('id')
       .eq('payment_reference', normalizedReference)
-      .limit(1)
-      .maybeSingle();
+      .limit(1));
 
     if (existingRefError) {
       logger.error('Error checking payment reference uniqueness:', existingRefError);
