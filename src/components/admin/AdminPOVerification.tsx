@@ -314,9 +314,14 @@ export const AdminPOVerification: React.FC = () => {
     () => selectedOrderItems.reduce((sum, item) => sum + (item.lineTotal || 0), 0),
     [selectedOrderItems]
   );
+  const isStaticHost = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    const host = window.location.hostname.toLowerCase();
+    return host.includes('github.io');
+  }, []);
   const fallbackSystemPOUrl = useMemo(
-    () => (selectedOrder?.id ? `/api/generate-po/${selectedOrder.id}` : null),
-    [selectedOrder?.id]
+    () => (selectedOrder?.id && !isStaticHost ? `/api/generate-po/${selectedOrder.id}` : null),
+    [isStaticHost, selectedOrder?.id]
   );
   const effectivePreviewUrl = previewUrl || fallbackSystemPOUrl;
 
@@ -756,7 +761,9 @@ export const AdminPOVerification: React.FC = () => {
                           {selectedPendingPO.documentLoading
                             ? `${t('common.loading') || 'Loading'}...`
                             : selectedPendingPO.documentLoadError ||
-                              'No PO document available. You can still approve this order based on order details.'}
+                              (isStaticHost
+                                ? 'No PO document URL available in DB. API-generated preview is disabled on static hosting. Upload PO to preview it here.'
+                                : 'No PO document available. You can still approve this order based on order details.')}
                           {!selectedPendingPO.documentLoading && (
                             <div>
                               <button
