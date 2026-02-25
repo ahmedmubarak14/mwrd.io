@@ -515,7 +515,7 @@ export const AdminPOVerification: React.FC = () => {
                         e.stopPropagation();
                         openVerifyConfirm(item.order.id);
                       }}
-                      disabled={verifying === item.order.id || Boolean(item.documentLoading)}
+                      disabled={verifying === item.order.id}
                       className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {verifying === item.order.id ? (
