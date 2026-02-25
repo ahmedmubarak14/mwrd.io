@@ -18,6 +18,7 @@ interface PendingPO {
         status: string;
     };
     clientName: string;
+    documentLoading?: boolean;
     documentLoadError?: string;
 }
 
@@ -79,15 +80,33 @@ export const AdminPOVerification: React.FC = () => {
                 return status === 'PENDING_ADMIN_CONFIRMATION' || status === 'PENDING_PO';
             });
 
-            const pending = await Promise.all(
-                pendingOrders.map(async (order): Promise<PendingPO> => {
-                    const client = users.find(u => u.id === order.clientId);
+            const pendingBase: PendingPO[] = pendingOrders.map((order) => {
+                const client = users.find(u => u.id === order.clientId);
+                return {
+                    order: {
+                        id: order.id,
+                        clientId: order.clientId,
+                        amount: order.amount,
+                        date: order.date,
+                        status: String(order.status),
+                    },
+                    clientName: client?.companyName || client?.name || t('admin.overview.unknownClient'),
+                    documentLoading: true,
+                };
+            });
 
+            // Render list immediately; load documents per order in background.
+            setPendingPOs(pendingBase);
+            setActionErrorsByOrder({});
+            setLoading(false);
+
+            const pendingWithDocs = await Promise.all(
+                pendingBase.map(async (pendingItem): Promise<PendingPO> => {
                     try {
                         const docs = await withTimeout(
-                            orderDocumentService.getOrderDocuments(order.id),
+                            orderDocumentService.getOrderDocuments(pendingItem.order.id),
                             DOCUMENT_FETCH_TIMEOUT_MS,
-                            `Loading PO documents for order ${order.id}`,
+                            `Loading PO documents for order ${pendingItem.order.id}`,
                         );
 
                         const clientPODocuments = docs.filter(
@@ -98,37 +117,25 @@ export const AdminPOVerification: React.FC = () => {
                         ) || clientPODocuments[0];
 
                         return {
+                            ...pendingItem,
                             document: clientPO,
-                            order: {
-                                id: order.id,
-                                clientId: order.clientId,
-                                amount: order.amount,
-                                date: order.date,
-                                status: String(order.status),
-                            },
-                            clientName: client?.companyName || client?.name || t('admin.overview.unknownClient'),
+                            documentLoading: false,
+                            documentLoadError: clientPO ? undefined : 'Client PO document not found',
                         };
                     } catch (err) {
                         const message = getErrorMessage(err, t('errors.failedToLoad'));
-                        logger.error(`Error loading docs for order ${order.id}:`, err);
+                        logger.error(`Error loading docs for order ${pendingItem.order.id}:`, err);
                         return {
+                            ...pendingItem,
                             document: undefined,
-                            order: {
-                                id: order.id,
-                                clientId: order.clientId,
-                                amount: order.amount,
-                                date: order.date,
-                                status: String(order.status),
-                            },
-                            clientName: client?.companyName || client?.name || t('admin.overview.unknownClient'),
+                            documentLoading: false,
                             documentLoadError: message,
                         };
                     }
                 })
             );
 
-            setPendingPOs(pending);
-            setActionErrorsByOrder({});
+            setPendingPOs(pendingWithDocs);
         } catch (error) {
             const message = getErrorMessage(error, t('errors.failedToLoad'));
             logger.error('Error loading pending POs:', error);
@@ -352,6 +359,7 @@ export const AdminPOVerification: React.FC = () => {
                     <div className="space-y-3">
                         {pendingPOs.map((item) => {
                             const hasDocument = Boolean(item.document);
+                            const isDocumentReady = hasDocument && !item.documentLoading;
                             return (
                                 <div
                                     key={item.order.id}
@@ -378,7 +386,12 @@ export const AdminPOVerification: React.FC = () => {
                                                 <p className="text-sm text-neutral-500">
                                                     {new Date((item.document?.created_at) || item.order.date).toLocaleDateString()}
                                                 </p>
-                                                {!hasDocument && (
+                                                {item.documentLoading && (
+                                                    <p className="mt-1 text-xs text-slate-500">
+                                                        {t('common.loading') || 'Loading'}...
+                                                    </p>
+                                                )}
+                                                {!item.documentLoading && !hasDocument && (
                                                     <p className="mt-1 text-xs text-red-600">
                                                         {item.documentLoadError || 'Client PO document is missing'}
                                                     </p>
@@ -399,7 +412,7 @@ export const AdminPOVerification: React.FC = () => {
                                                 e.stopPropagation();
                                                 openVerifyConfirm(item.order.id);
                                             }}
-                                            disabled={verifying === item.order.id || !hasDocument}
+                                            disabled={verifying === item.order.id || !isDocumentReady}
                                             className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                         >
                                             {verifying === item.order.id ? (
