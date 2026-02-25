@@ -124,12 +124,12 @@ export class ApiService {
 
   private async maybeSingleCompat<T = any>(
     query: {
-      maybeSingle?: () => Promise<{ data: T | null; error: any }>;
-      single?: () => Promise<{ data: T | null; error: any }>;
+      maybeSingle?: () => any;
+      single?: () => any;
     }
   ): Promise<{ data: T | null; error: any }> {
     if (typeof query?.maybeSingle === 'function') {
-      return query.maybeSingle();
+      return await query.maybeSingle();
     }
 
     if (typeof query?.single === 'function') {
