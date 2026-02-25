@@ -136,6 +136,33 @@ function mapStorageBucketError(error: unknown): Error | null {
     return null;
 }
 
+function pruneMissingOrderDocumentColumn(
+    payload: Record<string, unknown>,
+    error: { message?: string } | null | undefined
+): Record<string, unknown> | null {
+    const message = String(error?.message || '');
+    const isMissingColumnError =
+        /could not find the '(.+)' column of 'order_documents'/i.test(message)
+        || /column .* does not exist/i.test(message);
+    if (!isMissingColumnError) {
+        return null;
+    }
+
+    const missingFromSchemaCache = message.match(/could not find the '([^']+)' column/i)?.[1];
+    const missingFromPg = message.match(/column\s+"?([a-zA-Z0-9_]+)"?\s+does not exist/i)?.[1];
+    const missingColumn = (missingFromSchemaCache || missingFromPg || '').trim();
+    if (!missingColumn || !(missingColumn in payload)) {
+        return null;
+    }
+
+    const nextPayload = { ...payload };
+    delete nextPayload[missingColumn];
+    logger.warn('Retrying order_documents insert without missing column', {
+        missingColumn,
+    });
+    return nextPayload;
+}
+
 /**
  * Log a PO audit event.
  *
@@ -260,19 +287,36 @@ export const orderDocumentService = {
         const fileRef = buildStorageRef(fileName);
 
         // 2. Insert document record
-        const { data, error } = await supabase
-            .from('order_documents')
-            .insert({
-                order_id: orderId,
-                document_type: 'CLIENT_PO',
-                file_url: fileRef,
-                file_name: file.name,
-                uploaded_by: userId
-            })
-            .select()
-            .single();
+        let insertPayload: Record<string, unknown> = {
+            order_id: orderId,
+            document_type: 'CLIENT_PO',
+            file_url: fileRef,
+            file_name: file.name,
+            uploaded_by: userId
+        };
+        let data: any = null;
+        while (Object.keys(insertPayload).length > 0) {
+            const result = await supabase
+                .from('order_documents' as any)
+                .insert(insertPayload)
+                .select()
+                .single();
 
-        if (error) throw error;
+            if (!result.error) {
+                data = result.data;
+                break;
+            }
+
+            const nextPayload = pruneMissingOrderDocumentColumn(insertPayload, result.error);
+            if (!nextPayload) {
+                throw result.error;
+            }
+            insertPayload = nextPayload;
+        }
+
+        if (!data) {
+            throw new Error('Unable to insert order document');
+        }
 
         // 3. Update order flags/status
         if (options.updateOrderStatusToPending) {
@@ -384,19 +428,36 @@ export const orderDocumentService = {
                 }
             }
 
-            const { data, error } = await supabase
-                .from('order_documents')
-                .insert({
-                    order_id: orderId,
-                    document_type: 'SYSTEM_PO',
-                    file_url: fileUrl,
-                    file_name: fileName,
-                    uploaded_by: userId
-                })
-                .select()
-                .single();
+            let insertPayload: Record<string, unknown> = {
+                order_id: orderId,
+                document_type: 'SYSTEM_PO',
+                file_url: fileUrl,
+                file_name: fileName,
+                uploaded_by: userId
+            };
+            let insertedDoc: any = null;
+            while (Object.keys(insertPayload).length > 0) {
+                const result = await supabase
+                    .from('order_documents' as any)
+                    .insert(insertPayload)
+                    .select()
+                    .single();
 
-            if (error) throw error;
+                if (!result.error) {
+                    insertedDoc = result.data;
+                    break;
+                }
+
+                const nextPayload = pruneMissingOrderDocumentColumn(insertPayload, result.error);
+                if (!nextPayload) {
+                    throw result.error;
+                }
+                insertPayload = nextPayload;
+            }
+
+            if (!insertedDoc) {
+                throw new Error('Unable to insert system order document');
+            }
 
             // Update order to indicate system PO generated
             await supabase
@@ -407,14 +468,14 @@ export const orderDocumentService = {
             // Audit log
             await logPOAudit({
                 orderId,
-                documentId: data.id,
+                documentId: insertedDoc.id,
                 actorUserId: userId,
                 actorRole: 'ADMIN' as UserRole,
                 action: 'PO_GENERATED',
                 metadata: { fileName },
             });
 
-            return data;
+            return insertedDoc;
         } catch (error) {
             logger.error('Error generating system PO:', error);
             throw error;
