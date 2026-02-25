@@ -100,8 +100,9 @@ export const AdminPOVerification: React.FC = () => {
             setActionErrorsByOrder({});
             setLoading(false);
 
-            const pendingWithDocs = await Promise.all(
-                pendingBase.map(async (pendingItem): Promise<PendingPO> => {
+            // Resolve each order document independently so one slow row doesn't block others.
+            pendingBase.forEach((pendingItem) => {
+                void (async () => {
                     try {
                         const docs = await withTimeout(
                             orderDocumentService.getOrderDocuments(pendingItem.order.id),
@@ -116,26 +117,32 @@ export const AdminPOVerification: React.FC = () => {
                             (document) => !document.verified_at && !document.verified_by
                         ) || clientPODocuments[0];
 
-                        return {
-                            ...pendingItem,
-                            document: clientPO,
-                            documentLoading: false,
-                            documentLoadError: clientPO ? undefined : 'Client PO document not found',
-                        };
+                        setPendingPOs((prev) => prev.map((item) => (
+                            item.order.id === pendingItem.order.id
+                                ? {
+                                    ...item,
+                                    document: clientPO,
+                                    documentLoading: false,
+                                    documentLoadError: clientPO ? undefined : 'Client PO document not found',
+                                }
+                                : item
+                        )));
                     } catch (err) {
                         const message = getErrorMessage(err, t('errors.failedToLoad'));
                         logger.error(`Error loading docs for order ${pendingItem.order.id}:`, err);
-                        return {
-                            ...pendingItem,
-                            document: undefined,
-                            documentLoading: false,
-                            documentLoadError: message,
-                        };
+                        setPendingPOs((prev) => prev.map((item) => (
+                            item.order.id === pendingItem.order.id
+                                ? {
+                                    ...item,
+                                    document: undefined,
+                                    documentLoading: false,
+                                    documentLoadError: message,
+                                }
+                                : item
+                        )));
                     }
-                })
-            );
-
-            setPendingPOs(pendingWithDocs);
+                })();
+            });
         } catch (error) {
             const message = getErrorMessage(error, t('errors.failedToLoad'));
             logger.error('Error loading pending POs:', error);
