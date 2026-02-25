@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { orderDocumentService, OrderDocument, logPOAudit } from '../../services/orderDocumentService';
 import { useStore } from '../../store/useStore';
@@ -30,7 +30,7 @@ type PendingOrderItem = {
   lineTotal: number | null;
 };
 
-const DOCUMENT_FETCH_TIMEOUT_MS = 15000;
+const DOCUMENT_FETCH_TIMEOUT_MS = 30000;
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> {
   return Promise.race([
@@ -82,6 +82,8 @@ export const AdminPOVerification: React.FC = () => {
   const [pendingVerification, setPendingVerification] = useState<PendingPO | null>(null);
   const [pendingRejection, setPendingRejection] = useState<PendingPO | null>(null);
   const [actionErrorsByOrder, setActionErrorsByOrder] = useState<Record<string, string>>({});
+  const [uploadingByOrder, setUploadingByOrder] = useState<Record<string, boolean>>({});
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const loadPendingPOs = useCallback(async (forceReloadDocs: boolean = false) => {
     try {
@@ -139,7 +141,7 @@ export const AdminPOVerification: React.FC = () => {
 
     try {
       const docs = await withTimeout(
-        orderDocumentService.getOrderDocuments(orderId),
+        orderDocumentService.getOrderDocumentsMetadata(orderId),
         DOCUMENT_FETCH_TIMEOUT_MS,
         `Loading PO documents for order ${orderId}`
       );
@@ -183,6 +185,43 @@ export const AdminPOVerification: React.FC = () => {
       return null;
     }
   }, []);
+
+  const handleManualPOUpload = async (orderId: string, file: File) => {
+    if (!currentUser) return;
+
+    try {
+      setUploadingByOrder((prev) => ({ ...prev, [orderId]: true }));
+      const uploadedDoc = await orderDocumentService.uploadClientPOByAdmin(orderId, file, currentUser.id);
+
+      setPendingPOs((prev) =>
+        prev.map((item) =>
+          item.order.id === orderId
+            ? {
+                ...item,
+                document: uploadedDoc,
+                documentLoading: false,
+                documentLoadError: undefined,
+              }
+            : item
+        )
+      );
+
+      showSuccessToast('Client PO uploaded successfully');
+
+      if (selectedOrderId === orderId) {
+        handlePreview(uploadedDoc);
+      }
+    } catch (error) {
+      const message = getErrorMessage(error, 'Failed to upload client PO');
+      logger.error('Error uploading manual client PO:', error);
+      showErrorToast(message);
+      setActionErrorsByOrder((prev) => ({ ...prev, [orderId]: message }));
+    } finally {
+      setUploadingByOrder((prev) => ({ ...prev, [orderId]: false }));
+      const input = fileInputRefs.current[orderId];
+      if (input) input.value = '';
+    }
+  };
 
   useEffect(() => {
     loadPendingPOs(false);
@@ -517,7 +556,23 @@ export const AdminPOVerification: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex gap-2 mt-4 pt-4 border-t border-neutral-100">
+                    <div className="flex gap-2 mt-4 pt-4 border-t border-neutral-100">
+                    <input
+                      ref={(el) => {
+                        fileInputRefs.current[item.order.id] = el;
+                      }}
+                      type="file"
+                      accept=".pdf,.png,.jpg,.jpeg"
+                      className="hidden"
+                      onClick={(e) => {
+                        (e.target as HTMLInputElement).value = '';
+                      }}
+                      onChange={(event) => {
+                        const selectedFile = event.target.files?.[0];
+                        if (!selectedFile) return;
+                        void handleManualPOUpload(item.order.id, selectedFile);
+                      }}
+                    />
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -535,6 +590,26 @@ export const AdminPOVerification: React.FC = () => {
                         <>
                           <span className="material-symbols-outlined text-sm">check_circle</span>
                           {t('admin.po.confirmAndSend') || 'Confirm & Send to Supplier'}
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fileInputRefs.current[item.order.id]?.click();
+                      }}
+                      disabled={Boolean(uploadingByOrder[item.order.id])}
+                      className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg font-medium hover:bg-blue-100 disabled:opacity-50 flex items-center justify-center gap-1"
+                    >
+                      {uploadingByOrder[item.order.id] ? (
+                        <>
+                          <span className="animate-spin material-symbols-outlined text-sm">hourglass_empty</span>
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <span className="material-symbols-outlined text-sm">upload_file</span>
+                          Upload PO
                         </>
                       )}
                     </button>
@@ -669,12 +744,24 @@ export const AdminPOVerification: React.FC = () => {
                           <iframe src={previewUrl} className="w-full h-full" title={t('admin.po.preview')} />
                         </div>
                       ) : (
-                        <p className="px-3 py-3 text-xs text-amber-700 bg-amber-50 border-t border-amber-100">
+                        <div className="px-3 py-3 text-xs text-amber-700 bg-amber-50 border-t border-amber-100 space-y-2">
                           {selectedPendingPO.documentLoading
                             ? `${t('common.loading') || 'Loading'}...`
                             : selectedPendingPO.documentLoadError ||
                               'No PO document available. You can still approve this order based on order details.'}
-                        </p>
+                          {!selectedPendingPO.documentLoading && (
+                            <div>
+                              <button
+                                onClick={() => {
+                                  void resolveOrderDocument(selectedPendingPO.order.id);
+                                }}
+                                className="rounded bg-white border border-amber-200 px-2 py-1 text-xs text-amber-800 hover:bg-amber-100"
+                              >
+                                Retry Document Load
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>

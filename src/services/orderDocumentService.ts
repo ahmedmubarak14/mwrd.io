@@ -19,6 +19,11 @@ export interface OrderDocument {
     updated_at: string;
 }
 
+type UploadClientPOOptions = {
+    updateOrderStatusToPending: boolean;
+    auditActorRole: UserRole;
+};
+
 function buildStorageRef(path: string): string {
     return `${STORAGE_REF_PREFIX}${path}`;
 }
@@ -226,39 +231,43 @@ async function logPOVerificationFailure(params: {
 }
 
 export const orderDocumentService = {
-    /**
-     * Upload client PO document
-     */
-    async uploadClientPO(orderId: string, file: File, userId: string): Promise<OrderDocument> {
-        try {
-            // 1. Upload file to Supabase Storage
-            const fileName = `${orderId}_client_po_${Date.now()}.pdf`;
-            const { error: uploadError } = await supabase.storage
-                .from(ORDER_DOCUMENTS_BUCKET)
-                .upload(fileName, file, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
+    async uploadClientPOInternal(
+        orderId: string,
+        file: File,
+        userId: string,
+        options: UploadClientPOOptions
+    ): Promise<OrderDocument> {
+        // 1. Upload file to Supabase Storage
+        const fileExtension = (file.name.split('.').pop() || 'pdf').toLowerCase();
+        const fileName = `${orderId}_client_po_${Date.now()}.${fileExtension}`;
+        const { error: uploadError } = await supabase.storage
+            .from(ORDER_DOCUMENTS_BUCKET)
+            .upload(fileName, file, {
+                cacheControl: '3600',
+                upsert: false,
+                contentType: file.type || undefined,
+            });
 
-            if (uploadError) throw uploadError;
-            const fileRef = buildStorageRef(fileName);
+        if (uploadError) throw uploadError;
+        const fileRef = buildStorageRef(fileName);
 
-            // 3. Insert document record
-            const { data, error } = await supabase
-                .from('order_documents')
-                .insert({
-                    order_id: orderId,
-                    document_type: 'CLIENT_PO',
-                    file_url: fileRef,
-                    file_name: file.name,
-                    uploaded_by: userId
-                })
-                .select()
-                .single();
+        // 2. Insert document record
+        const { data, error } = await supabase
+            .from('order_documents')
+            .insert({
+                order_id: orderId,
+                document_type: 'CLIENT_PO',
+                file_url: fileRef,
+                file_name: file.name,
+                uploaded_by: userId
+            })
+            .select()
+            .single();
 
-            if (error) throw error;
+        if (error) throw error;
 
-            // 4. Update order status to PENDING_ADMIN_CONFIRMATION
+        // 3. Update order flags/status
+        if (options.updateOrderStatusToPending) {
             const pendingAdminUpdate = await supabase
                 .from('orders')
                 .update({
@@ -282,20 +291,59 @@ export const orderDocumentService = {
             } else if (pendingAdminUpdate.error) {
                 throw pendingAdminUpdate.error;
             }
+        } else {
+            const { error: markUploadedError } = await supabase
+                .from('orders')
+                .update({ client_po_uploaded: true })
+                .eq('id', orderId);
+            if (markUploadedError) {
+                throw markUploadedError;
+            }
+        }
 
-            // 5. Audit log
-            await logPOAudit({
-                orderId,
-                documentId: data.id,
-                actorUserId: userId,
-                actorRole: 'CLIENT' as UserRole,
-                action: 'CLIENT_PO_UPLOADED',
-                metadata: { fileName: file.name, fileSize: file.size },
+        // 4. Audit log
+        await logPOAudit({
+            orderId,
+            documentId: data.id,
+            actorUserId: userId,
+            actorRole: options.auditActorRole,
+            action: 'CLIENT_PO_UPLOADED',
+            metadata: {
+                fileName: file.name,
+                fileSize: file.size,
+                source: options.auditActorRole === 'ADMIN' ? 'ADMIN_MANUAL_UPLOAD' : 'CLIENT_UPLOAD',
+            },
+        });
+
+        return data;
+    },
+
+    /**
+     * Upload client PO document
+     */
+    async uploadClientPO(orderId: string, file: File, userId: string): Promise<OrderDocument> {
+        try {
+            return await this.uploadClientPOInternal(orderId, file, userId, {
+                updateOrderStatusToPending: true,
+                auditActorRole: 'CLIENT' as UserRole,
             });
-
-            return data;
         } catch (error) {
             logger.error('Error uploading client PO:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Admin: Upload client PO received manually (email/whatsapp/etc.)
+     */
+    async uploadClientPOByAdmin(orderId: string, file: File, adminUserId: string): Promise<OrderDocument> {
+        try {
+            return await this.uploadClientPOInternal(orderId, file, adminUserId, {
+                updateOrderStatusToPending: false,
+                auditActorRole: 'ADMIN' as UserRole,
+            });
+        } catch (error) {
+            logger.error('Error uploading client PO by admin:', error);
             throw error;
         }
     },
@@ -380,6 +428,24 @@ export const orderDocumentService = {
 
         const documents = data || [];
         return Promise.all(documents.map((doc) => mapOrderDocumentWithResolvedUrl(doc)));
+    },
+
+    /**
+     * Get order document metadata only (no signed URLs)
+     */
+    async getOrderDocumentsMetadata(orderId: string): Promise<OrderDocument[]> {
+        const { data, error } = await supabase
+            .from('order_documents')
+            .select('*')
+            .eq('order_id', orderId)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            logger.error('Error fetching order document metadata:', error);
+            throw error;
+        }
+
+        return data || [];
     },
 
     /**
