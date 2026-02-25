@@ -17,7 +17,7 @@ interface AdminOrdersViewProps {
 export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ exportToCSV }) => {
   const { t } = useTranslation();
   const toast = useToast();
-  const { orders, updateOrder, currentUser, loadOrders } = useStore();
+  const { orders, updateOrder, currentUser, loadOrders, users, products, quotes, rfqs } = useStore();
   const [focusedOrderId, setFocusedOrderId] = useState<string | null>(null);
 
   const {
@@ -161,6 +161,10 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ exportToCSV })
 
         <OrderDetailsModal
           order={selectedOrderForDetails}
+          users={users}
+          products={products}
+          quotes={quotes}
+          rfqs={rfqs}
           paymentAuditLogs={selectedOrderAuditLogs}
           isLoadingOrderAuditLogs={isLoadingOrderAuditLogs}
           enableExternalPaymentLinks={appConfig.payment.enableExternalPaymentLinks}
