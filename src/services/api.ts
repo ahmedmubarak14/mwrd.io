@@ -122,6 +122,36 @@ export class ApiService {
     return UserRole.CLIENT;
   }
 
+  private async maybeSingleCompat<T = any>(
+    query: {
+      maybeSingle?: () => Promise<{ data: T | null; error: any }>;
+      single?: () => Promise<{ data: T | null; error: any }>;
+    }
+  ): Promise<{ data: T | null; error: any }> {
+    if (typeof query?.maybeSingle === 'function') {
+      return query.maybeSingle();
+    }
+
+    if (typeof query?.single === 'function') {
+      const result = await query.single();
+      const message = String(result?.error?.message || '').toLowerCase();
+      const code = String(result?.error?.code || '').toUpperCase();
+      const isNoRowsError =
+        code === 'PGRST116'
+        || message.includes('no rows')
+        || message.includes('0 rows')
+        || message.includes('multiple (or no) rows');
+
+      if (isNoRowsError) {
+        return { data: null, error: null };
+      }
+
+      return result;
+    }
+
+    return { data: null, error: new Error('Query does not support single-row selection') };
+  }
+
   private async getCurrentActorIdentity(): Promise<{ id: string; role: UserRole } | null> {
     const {
       data: { user: authUser },
@@ -132,11 +162,10 @@ export class ApiService {
       return null;
     }
 
-    const { data: actorRow, error: actorError } = await (supabase as any)
+    const { data: actorRow, error: actorError } = await this.maybeSingleCompat((supabase as any)
       .from('users')
       .select('id, role')
-      .eq('id', authUser.id)
-      .maybeSingle();
+      .eq('id', authUser.id));
 
     if (actorError || !actorRow) {
       logger.warn('Unable to resolve current actor identity', {
@@ -1830,12 +1859,11 @@ export class ApiService {
         );
 
       if (isSupplierRfqDuplicate) {
-        const { data: existingQuote, error: existingQuoteError } = await (supabase as any)
+        const { data: existingQuote, error: existingQuoteError } = await this.maybeSingleCompat((supabase as any)
           .from('quotes')
           .select('id')
           .eq('rfq_id', quote.rfqId)
-          .eq('supplier_id', quote.supplierId)
-          .maybeSingle();
+          .eq('supplier_id', quote.supplierId));
 
         if (existingQuoteError || !existingQuote?.id) {
           logger.error('Duplicate quote detected but existing quote lookup failed', {
@@ -1996,13 +2024,12 @@ export class ApiService {
   }
 
   private async getLatestOrderForQuote(quoteId: string): Promise<Order | null> {
-    const buildQuery = (orderColumn: 'created_at' | 'date') => (supabase as any)
+    const buildQuery = (orderColumn: 'created_at' | 'date') => this.maybeSingleCompat((supabase as any)
       .from('orders')
       .select('*')
       .eq('quote_id', quoteId)
       .order(orderColumn, { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(1));
 
     let { data, error } = await buildQuery('created_at');
 
@@ -2280,9 +2307,7 @@ export class ApiService {
         query = query.eq('status', currentDbStatus as unknown as DbOrderStatus);
       }
 
-      const { data, error } = await query
-        .select()
-        .maybeSingle();
+      const { data, error } = await this.maybeSingleCompat(query.select());
 
       if (!error) {
         if (!data) {
@@ -2625,21 +2650,19 @@ export class ApiService {
     autoQuoteLeadTimeDays?: number;
     rfqDefaultExpiryDays?: number;
   } | null> {
-    let systemSettingsQuery = (supabase as any)
+    let systemSettingsQuery = this.maybeSingleCompat((supabase as any)
       .from('system_settings')
       .select('*')
       .order('updated_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(1));
 
     let { data, error } = await systemSettingsQuery;
 
     if (error && /column "updated_at" of relation "system_settings" does not exist/i.test(error.message || '')) {
-      const fallbackResult = await (supabase as any)
+      const fallbackResult = await this.maybeSingleCompat((supabase as any)
         .from('system_settings')
         .select('*')
-        .limit(1)
-        .maybeSingle();
+        .limit(1));
       data = fallbackResult.data;
       error = fallbackResult.error;
     }
@@ -3074,13 +3097,12 @@ export class ApiService {
       throw quoteError || new Error('Quote not found');
     }
 
-    const { data: existingOrderRow, error: existingOrderError } = await (supabase as any)
+    const { data: existingOrderRow, error: existingOrderError } = await this.maybeSingleCompat((supabase as any)
       .from('orders')
       .select('*')
       .eq('quote_id', id)
       .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(1));
 
     if (!existingOrderError && existingOrderRow) {
       await (supabase as any)
@@ -3147,7 +3169,7 @@ export class ApiService {
     const reservedCreditUsed = Math.round((effectiveCreditUsed + orderAmount) * 100) / 100;
     const reservedCurrentBalance = reservedCreditUsed;
 
-    const { data: creditUpdateResult, error: reserveCreditError } = await (supabase as any)
+    const { data: creditUpdateResult, error: reserveCreditError } = await this.maybeSingleCompat((supabase as any)
       .from('users')
       .update({
         credit_used: reservedCreditUsed,
@@ -3155,8 +3177,7 @@ export class ApiService {
         updated_at: new Date().toISOString(),
       })
       .eq('id', rfqRow.client_id)
-      .select('id')
-      .maybeSingle();
+      .select('id'));
 
     if (reserveCreditError || !creditUpdateResult) {
       logger.error('Fallback quote acceptance failed to reserve client credit', {
