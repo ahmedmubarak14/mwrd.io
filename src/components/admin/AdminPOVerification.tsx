@@ -7,6 +7,7 @@ import { StatusBadge } from '../ui/StatusBadge';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { logger } from '../../utils/logger';
 import { UserRole } from '../../types/types';
+import { supabase } from '../../lib/supabase';
 
 interface PendingPO {
   document?: OrderDocument;
@@ -108,25 +109,35 @@ export const AdminPOVerification: React.FC = () => {
         };
       });
 
-      setPendingPOs(pendingBase);
-      setActionErrorsByOrder({});
-      setLoading(false);
+            setPendingPOs(pendingBase);
+            setActionErrorsByOrder({});
+            setLoading(false);
 
-      pendingBase.forEach((pendingItem) => {
-        void (async () => {
-          try {
-            const docs = await withTimeout(
-              orderDocumentService.getOrderDocuments(pendingItem.order.id),
-              DOCUMENT_FETCH_TIMEOUT_MS,
-              `Loading PO documents for order ${pendingItem.order.id}`
-            );
+            pendingBase.forEach((pendingItem) => {
+                void (async () => {
+                    try {
+                        // Fetch metadata only here to avoid blocking row readiness on signed URL creation.
+                        const docsPromise = supabase
+                            .from('order_documents')
+                            .select('*')
+                            .eq('order_id', pendingItem.order.id)
+                            .order('created_at', { ascending: false });
 
-            const clientPODocuments = docs.filter(
-              (document) => String(document.document_type || '').toUpperCase() === 'CLIENT_PO'
-            );
-            const clientPO =
-              clientPODocuments.find((document) => !document.verified_at && !document.verified_by) ||
-              clientPODocuments[0];
+                        const docsResult = await withTimeout<{ data: any[] | null; error: { message?: string } | null }>(
+                            Promise.resolve(docsPromise as any),
+                            DOCUMENT_FETCH_TIMEOUT_MS,
+                            `Loading PO documents for order ${pendingItem.order.id}`
+                        );
+                        const { data, error } = docsResult;
+                        if (error) throw error;
+
+                        const docs = data || [];
+                        const clientPODocuments = docs.filter(
+                            (document) => String(document.document_type || '').toUpperCase() === 'CLIENT_PO'
+                        );
+                        const clientPO =
+                            clientPODocuments.find((document) => !document.verified_at && !document.verified_by) ||
+                            clientPODocuments[0];
 
             setPendingPOs((prev) =>
               prev.map((item) =>
@@ -337,8 +348,18 @@ export const AdminPOVerification: React.FC = () => {
   };
 
   const handlePreview = (doc: OrderDocument) => {
-    setSelectedDoc(doc);
-    setPreviewUrl(doc.file_url);
+    // Resolve signed URL lazily on-demand so listing never gets blocked.
+    void (async () => {
+      try {
+        const latestDoc = await orderDocumentService.getDocument(doc.id);
+        const resolvedDoc = latestDoc || doc;
+        setSelectedDoc(resolvedDoc);
+        setPreviewUrl(resolvedDoc.file_url);
+      } catch {
+        setSelectedDoc(doc);
+        setPreviewUrl(doc.file_url);
+      }
+    })();
   };
 
   const handleReject = async (orderId: string) => {
