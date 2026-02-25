@@ -9,6 +9,9 @@ describe('orderStatusService', () => {
 
   it('allows valid payment transition path', () => {
     expect(
+      canTransitionOrderStatus(OrderStatus.PENDING_ADMIN_CONFIRMATION, OrderStatus.PENDING_PAYMENT)
+    ).toBe(true);
+    expect(
       canTransitionOrderStatus(OrderStatus.PENDING_PAYMENT, OrderStatus.AWAITING_CONFIRMATION)
     ).toBe(true);
     expect(

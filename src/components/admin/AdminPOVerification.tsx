@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { orderDocumentService, OrderDocument, logPOAudit } from '../../services/orderDocumentService';
 import { useStore } from '../../store/useStore';
@@ -18,6 +18,31 @@ interface PendingPO {
         status: string;
     };
     clientName: string;
+    documentLoadError?: string;
+}
+
+const DOCUMENT_FETCH_TIMEOUT_MS = 15000;
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> {
+    return Promise.race([
+        promise,
+        new Promise<T>((_, reject) => {
+            setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs);
+        }),
+    ]);
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+    if (error && typeof error === 'object') {
+        const maybeMessage = (error as { message?: unknown }).message;
+        if (typeof maybeMessage === 'string' && maybeMessage.trim().length > 0) {
+            return maybeMessage;
+        }
+    }
+    if (typeof error === 'string' && error.trim().length > 0) {
+        return error;
+    }
+    return fallback;
 }
 
 export const AdminPOVerification: React.FC = () => {
@@ -35,15 +60,18 @@ export const AdminPOVerification: React.FC = () => {
 
     const [pendingPOs, setPendingPOs] = useState<PendingPO[]>([]);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
     const [verifying, setVerifying] = useState<string | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [selectedDoc, setSelectedDoc] = useState<OrderDocument | null>(null);
+    const [pendingVerification, setPendingVerification] = useState<PendingPO | null>(null);
     const [pendingRejection, setPendingRejection] = useState<PendingPO | null>(null);
+    const [actionErrorsByOrder, setActionErrorsByOrder] = useState<Record<string, string>>({});
 
     const loadPendingPOs = useCallback(async () => {
         try {
             setLoading(true);
-            const pending: PendingPO[] = [];
+            setLoadError(null);
 
             // Find orders strictly awaiting PO verification.
             const pendingOrders = orders.filter((order) => {
@@ -51,37 +79,61 @@ export const AdminPOVerification: React.FC = () => {
                 return status === 'PENDING_ADMIN_CONFIRMATION' || status === 'PENDING_PO';
             });
 
-            for (const order of pendingOrders) {
-                try {
-                    const docs = await orderDocumentService.getOrderDocuments(order.id);
-                    const clientPODocuments = docs.filter(
-                        (document) => String(document.document_type || '').toUpperCase() === 'CLIENT_PO'
-                    );
-                    const clientPO = clientPODocuments.find(
-                        (document) => !document.verified_at && !document.verified_by
-                    ) || clientPODocuments[0];
-
+            const pending = await Promise.all(
+                pendingOrders.map(async (order): Promise<PendingPO> => {
                     const client = users.find(u => u.id === order.clientId);
-                    pending.push({
-                        document: clientPO,
-                        order: {
-                            id: order.id,
-                            clientId: order.clientId,
-                            amount: order.amount,
-                            date: order.date,
-                            status: String(order.status)
-                        },
-                        clientName: client?.companyName || client?.name || t('admin.overview.unknownClient')
-                    });
-                } catch (err) {
-                    logger.error(`Error loading docs for order ${order.id}:`, err);
-                }
-            }
+
+                    try {
+                        const docs = await withTimeout(
+                            orderDocumentService.getOrderDocuments(order.id),
+                            DOCUMENT_FETCH_TIMEOUT_MS,
+                            `Loading PO documents for order ${order.id}`,
+                        );
+
+                        const clientPODocuments = docs.filter(
+                            (document) => String(document.document_type || '').toUpperCase() === 'CLIENT_PO'
+                        );
+                        const clientPO = clientPODocuments.find(
+                            (document) => !document.verified_at && !document.verified_by
+                        ) || clientPODocuments[0];
+
+                        return {
+                            document: clientPO,
+                            order: {
+                                id: order.id,
+                                clientId: order.clientId,
+                                amount: order.amount,
+                                date: order.date,
+                                status: String(order.status),
+                            },
+                            clientName: client?.companyName || client?.name || t('admin.overview.unknownClient'),
+                        };
+                    } catch (err) {
+                        const message = getErrorMessage(err, t('errors.failedToLoad'));
+                        logger.error(`Error loading docs for order ${order.id}:`, err);
+                        return {
+                            document: undefined,
+                            order: {
+                                id: order.id,
+                                clientId: order.clientId,
+                                amount: order.amount,
+                                date: order.date,
+                                status: String(order.status),
+                            },
+                            clientName: client?.companyName || client?.name || t('admin.overview.unknownClient'),
+                            documentLoadError: message,
+                        };
+                    }
+                })
+            );
 
             setPendingPOs(pending);
+            setActionErrorsByOrder({});
         } catch (error) {
+            const message = getErrorMessage(error, t('errors.failedToLoad'));
             logger.error('Error loading pending POs:', error);
-            showErrorToast(t('errors.failedToLoad'));
+            setLoadError(message);
+            showErrorToast(message);
         } finally {
             setLoading(false);
         }
@@ -96,21 +148,49 @@ export const AdminPOVerification: React.FC = () => {
         void Promise.allSettled([loadOrders(), loadUsers()]);
     }, [currentUser?.id, currentUser?.role, loadOrders, loadUsers]);
 
+    const selectedPendingPO = useMemo(
+        () => pendingPOs.find((item) => item.document?.id === selectedDoc?.id),
+        [pendingPOs, selectedDoc?.id]
+    );
+
+    const openVerifyConfirm = (orderId: string) => {
+        const pendingPo = pendingPOs.find((item) => item.order.id === orderId);
+        if (!pendingPo) return;
+        setPendingVerification(pendingPo);
+
+        if (pendingPo.document) {
+            setSelectedDoc(pendingPo.document);
+            setPreviewUrl(pendingPo.document.file_url);
+        }
+    };
+
     const handleVerify = async (orderId: string) => {
         if (!currentUser) return;
 
+        let pendingPo: PendingPO | undefined;
+
         try {
             setVerifying(orderId);
-            const pendingPo = pendingPOs.find((item) => item.order.id === orderId);
+            setActionErrorsByOrder((prev) => {
+                if (!prev[orderId]) return prev;
+                const next = { ...prev };
+                delete next[orderId];
+                return next;
+            });
+
+            pendingPo = pendingPOs.find((item) => item.order.id === orderId);
             if (!pendingPo) {
                 throw new Error('Pending PO not found');
             }
 
-            if (pendingPo.document) {
-                await orderDocumentService.verifyClientPO(pendingPo.document.id);
-            } else {
-                await orderDocumentService.verifyOrderPO(orderId);
+            if (!pendingPo.document) {
+                throw new Error(
+                    pendingPo.documentLoadError
+                        || 'Missing client PO document. Please refresh and review details before confirming.'
+                );
             }
+
+            await orderDocumentService.verifyClientPO(pendingPo.document.id);
 
             addNotification({
                 type: 'order',
@@ -137,10 +217,30 @@ export const AdminPOVerification: React.FC = () => {
             setPreviewUrl(null);
             setSelectedDoc(null);
         } catch (error) {
+            const message = getErrorMessage(error, t('admin.po.verifyError') || 'Failed to verify PO');
             logger.error('Error verifying PO:', error);
-            showErrorToast(t('admin.po.verifyError') || 'Failed to verify PO');
+            setActionErrorsByOrder(prev => ({ ...prev, [orderId]: message }));
+            showErrorToast(message);
+
+            if (currentUser && pendingPo && !pendingPo.document) {
+                await logPOAudit({
+                    orderId: pendingPo.order.id,
+                    documentId: pendingPo.document?.id,
+                    actorUserId: currentUser.id,
+                    actorRole: UserRole.ADMIN,
+                    action: 'PO_VERIFIED',
+                    notes: 'PO verification failed',
+                    metadata: {
+                        clientId: pendingPo.order.clientId,
+                        orderAmount: pendingPo.order.amount,
+                        verificationOutcome: 'FAILED',
+                        errorMessage: message,
+                    },
+                });
+            }
         } finally {
             setVerifying(null);
+            setPendingVerification(null);
         }
     };
 
@@ -182,8 +282,10 @@ export const AdminPOVerification: React.FC = () => {
             setSelectedDoc(null);
             setPendingRejection(null);
         } catch (error) {
+            const message = getErrorMessage(error, t('admin.po.rejectError') || 'Failed to reject PO');
             logger.error('Error rejecting PO:', error);
-            showErrorToast(t('admin.po.rejectError') || 'Failed to reject PO');
+            setActionErrorsByOrder(prev => ({ ...prev, [pendingRejection.order.id]: message }));
+            showErrorToast(message);
         } finally {
             setVerifying(null);
         }
@@ -222,6 +324,18 @@ export const AdminPOVerification: React.FC = () => {
                 </div>
             </div>
 
+            {loadError && (
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3">
+                    <span>{loadError}</span>
+                    <button
+                        onClick={loadPendingPOs}
+                        className="rounded-lg bg-white px-3 py-1.5 font-medium text-red-700 border border-red-200 hover:bg-red-100"
+                    >
+                        {t('common.retry') || 'Retry'}
+                    </button>
+                </div>
+            )}
+
             {pendingPOs.length === 0 ? (
                 <div className="bg-white rounded-xl border border-neutral-200 p-12 text-center">
                     <span className="material-symbols-outlined text-6xl text-neutral-300 mb-4">task_alt</span>
@@ -236,86 +350,97 @@ export const AdminPOVerification: React.FC = () => {
                 <div className="grid gap-4 lg:grid-cols-2">
                     {/* PO List */}
                     <div className="space-y-3">
-                        {pendingPOs.map((item) => (
-                            <div
-                                key={item.order.id}
-                                className={`bg-white rounded-xl border p-4 cursor-pointer transition-all ${selectedDoc?.id === item.document?.id && item.document
-                                    ? 'border-blue-500 ring-2 ring-blue-100'
-                                    : 'border-neutral-200 hover:border-neutral-300'
-                                    }`}
-                                onClick={() => item.document ? handlePreview(item.document) : null}
-                            >
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-start gap-3">
-                                        <div className="p-2 bg-amber-100 rounded-lg">
-                                            <span className="material-symbols-outlined text-amber-600">
-                                                description
-                                            </span>
+                        {pendingPOs.map((item) => {
+                            const hasDocument = Boolean(item.document);
+                            return (
+                                <div
+                                    key={item.order.id}
+                                    className={`bg-white rounded-xl border p-4 cursor-pointer transition-all ${selectedDoc?.id === item.document?.id && item.document
+                                        ? 'border-blue-500 ring-2 ring-blue-100'
+                                        : 'border-neutral-200 hover:border-neutral-300'
+                                        }`}
+                                    onClick={() => item.document ? handlePreview(item.document) : null}
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex items-start gap-3">
+                                            <div className={`p-2 rounded-lg ${hasDocument ? 'bg-amber-100' : 'bg-red-100'}`}>
+                                                <span className={`material-symbols-outlined ${hasDocument ? 'text-amber-600' : 'text-red-600'}`}>
+                                                    {hasDocument ? 'description' : 'warning'}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-semibold text-neutral-800">
+                                                    {item.clientName}
+                                                </h4>
+                                                <p className="text-sm text-neutral-500">
+                                                    Order #{item.order.id.slice(0, 8).toUpperCase()}
+                                                </p>
+                                                <p className="text-sm text-neutral-500">
+                                                    {new Date((item.document?.created_at) || item.order.date).toLocaleDateString()}
+                                                </p>
+                                                {!hasDocument && (
+                                                    <p className="mt-1 text-xs text-red-600">
+                                                        {item.documentLoadError || 'Client PO document is missing'}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 className="font-semibold text-neutral-800">
-                                                {item.clientName}
-                                            </h4>
-                                            <p className="text-sm text-neutral-500">
-                                                Order #{item.order.id.slice(0, 8).toUpperCase()}
+                                        <div className="text-right">
+                                            <p className="font-bold text-neutral-800">
+                                                {t('common.currency')} {item.order.amount?.toLocaleString() || '0'}
                                             </p>
-                                            <p className="text-sm text-neutral-500">
-                                                {new Date((item.document?.created_at) || item.order.date).toLocaleDateString()}
-                                            </p>
+                                            <StatusBadge status={item.order.status.toLowerCase()} size="sm" />
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="font-bold text-neutral-800">
-                                            {t('common.currency')} {item.order.amount?.toLocaleString() || '0'}
-                                        </p>
-                                        <StatusBadge status={item.order.status.toLowerCase()} size="sm" />
-                                    </div>
-                                </div>
 
-                                <div className="flex gap-2 mt-4 pt-4 border-t border-neutral-100">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleVerify(item.order.id);
-                                        }}
-                                        disabled={verifying === item.order.id}
-                                        className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 flex items-center justify-center gap-2"
-                                    >
-                                        {verifying === item.order.id ? (
-                                            <>
-                                                <span className="animate-spin material-symbols-outlined text-sm">hourglass_empty</span>
-                                                {t('common.verifying') || 'Verifying...'}
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span className="material-symbols-outlined text-sm">check_circle</span>
-                                                {t('admin.po.confirmAndSend') || 'Confirm & Send to Supplier'}
-                                            </>
-                                        )}
-                                    </button>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleReject(item.order.id);
-                                        }}
-                                        disabled={verifying === item.order.id}
-                                        className="px-4 py-2 bg-red-50 text-red-600 rounded-lg font-medium hover:bg-red-100 disabled:opacity-50 flex items-center justify-center gap-2"
-                                    >
-                                        {verifying === item.order.id ? (
-                                            <>
-                                                <span className="animate-spin material-symbols-outlined text-sm">hourglass_empty</span>
-                                                {t('common.processing') || 'Processing...'}
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span className="material-symbols-outlined text-sm">cancel</span>
-                                                {t('admin.po.reject') || 'Reject'}
-                                            </>
-                                        )}
-                                    </button>
+                                    <div className="flex gap-2 mt-4 pt-4 border-t border-neutral-100">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openVerifyConfirm(item.order.id);
+                                            }}
+                                            disabled={verifying === item.order.id || !hasDocument}
+                                            className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                        >
+                                            {verifying === item.order.id ? (
+                                                <>
+                                                    <span className="animate-spin material-symbols-outlined text-sm">hourglass_empty</span>
+                                                    {t('common.verifying') || 'Verifying...'}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span className="material-symbols-outlined text-sm">check_circle</span>
+                                                    {t('admin.po.confirmAndSend') || 'Confirm & Send to Supplier'}
+                                                </>
+                                            )}
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleReject(item.order.id);
+                                            }}
+                                            disabled={verifying === item.order.id}
+                                            className="px-4 py-2 bg-red-50 text-red-600 rounded-lg font-medium hover:bg-red-100 disabled:opacity-50 flex items-center justify-center gap-2"
+                                        >
+                                            {verifying === item.order.id ? (
+                                                <>
+                                                    <span className="animate-spin material-symbols-outlined text-sm">hourglass_empty</span>
+                                                    {t('common.processing') || 'Processing...'}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span className="material-symbols-outlined text-sm">cancel</span>
+                                                    {t('admin.po.reject') || 'Reject'}
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                    {actionErrorsByOrder[item.order.id] && (
+                                        <p className="mt-3 text-xs text-red-600">{actionErrorsByOrder[item.order.id]}</p>
+                                    )}
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     {/* Preview Panel */}
@@ -323,9 +448,16 @@ export const AdminPOVerification: React.FC = () => {
                         {previewUrl ? (
                             <div className="h-full flex flex-col">
                                 <div className="p-4 border-b border-neutral-200 flex items-center justify-between">
-                                    <h3 className="font-semibold text-neutral-800">
-                                        {t('admin.po.preview') || 'Document Preview'}
-                                    </h3>
+                                    <div>
+                                        <h3 className="font-semibold text-neutral-800">
+                                            {t('admin.po.preview') || 'Document Preview'}
+                                        </h3>
+                                        {selectedPendingPO && (
+                                            <p className="text-xs text-neutral-500 mt-1">
+                                                {selectedPendingPO.clientName} | Order #{selectedPendingPO.order.id.slice(0, 8).toUpperCase()} | {t('common.currency')} {selectedPendingPO.order.amount?.toLocaleString() || '0'}
+                                            </p>
+                                        )}
+                                    </div>
                                     <a
                                         href={previewUrl}
                                         target="_blank"
@@ -357,6 +489,19 @@ export const AdminPOVerification: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            <ConfirmDialog
+                isOpen={Boolean(pendingVerification)}
+                onClose={() => setPendingVerification(null)}
+                onConfirm={() => pendingVerification && handleVerify(pendingVerification.order.id)}
+                title={t('admin.po.confirmAndSend') || 'Confirm & Send to Supplier'}
+                message={pendingVerification
+                    ? `Client: ${pendingVerification.clientName}. Order #${pendingVerification.order.id.slice(0, 8).toUpperCase()}. Amount: ${t('common.currency')} ${pendingVerification.order.amount?.toLocaleString() || '0'}. PO: ${pendingVerification.document?.file_name || pendingVerification.document?.id || 'Document attached'}. This will move the order to pending payment.`
+                    : (t('admin.po.verifyPrompt') || 'Confirm this purchase order verification?')}
+                confirmText={t('common.confirm') || 'Confirm'}
+                type="info"
+                isLoading={Boolean(pendingVerification && verifying === pendingVerification.order.id)}
+            />
 
             <ConfirmDialog
                 isOpen={Boolean(pendingRejection)}

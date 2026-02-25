@@ -107,6 +107,22 @@ async function mapOrderDocumentWithResolvedUrl<T extends { file_url: string }>(d
     };
 }
 
+function extractErrorMessage(error: unknown): string {
+    if (error instanceof Error && error.message.trim().length > 0) {
+        return error.message;
+    }
+    if (error && typeof error === 'object') {
+        const message = (error as { message?: unknown }).message;
+        if (typeof message === 'string' && message.trim().length > 0) {
+            return message;
+        }
+    }
+    if (typeof error === 'string' && error.trim().length > 0) {
+        return error;
+    }
+    return 'Unknown verification error';
+}
+
 /**
  * Log a PO audit event.
  *
@@ -157,6 +173,55 @@ export async function logPOAudit(params: {
             error: err instanceof Error ? err.message : String(err),
         });
         return false;
+    }
+}
+
+async function logPOVerificationFailure(params: {
+    orderId?: string;
+    documentId?: string;
+    errorMessage: string;
+}): Promise<void> {
+    try {
+        const { data: authData } = await supabase.auth.getUser();
+        const actorUserId = authData.user?.id;
+        if (!actorUserId || !params.orderId) {
+            logger.warn('[PO_AUDIT] Verification failed but actor/order context is incomplete', params);
+            return;
+        }
+
+        let actorRole: UserRole = 'ADMIN' as UserRole;
+        try {
+            const { data: userData } = await supabase
+                .from('users')
+                .select('role')
+                .eq('id', actorUserId)
+                .maybeSingle();
+
+            const rawRole = String(userData?.role || '').toUpperCase();
+            if (rawRole === 'GUEST' || rawRole === 'CLIENT' || rawRole === 'SUPPLIER' || rawRole === 'ADMIN') {
+                actorRole = rawRole as UserRole;
+            }
+        } catch {
+            // Best-effort role detection only.
+        }
+
+        await logPOAudit({
+            orderId: params.orderId,
+            documentId: params.documentId,
+            actorUserId,
+            actorRole,
+            action: 'PO_VERIFIED',
+            notes: 'PO verification failed',
+            metadata: {
+                verificationOutcome: 'FAILED',
+                errorMessage: params.errorMessage,
+            },
+        });
+    } catch (error) {
+        logger.warn('[PO_AUDIT] Failed to record PO verification failure audit event', {
+            error: error instanceof Error ? error.message : String(error),
+            ...params,
+        });
     }
 }
 
@@ -425,6 +490,24 @@ export const orderDocumentService = {
 
         } catch (error) {
             logger.error('Error verifying client PO:', error);
+            const failureMessage = extractErrorMessage(error);
+            let relatedOrderId: string | undefined;
+            try {
+                const { data: docData } = await supabase
+                    .from('order_documents')
+                    .select('order_id')
+                    .eq('id', documentId)
+                    .single();
+                relatedOrderId = docData?.order_id;
+            } catch {
+                // Best-effort only for audit context.
+            }
+
+            await logPOVerificationFailure({
+                orderId: relatedOrderId,
+                documentId,
+                errorMessage: failureMessage,
+            });
             throw error;
         }
     },
@@ -472,6 +555,10 @@ export const orderDocumentService = {
             }
         } catch (error) {
             logger.error('Error verifying order PO:', error);
+            await logPOVerificationFailure({
+                orderId,
+                errorMessage: extractErrorMessage(error),
+            });
             throw error;
         }
     },
