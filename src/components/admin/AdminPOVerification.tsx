@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { orderDocumentService, OrderDocument, logPOAudit } from '../../services/orderDocumentService';
 import { useStore } from '../../store/useStore';
@@ -7,7 +7,6 @@ import { StatusBadge } from '../ui/StatusBadge';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { logger } from '../../utils/logger';
 import { UserRole } from '../../types/types';
-import { supabase } from '../../lib/supabase';
 
 interface PendingPO {
   document?: OrderDocument;
@@ -83,11 +82,6 @@ export const AdminPOVerification: React.FC = () => {
   const [pendingVerification, setPendingVerification] = useState<PendingPO | null>(null);
   const [pendingRejection, setPendingRejection] = useState<PendingPO | null>(null);
   const [actionErrorsByOrder, setActionErrorsByOrder] = useState<Record<string, string>>({});
-  const pendingPOsRef = useRef<PendingPO[]>([]);
-
-  useEffect(() => {
-    pendingPOsRef.current = pendingPOs;
-  }, [pendingPOs]);
 
   const loadPendingPOs = useCallback(async (forceReloadDocs: boolean = false) => {
     try {
@@ -99,14 +93,12 @@ export const AdminPOVerification: React.FC = () => {
         return status === 'PENDING_ADMIN_CONFIRMATION' || status === 'PENDING_PO';
       });
 
-      const existingByOrderId = new Map(
-        pendingPOsRef.current.map((item) => [item.order.id, item])
-      );
+      const existingByOrderId = new Map(pendingPOs.map((item) => [item.order.id, item]));
 
       const pendingBase: PendingPO[] = pendingOrders.map((order) => {
         const client = users.find((u) => u.id === order.clientId);
         const existing = existingByOrderId.get(order.id);
-        const shouldReloadDoc = forceReloadDocs || !existing;
+        const shouldReloadDoc = forceReloadDocs;
 
         return {
           order: {
@@ -119,75 +111,13 @@ export const AdminPOVerification: React.FC = () => {
           clientName: client?.companyName || client?.name || t('admin.overview.unknownClient'),
           document: shouldReloadDoc ? undefined : existing?.document,
           documentLoadError: shouldReloadDoc ? undefined : existing?.documentLoadError,
-          documentLoading: shouldReloadDoc ? true : Boolean(existing?.documentLoading),
+          documentLoading: false,
         };
       });
 
       setPendingPOs(pendingBase);
       setActionErrorsByOrder({});
       setLoading(false);
-
-      pendingBase.forEach((pendingItem) => {
-        // Keep already-resolved rows stable unless explicit refresh requested.
-        if (!forceReloadDocs && (pendingItem.document || pendingItem.documentLoadError)) {
-          return;
-        }
-
-        void (async () => {
-          try {
-                        // Fetch metadata only here to avoid blocking row readiness on signed URL creation.
-                        const docsPromise = supabase
-                            .from('order_documents')
-                            .select('*')
-                            .eq('order_id', pendingItem.order.id)
-                            .order('created_at', { ascending: false });
-
-                        const docsResult = await withTimeout<{ data: any[] | null; error: { message?: string } | null }>(
-                            Promise.resolve(docsPromise as any),
-                            DOCUMENT_FETCH_TIMEOUT_MS,
-                            `Loading PO documents for order ${pendingItem.order.id}`
-                        );
-                        const { data, error } = docsResult;
-                        if (error) throw error;
-
-                        const docs = data || [];
-                        const clientPODocuments = docs.filter(
-                            (document) => String(document.document_type || '').toUpperCase() === 'CLIENT_PO'
-                        );
-                        const clientPO =
-                            clientPODocuments.find((document) => !document.verified_at && !document.verified_by) ||
-                            clientPODocuments[0];
-
-            setPendingPOs((prev) =>
-              prev.map((item) =>
-                item.order.id === pendingItem.order.id
-                  ? {
-                      ...item,
-                      document: clientPO,
-                      documentLoading: false,
-                      documentLoadError: clientPO ? undefined : 'Client PO document not found',
-                    }
-                  : item
-              )
-            );
-          } catch (err) {
-            const message = getErrorMessage(err, t('errors.failedToLoad'));
-            logger.error(`Error loading docs for order ${pendingItem.order.id}:`, err);
-            setPendingPOs((prev) =>
-              prev.map((item) =>
-                item.order.id === pendingItem.order.id
-                  ? {
-                      ...item,
-                      document: undefined,
-                      documentLoading: false,
-                      documentLoadError: message,
-                    }
-                  : item
-              )
-            );
-          }
-        })();
-      });
     } catch (error) {
       const message = getErrorMessage(error, t('errors.failedToLoad'));
       logger.error('Error loading pending POs:', error);
@@ -196,7 +126,63 @@ export const AdminPOVerification: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [orders, showErrorToast, t, users]);
+  }, [orders, pendingPOs, showErrorToast, t, users]);
+
+  const resolveOrderDocument = useCallback(async (orderId: string): Promise<OrderDocument | null> => {
+    setPendingPOs((prev) =>
+      prev.map((item) =>
+        item.order.id === orderId
+          ? { ...item, documentLoading: true, documentLoadError: undefined }
+          : item
+      )
+    );
+
+    try {
+      const docs = await withTimeout(
+        orderDocumentService.getOrderDocuments(orderId),
+        DOCUMENT_FETCH_TIMEOUT_MS,
+        `Loading PO documents for order ${orderId}`
+      );
+
+      const clientPODocuments = docs.filter(
+        (document) => String(document.document_type || '').toUpperCase() === 'CLIENT_PO'
+      );
+      const clientPO =
+        clientPODocuments.find((document) => !document.verified_at && !document.verified_by) ||
+        clientPODocuments[0] ||
+        null;
+
+      setPendingPOs((prev) =>
+        prev.map((item) =>
+          item.order.id === orderId
+            ? {
+                ...item,
+                document: clientPO || undefined,
+                documentLoading: false,
+                documentLoadError: clientPO ? undefined : 'Client PO document not found',
+              }
+            : item
+        )
+      );
+
+      return clientPO;
+    } catch (err) {
+      logger.error(`Error loading docs for order ${orderId}:`, err);
+      setPendingPOs((prev) =>
+        prev.map((item) =>
+          item.order.id === orderId
+            ? {
+                ...item,
+                document: undefined,
+                documentLoading: false,
+                documentLoadError: 'Unable to load PO document right now. You can still confirm using order details.',
+              }
+            : item
+        )
+      );
+      return null;
+    }
+  }, []);
 
   useEffect(() => {
     loadPendingPOs(false);
@@ -294,13 +280,15 @@ export const AdminPOVerification: React.FC = () => {
     setSelectedOrderId(orderId);
     setPendingVerification(pendingPo);
 
-    if (pendingPo.document) {
-      setSelectedDoc(pendingPo.document);
-      setPreviewUrl(pendingPo.document.file_url);
-    } else {
-      setSelectedDoc(null);
-      setPreviewUrl(null);
-    }
+    void (async () => {
+      const doc = pendingPo.document || (await resolveOrderDocument(orderId));
+      if (doc) {
+        handlePreview(doc);
+      } else {
+        setSelectedDoc(null);
+        setPreviewUrl(null);
+      }
+    })();
   };
 
   const handleVerify = async (orderId: string) => {
@@ -494,6 +482,7 @@ export const AdminPOVerification: React.FC = () => {
                     } else {
                       setSelectedDoc(null);
                       setPreviewUrl(null);
+                      void resolveOrderDocument(item.order.id);
                     }
                   }}
                 >
