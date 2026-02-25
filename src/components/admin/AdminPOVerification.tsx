@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { orderDocumentService, OrderDocument, logPOAudit } from '../../services/orderDocumentService';
 import { useStore } from '../../store/useStore';
@@ -83,8 +83,13 @@ export const AdminPOVerification: React.FC = () => {
   const [pendingVerification, setPendingVerification] = useState<PendingPO | null>(null);
   const [pendingRejection, setPendingRejection] = useState<PendingPO | null>(null);
   const [actionErrorsByOrder, setActionErrorsByOrder] = useState<Record<string, string>>({});
+  const pendingPOsRef = useRef<PendingPO[]>([]);
 
-  const loadPendingPOs = useCallback(async () => {
+  useEffect(() => {
+    pendingPOsRef.current = pendingPOs;
+  }, [pendingPOs]);
+
+  const loadPendingPOs = useCallback(async (forceReloadDocs: boolean = false) => {
     try {
       setLoading(true);
       setLoadError(null);
@@ -94,8 +99,15 @@ export const AdminPOVerification: React.FC = () => {
         return status === 'PENDING_ADMIN_CONFIRMATION' || status === 'PENDING_PO';
       });
 
+      const existingByOrderId = new Map(
+        pendingPOsRef.current.map((item) => [item.order.id, item])
+      );
+
       const pendingBase: PendingPO[] = pendingOrders.map((order) => {
         const client = users.find((u) => u.id === order.clientId);
+        const existing = existingByOrderId.get(order.id);
+        const shouldReloadDoc = forceReloadDocs || !existing;
+
         return {
           order: {
             id: order.id,
@@ -105,17 +117,24 @@ export const AdminPOVerification: React.FC = () => {
             status: String(order.status),
           },
           clientName: client?.companyName || client?.name || t('admin.overview.unknownClient'),
-          documentLoading: true,
+          document: shouldReloadDoc ? undefined : existing?.document,
+          documentLoadError: shouldReloadDoc ? undefined : existing?.documentLoadError,
+          documentLoading: shouldReloadDoc ? true : Boolean(existing?.documentLoading),
         };
       });
 
-            setPendingPOs(pendingBase);
-            setActionErrorsByOrder({});
-            setLoading(false);
+      setPendingPOs(pendingBase);
+      setActionErrorsByOrder({});
+      setLoading(false);
 
-            pendingBase.forEach((pendingItem) => {
-                void (async () => {
-                    try {
+      pendingBase.forEach((pendingItem) => {
+        // Keep already-resolved rows stable unless explicit refresh requested.
+        if (!forceReloadDocs && (pendingItem.document || pendingItem.documentLoadError)) {
+          return;
+        }
+
+        void (async () => {
+          try {
                         // Fetch metadata only here to avoid blocking row readiness on signed URL creation.
                         const docsPromise = supabase
                             .from('order_documents')
@@ -180,7 +199,7 @@ export const AdminPOVerification: React.FC = () => {
   }, [orders, showErrorToast, t, users]);
 
   useEffect(() => {
-    loadPendingPOs();
+    loadPendingPOs(false);
   }, [loadPendingPOs]);
 
   useEffect(() => {
@@ -428,7 +447,7 @@ export const AdminPOVerification: React.FC = () => {
             {pendingPOs.length} {t('admin.po.pending') || 'Pending'}
           </span>
           <button
-            onClick={loadPendingPOs}
+            onClick={() => loadPendingPOs(true)}
             className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
             title={t('common.refresh')}
           >
@@ -441,7 +460,7 @@ export const AdminPOVerification: React.FC = () => {
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 flex items-center justify-between gap-3">
           <span>{loadError}</span>
           <button
-            onClick={loadPendingPOs}
+            onClick={() => loadPendingPOs(true)}
             className="rounded-lg bg-white px-3 py-1.5 font-medium text-red-700 border border-red-200 hover:bg-red-100"
           >
             {t('common.retry') || 'Retry'}
