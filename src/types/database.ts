@@ -231,7 +231,7 @@ export interface Database {
           phone: string | null
           account_type: 'client' | 'supplier'
           notes: string | null
-          status: 'PENDING' | 'CONTACTED' | 'CONVERTED' | 'REJECTED'
+          status: 'NEW' | 'CONTACTED' | 'KYC' | 'ONBOARDED' | 'REJECTED'
           created_at: string
           updated_at: string
           converted_user_id: string | null
@@ -244,7 +244,7 @@ export interface Database {
           phone?: string | null
           account_type: 'client' | 'supplier'
           notes?: string | null
-          status?: 'PENDING' | 'CONTACTED' | 'CONVERTED' | 'REJECTED'
+          status?: 'NEW' | 'CONTACTED' | 'KYC' | 'ONBOARDED' | 'REJECTED'
           created_at?: string
           updated_at?: string
           converted_user_id?: string | null
@@ -257,7 +257,7 @@ export interface Database {
           phone?: string | null
           account_type?: 'client' | 'supplier'
           notes?: string | null
-          status?: 'PENDING' | 'CONTACTED' | 'CONVERTED' | 'REJECTED'
+          status?: 'NEW' | 'CONTACTED' | 'KYC' | 'ONBOARDED' | 'REJECTED'
           created_at?: string
           updated_at?: string
           converted_user_id?: string | null

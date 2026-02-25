@@ -1,6 +1,10 @@
 
 import { supabase } from '../lib/supabase';
 
+export type LeadStatus = 'NEW' | 'CONTACTED' | 'KYC' | 'ONBOARDED' | 'REJECTED';
+type LegacyLeadStatus = 'PENDING' | 'CONVERTED';
+type PersistedLeadStatus = LeadStatus | LegacyLeadStatus;
+
 export interface Lead {
     id?: string;
     name: string;
@@ -11,9 +15,32 @@ export interface Lead {
     notes?: string;
     commercial_registration?: string;
     tax_id?: string;
-    status?: 'PENDING' | 'CONTACTED' | 'CONVERTED' | 'REJECTED';
+    status?: PersistedLeadStatus;
     created_at?: string;
 }
+
+const normalizeLeadStatus = (status?: string): LeadStatus => {
+    const normalized = String(status || '').toUpperCase();
+    switch (normalized) {
+        case 'CONTACTED':
+            return 'CONTACTED';
+        case 'KYC':
+            return 'KYC';
+        case 'ONBOARDED':
+        case 'CONVERTED':
+            return 'ONBOARDED';
+        case 'REJECTED':
+            return 'REJECTED';
+        case 'NEW':
+        case 'PENDING':
+        default:
+            return 'NEW';
+    }
+};
+
+const toPersistedLeadStatus = (status: NonNullable<Lead['status']>): LeadStatus => {
+    return normalizeLeadStatus(status);
+};
 
 export const leadsService = {
     async submitLead(lead: Lead) {
@@ -70,13 +97,18 @@ export const leadsService = {
             .order('created_at', { ascending: false });
 
         if (error) throw error;
-        return data as Lead[];
+        return (data as Lead[]).map((lead) => ({
+            ...lead,
+            status: normalizeLeadStatus(lead.status)
+        }));
     },
 
     async updateLeadStatus(id: string, status: Lead['status']) {
+        if (!status) throw new Error('Lead status is required');
+        const persistedStatus = toPersistedLeadStatus(status);
         const { data, error } = await supabase
             .from('leads')
-            .update({ status })
+            .update({ status: persistedStatus })
             .eq('id', id)
             .select()
             .single();
