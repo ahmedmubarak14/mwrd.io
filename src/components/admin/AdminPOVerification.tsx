@@ -315,8 +315,8 @@ export const AdminPOVerification: React.FC = () => {
     [selectedOrderItems]
   );
   const fallbackSystemPOUrl = useMemo(
-    () => (selectedOrder?.system_po_generated ? `/api/generate-po/${selectedOrder.id}` : null),
-    [selectedOrder?.id, selectedOrder?.system_po_generated]
+    () => (selectedOrder?.id ? `/api/generate-po/${selectedOrder.id}` : null),
+    [selectedOrder?.id]
   );
   const effectivePreviewUrl = previewUrl || fallbackSystemPOUrl;
 
