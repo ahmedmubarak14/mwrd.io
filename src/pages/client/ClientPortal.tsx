@@ -31,6 +31,7 @@ import { reviewService } from '../../services/reviewService';
 import { getBestValueQuoteId, parseLeadTimeDays } from '../../utils/quoteValue';
 import { ClientCustomRequestsList } from '../../components/client/ClientCustomRequestsList';
 import { poGeneratorService } from '../../services/poGeneratorService';
+import { orderDocumentService, OrderDocument } from '../../services/orderDocumentService';
 
 interface ClientPortalProps {
   activeTab: string;
@@ -96,6 +97,10 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [quoteSortBy, setQuoteSortBy] = useState<'price' | 'delivery' | 'rating'>('price');
   const [selectedOrderForDetails, setSelectedOrderForDetails] = useState<Order | null>(null);
+  const [selectedOrderDocuments, setSelectedOrderDocuments] = useState<OrderDocument[]>([]);
+  const [selectedOrderDocumentUrl, setSelectedOrderDocumentUrl] = useState<string | null>(null);
+  const [isLoadingSelectedOrderDocuments, setIsLoadingSelectedOrderDocuments] = useState(false);
+  const [selectedOrderDocumentsError, setSelectedOrderDocumentsError] = useState<string | null>(null);
   const [orderForReview, setOrderForReview] = useState<Order | null>(null);
   const [reviewedOrderIds, setReviewedOrderIds] = useState<Record<string, boolean>>({});
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
@@ -176,6 +181,49 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
       isActive = false;
     };
   }, [currentUser, orders]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const loadOrderDocuments = async () => {
+      if (!selectedOrderForDetails?.id) {
+        if (!isCancelled) {
+          setSelectedOrderDocuments([]);
+          setSelectedOrderDocumentUrl(null);
+          setSelectedOrderDocumentsError(null);
+          setIsLoadingSelectedOrderDocuments(false);
+        }
+        return;
+      }
+
+      try {
+        setIsLoadingSelectedOrderDocuments(true);
+        setSelectedOrderDocumentsError(null);
+        const docs = await orderDocumentService.getOrderDocuments(selectedOrderForDetails.id);
+        if (isCancelled) return;
+
+        setSelectedOrderDocuments(docs);
+        const preferredDoc = docs.find((doc) => doc.document_type === 'CLIENT_PO') || docs[0] || null;
+        setSelectedOrderDocumentUrl(preferredDoc?.file_url || null);
+      } catch (error) {
+        if (isCancelled) return;
+        logger.error('Failed to load order documents for client details view', error);
+        setSelectedOrderDocuments([]);
+        setSelectedOrderDocumentUrl(null);
+        setSelectedOrderDocumentsError(t('errors.failedToLoad'));
+      } finally {
+        if (!isCancelled) {
+          setIsLoadingSelectedOrderDocuments(false);
+        }
+      }
+    };
+
+    void loadOrderDocuments();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [selectedOrderForDetails?.id, t]);
 
 
   const getCategoryKey = (cat: string) => {
@@ -2420,7 +2468,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                   </button>
                 </div>
               </div>
-              <div className="p-6 space-y-6">
+                <div className="p-6 space-y-6">
                 {/* Order Info */}
                 <div className="grid gap-4 lg:grid-cols-2">
                   <div className="space-y-3 text-sm">
@@ -2519,6 +2567,81 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ activeTab, onNavigat
                   {selectedOrderForDetails.status === 'CANCELLED' && (
                     <div className="mt-3 bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700 font-medium">
                       {t('client.orders.orderCancelled')}
+                    </div>
+                  )}
+                </div>
+
+                {/* PO Documents */}
+                <div className="border-t border-slate-200 pt-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-bold text-slate-700">{t('client.orders.poDocuments') || 'PO Documents'}</h4>
+                    <button
+                      onClick={async () => {
+                        if (!selectedOrderForDetails?.id) return;
+                        try {
+                          setIsLoadingSelectedOrderDocuments(true);
+                          setSelectedOrderDocumentsError(null);
+                          const docs = await orderDocumentService.getOrderDocuments(selectedOrderForDetails.id);
+                          setSelectedOrderDocuments(docs);
+                          const preferredDoc = docs.find((doc) => doc.document_type === 'CLIENT_PO') || docs[0] || null;
+                          setSelectedOrderDocumentUrl(preferredDoc?.file_url || null);
+                        } catch (error) {
+                          logger.error('Failed to refresh order documents in client details view', error);
+                          setSelectedOrderDocumentsError(t('errors.failedToLoad'));
+                        } finally {
+                          setIsLoadingSelectedOrderDocuments(false);
+                        }
+                      }}
+                      className="text-xs font-medium text-blue-600 hover:text-blue-800"
+                    >
+                      {t('common.refresh') || 'Refresh'}
+                    </button>
+                  </div>
+
+                  {isLoadingSelectedOrderDocuments ? (
+                    <p className="text-xs text-slate-500">{t('common.loading') || 'Loading'}...</p>
+                  ) : selectedOrderDocumentsError ? (
+                    <p className="text-xs text-red-600">{selectedOrderDocumentsError}</p>
+                  ) : selectedOrderDocuments.length === 0 ? (
+                    <p className="text-xs text-slate-500">{t('client.orders.noPoDocuments') || 'No PO documents available yet.'}</p>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap gap-2">
+                        {selectedOrderDocuments.map((doc) => (
+                          <button
+                            key={doc.id}
+                            onClick={() => setSelectedOrderDocumentUrl(doc.file_url)}
+                            className={`px-3 py-1.5 rounded-lg text-xs border ${
+                              selectedOrderDocumentUrl === doc.file_url
+                                ? 'border-blue-300 bg-blue-50 text-blue-700'
+                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            {(doc.document_type === 'CLIENT_PO' ? 'Client PO' : 'System PO')} • {new Date(doc.created_at).toLocaleDateString()}
+                          </button>
+                        ))}
+                      </div>
+
+                      {selectedOrderDocumentUrl && (
+                        <div className="rounded-lg border border-slate-200 overflow-hidden">
+                          <div className="p-2 bg-slate-50 border-b border-slate-200 flex justify-end">
+                            <a
+                              href={selectedOrderDocumentUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs font-medium text-blue-600 hover:text-blue-800 inline-flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-sm">open_in_new</span>
+                              {t('admin.po.openInNewTab') || 'Open'}
+                            </a>
+                          </div>
+                          <iframe
+                            src={selectedOrderDocumentUrl}
+                            title="Client PO Document"
+                            className="w-full h-72 bg-slate-50"
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

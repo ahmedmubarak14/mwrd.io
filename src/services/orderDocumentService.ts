@@ -487,18 +487,7 @@ export const orderDocumentService = {
      * Get all documents for an order
      */
     async getOrderDocuments(orderId: string): Promise<OrderDocument[]> {
-        const { data, error } = await supabase
-            .from('order_documents')
-            .select('*')
-            .eq('order_id', orderId)
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            logger.error('Error fetching order documents:', error);
-            throw error;
-        }
-
-        const documents = data || [];
+        const documents = await this.getOrderDocumentsMetadata(orderId);
         return Promise.all(documents.map((doc) => mapOrderDocumentWithResolvedUrl(doc)));
     },
 
@@ -506,6 +495,18 @@ export const orderDocumentService = {
      * Get order document metadata only (no signed URLs)
      */
     async getOrderDocumentsMetadata(orderId: string): Promise<OrderDocument[]> {
+        const rpcResult = await (supabase as any)
+            .rpc('get_order_documents_for_user', { p_order_id: orderId });
+
+        if (!rpcResult.error) {
+            return rpcResult.data || [];
+        }
+
+        // Backward-compatible fallback for environments without the RPC migration.
+        logger.warn('get_order_documents_for_user RPC failed, falling back to direct query', {
+            orderId,
+            error: rpcResult.error?.message,
+        });
         const { data, error } = await supabase
             .from('order_documents')
             .select('*')
