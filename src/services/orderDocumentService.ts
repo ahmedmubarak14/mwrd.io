@@ -291,7 +291,6 @@ export const orderDocumentService = {
             order_id: orderId,
             document_type: 'CLIENT_PO',
             file_url: fileRef,
-            file_name: file.name,
             uploaded_by: userId
         };
         let data: any = null;
@@ -432,7 +431,6 @@ export const orderDocumentService = {
                 order_id: orderId,
                 document_type: 'SYSTEM_PO',
                 file_url: fileUrl,
-                file_name: fileName,
                 uploaded_by: userId
             };
             let insertedDoc: any = null;
