@@ -266,6 +266,9 @@ async function logPOVerificationFailure(params: {
 }
 
 export const orderDocumentService = {
+    async resolveDocumentUrl(fileRef: string): Promise<string> {
+        return resolveDocumentAccessUrl(fileRef);
+    },
     async uploadClientPOInternal(
         orderId: string,
         file: File,

@@ -407,13 +407,13 @@ export const AdminPOVerification: React.FC = () => {
   };
 
   const handlePreview = (doc: OrderDocument) => {
-    // Resolve signed URL lazily on-demand so listing never gets blocked.
+    // Resolve signed URL directly from file ref so admin can preview freshly uploaded docs
+    // without requiring an additional row fetch by document id.
     void (async () => {
       try {
-        const latestDoc = await orderDocumentService.getDocument(doc.id);
-        const resolvedDoc = latestDoc || doc;
-        setSelectedDoc(resolvedDoc);
-        setPreviewUrl(resolvedDoc.file_url);
+        const resolvedUrl = await orderDocumentService.resolveDocumentUrl(doc.file_url);
+        setSelectedDoc(doc);
+        setPreviewUrl(resolvedUrl);
       } catch {
         setSelectedDoc(doc);
         setPreviewUrl(doc.file_url);
