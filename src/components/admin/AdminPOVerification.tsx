@@ -153,21 +153,24 @@ export const AdminPOVerification: React.FC = () => {
         clientPODocuments.find((document) => !document.verified_at && !document.verified_by) ||
         clientPODocuments[0] ||
         null;
+      const fallbackDocument = clientPO || docs[0] || null;
 
       setPendingPOs((prev) =>
         prev.map((item) =>
           item.order.id === orderId
             ? {
                 ...item,
-                document: clientPO || undefined,
+                document: fallbackDocument || undefined,
                 documentLoading: false,
-                documentLoadError: clientPO ? undefined : 'Client PO document not found',
+                documentLoadError: fallbackDocument
+                  ? (clientPO ? undefined : 'Client PO document not found. Showing latest available order document.')
+                  : 'Client PO document not found',
               }
             : item
         )
       );
 
-      return clientPO;
+      return fallbackDocument;
     } catch (err) {
       logger.error(`Error loading docs for order ${orderId}:`, err);
       setPendingPOs((prev) =>
