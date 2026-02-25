@@ -128,6 +128,14 @@ function extractErrorMessage(error: unknown): string {
     return 'Unknown verification error';
 }
 
+function mapStorageBucketError(error: unknown): Error | null {
+    const message = extractErrorMessage(error);
+    if (/bucket not found/i.test(message)) {
+        return new Error('Storage bucket "order-documents" is missing. Apply migration 20260225_phase24_order_documents_bucket_and_policies.sql and retry.');
+    }
+    return null;
+}
+
 /**
  * Log a PO audit event.
  *
@@ -329,7 +337,8 @@ export const orderDocumentService = {
             });
         } catch (error) {
             logger.error('Error uploading client PO:', error);
-            throw error;
+            const mappedError = mapStorageBucketError(error);
+            throw mappedError || error;
         }
     },
 
@@ -344,7 +353,8 @@ export const orderDocumentService = {
             });
         } catch (error) {
             logger.error('Error uploading client PO by admin:', error);
-            throw error;
+            const mappedError = mapStorageBucketError(error);
+            throw mappedError || error;
         }
     },
 
