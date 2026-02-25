@@ -314,6 +314,11 @@ export const AdminPOVerification: React.FC = () => {
     () => selectedOrderItems.reduce((sum, item) => sum + (item.lineTotal || 0), 0),
     [selectedOrderItems]
   );
+  const fallbackSystemPOUrl = useMemo(
+    () => (selectedOrder?.system_po_generated ? `/api/generate-po/${selectedOrder.id}` : null),
+    [selectedOrder?.id, selectedOrder?.system_po_generated]
+  );
+  const effectivePreviewUrl = previewUrl || fallbackSystemPOUrl;
 
   const openVerifyConfirm = (orderId: string) => {
     const pendingPo = pendingPOs.find((item) => item.order.id === orderId);
@@ -729,9 +734,9 @@ export const AdminPOVerification: React.FC = () => {
                     <div className="rounded-lg border border-neutral-200 overflow-hidden">
                       <div className="px-3 py-2 bg-neutral-50 text-xs font-semibold text-neutral-700 flex items-center justify-between">
                         <span>{t('admin.po.preview') || 'Document Preview'}</span>
-                        {previewUrl && (
+                        {effectivePreviewUrl && (
                           <a
-                            href={previewUrl}
+                            href={effectivePreviewUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 text-blue-600 hover:underline"
@@ -742,9 +747,9 @@ export const AdminPOVerification: React.FC = () => {
                           </a>
                         )}
                       </div>
-                      {previewUrl ? (
+                      {effectivePreviewUrl ? (
                         <div className="bg-neutral-100 h-72">
-                          <iframe src={previewUrl} className="w-full h-full" title={t('admin.po.preview')} />
+                          <iframe src={effectivePreviewUrl} className="w-full h-full" title={t('admin.po.preview')} />
                         </div>
                       ) : (
                         <div className="px-3 py-3 text-xs text-amber-700 bg-amber-50 border-t border-amber-100 space-y-2">
