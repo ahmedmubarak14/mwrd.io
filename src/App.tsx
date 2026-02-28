@@ -21,9 +21,7 @@ const Login = lazy(() =>
 const GetStarted = lazy(() =>
   import('./pages/GetStarted').then((module) => ({ default: module.GetStarted }))
 );
-const About = lazy(() =>
-  import('./pages/About').then((module) => ({ default: module.About }))
-);
+
 
 const getDefaultTabForRole = (role?: UserRole): string => {
   if (role === UserRole.ADMIN) return 'overview';
@@ -187,123 +185,100 @@ function App() {
           </div>
         }
       >
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Landing
-              onNavigateToLogin={() => navigate('/login')}
-              onNavigateToGetStarted={() => navigate('/get-started')}
-              onNavigateToAboutClients={() => navigate('/about/clients')}
-              onNavigateToAboutSuppliers={() => navigate('/about/suppliers')}
-            />
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <Login
-              onLogin={handleLogin}
-              onBack={() => navigate('/')}
-              onNavigateToGetStarted={() => navigate('/get-started')}
-              onRequestPasswordReset={handleRequestPasswordReset}
-              onCompletePasswordReset={handleCompletePasswordReset}
-            />
-          }
-        />
-        <Route
-          path="/get-started"
-          element={<GetStarted onBack={() => navigate('/')} />}
-        />
-        <Route
-          path="/about/clients"
-          element={
-            <About
-              onNavigateToLogin={() => navigate('/login')}
-              onNavigateToGetStarted={() => navigate('/get-started')}
-              onBack={() => navigate('/')}
-              scrollTo="clients"
-            />
-          }
-        />
-        <Route
-          path="/about/suppliers"
-          element={
-            <About
-              onNavigateToLogin={() => navigate('/login')}
-              onNavigateToGetStarted={() => navigate('/get-started')}
-              onBack={() => navigate('/')}
-              scrollTo="suppliers"
-            />
-          }
-        />
-        <Route
-          path="/app"
-          element={
-            isAuthenticated && currentUser ? (
-              <div className="flex min-h-screen w-full bg-[#f9fafb] font-sans text-gray-900">
-                <Sidebar
-                  role={currentUser.role}
-                  activeTab={activeTab}
-                  onNavigate={handleTabNavigate}
-                  onLogout={handleLogout}
-                  isOpen={sidebarOpen}
-                  onClose={() => setSidebarOpen(false)}
-                  userName={currentUser.companyName || currentUser.name}
-                  userEmail={currentUser.email}
-                />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Landing
+                onNavigateToLogin={() => navigate('/login')}
+                onNavigateToGetStarted={() => navigate('/get-started')}
+              />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Login
+                onLogin={handleLogin}
+                onBack={() => navigate('/')}
+                onNavigateToGetStarted={() => navigate('/get-started')}
+                onRequestPasswordReset={handleRequestPasswordReset}
+                onCompletePasswordReset={handleCompletePasswordReset}
+              />
+            }
+          />
+          <Route
+            path="/get-started"
+            element={<GetStarted onBack={() => navigate('/')} />}
+          />
 
-                <div className="flex-1 flex flex-col min-w-0">
-                  <header className="md:hidden sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-                    <button
-                      onClick={() => setSidebarOpen(true)}
-                      className="p-2 -ml-2 text-gray-600 hover:text-gray-900"
-                      aria-label={t('sidebar.expand')}
-                    >
-                      <span className="material-symbols-outlined">menu</span>
-                    </button>
-                    <div className="flex items-center gap-2">
-                      <div className="size-6 bg-[#0A2540] rounded flex items-center justify-center text-white">
-                        <svg className="size-4" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
-                        </svg>
-                      </div>
-                      <span className="text-[#0A2540] text-lg font-bold">mwrd</span>
-                    </div>
-                    <NotificationBell onNavigate={handleNotificationNavigation} />
-                  </header>
+          <Route
+            path="/app"
+            element={
+              isAuthenticated && currentUser ? (
+                <div className="flex min-h-screen w-full bg-[#f9fafb] font-sans text-gray-900">
+                  <Sidebar
+                    role={currentUser.role}
+                    activeTab={activeTab}
+                    onNavigate={handleTabNavigate}
+                    onLogout={handleLogout}
+                    isOpen={sidebarOpen}
+                    onClose={() => setSidebarOpen(false)}
+                    userName={currentUser.companyName || currentUser.name}
+                    userEmail={currentUser.email}
+                  />
 
-                  <main className="flex-1 overflow-y-auto bg-gray-50/50">
-                    <Suspense
-                      fallback={
-                        <div className="flex min-h-[320px] items-center justify-center">
-                          <LoadingSpinner size="lg" />
+                  <div className="flex-1 flex flex-col min-w-0">
+                    <header className="md:hidden sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+                      <button
+                        onClick={() => setSidebarOpen(true)}
+                        className="p-2 -ml-2 text-gray-600 hover:text-gray-900"
+                        aria-label={t('sidebar.expand')}
+                      >
+                        <span className="material-symbols-outlined">menu</span>
+                      </button>
+                      <div className="flex items-center gap-2">
+                        <div className="size-6 bg-[#0A2540] rounded flex items-center justify-center text-white">
+                          <svg className="size-4" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+                          </svg>
                         </div>
-                      }
-                    >
-                      {currentUser.role === UserRole.CLIENT && (
-                        <ClientPortal activeTab={activeTab} onNavigate={handleTabNavigate} />
-                      )}
-                      {currentUser.role === UserRole.SUPPLIER && (
-                        <SupplierPortal activeTab={activeTab} onNavigate={handleTabNavigate} />
-                      )}
-                      {currentUser.role === UserRole.ADMIN && (
-                        <AdminPortal activeTab={activeTab} onNavigate={handleTabNavigate} />
-                      )}
-                    </Suspense>
-                  </main>
+                        <span className="text-[#0A2540] text-lg font-bold">mwrd</span>
+                      </div>
+                      <NotificationBell onNavigate={handleNotificationNavigation} />
+                    </header>
+
+                    <main className="flex-1 overflow-y-auto bg-gray-50/50">
+                      <Suspense
+                        fallback={
+                          <div className="flex min-h-[320px] items-center justify-center">
+                            <LoadingSpinner size="lg" />
+                          </div>
+                        }
+                      >
+                        {currentUser.role === UserRole.CLIENT && (
+                          <ClientPortal activeTab={activeTab} onNavigate={handleTabNavigate} />
+                        )}
+                        {currentUser.role === UserRole.SUPPLIER && (
+                          <SupplierPortal activeTab={activeTab} onNavigate={handleTabNavigate} />
+                        )}
+                        {currentUser.role === UserRole.ADMIN && (
+                          <AdminPortal activeTab={activeTab} onNavigate={handleTabNavigate} />
+                        )}
+                      </Suspense>
+                    </main>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="*"
-          element={<Navigate to={isAuthenticated ? '/app' : '/'} replace />}
-        />
-      </Routes>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="*"
+            element={<Navigate to={isAuthenticated ? '/app' : '/'} replace />}
+          />
+        </Routes>
       </Suspense>
     </ErrorBoundary>
   );

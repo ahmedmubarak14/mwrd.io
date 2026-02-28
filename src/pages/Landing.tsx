@@ -10,8 +10,6 @@ gsap.registerPlugin(ScrollTrigger);
 interface LandingProps {
   onNavigateToLogin: () => void;
   onNavigateToGetStarted: () => void;
-  onNavigateToAboutClients: () => void;
-  onNavigateToAboutSuppliers: () => void;
 }
 
 /* ─── 3D Floating Shapes (pure CSS + GSAP) ─── */
@@ -97,12 +95,15 @@ const AnimatedCounter: React.FC<{ end: number; suffix?: string; duration?: numbe
 export const Landing: React.FC<LandingProps> = ({
   onNavigateToLogin,
   onNavigateToGetStarted,
-  onNavigateToAboutClients,
-  onNavigateToAboutSuppliers,
 }) => {
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const clientsRef = useRef<HTMLElement>(null);
+  const suppliersRef = useRef<HTMLElement>(null);
+
+  const scrollToClients = () => clientsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToSuppliers = () => suppliersRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   useGSAP(() => {
     /* ── Hero entrance ── */
@@ -137,10 +138,16 @@ export const Landing: React.FC<LandingProps> = ({
       scrollTrigger: { trigger: '.how-section', start: 'top 70%' }
     });
 
-    /* ── Audience cards ── */
-    gsap.fromTo('.audience-card', { opacity: 0, y: 50 }, {
-      opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: 'power2.out',
-      scrollTrigger: { trigger: '.audience-section', start: 'top 75%' }
+    /* ── Clients section ── */
+    gsap.fromTo('.clients-content > *', { opacity: 0, y: 40 }, {
+      opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power2.out',
+      scrollTrigger: { trigger: '.clients-section', start: 'top 75%' }
+    });
+
+    /* ── Suppliers section ── */
+    gsap.fromTo('.suppliers-content > *', { opacity: 0, y: 40 }, {
+      opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power2.out',
+      scrollTrigger: { trigger: '.suppliers-section', start: 'top 75%' }
     });
 
     /* ── Feature cards ── */
@@ -180,8 +187,8 @@ export const Landing: React.FC<LandingProps> = ({
             </div>
 
             <nav className="hidden md:flex flex-1 justify-center items-center gap-8">
-              <button onClick={onNavigateToAboutClients} className="text-[#4A4A4A] text-sm font-medium hover:text-[#0A2540] transition-colors">{t('landing.forClients')}</button>
-              <button onClick={onNavigateToAboutSuppliers} className="text-[#4A4A4A] text-sm font-medium hover:text-[#0A2540] transition-colors">{t('landing.forSuppliers')}</button>
+              <button onClick={scrollToClients} className="text-[#4A4A4A] text-sm font-medium hover:text-[#0A2540] transition-colors">{t('landing.forClients')}</button>
+              <button onClick={scrollToSuppliers} className="text-[#4A4A4A] text-sm font-medium hover:text-[#0A2540] transition-colors">{t('landing.forSuppliers')}</button>
             </nav>
 
             <div className="flex gap-1.5 md:gap-2 items-center">
@@ -217,8 +224,8 @@ export const Landing: React.FC<LandingProps> = ({
           <div className="md:hidden bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-lg">
             <div className="container mx-auto px-4 py-4">
               <nav className="flex flex-col gap-1 mb-4">
-                <button onClick={() => { onNavigateToAboutClients(); setMobileMenuOpen(false); }} className="text-[#4A4A4A] text-base font-medium py-3 px-3 rounded-lg hover:bg-gray-100 text-start min-h-[44px]">{t('landing.forClients')}</button>
-                <button onClick={() => { onNavigateToAboutSuppliers(); setMobileMenuOpen(false); }} className="text-[#4A4A4A] text-base font-medium py-3 px-3 rounded-lg hover:bg-gray-100 text-start min-h-[44px]">{t('landing.forSuppliers')}</button>
+                <button onClick={() => { scrollToClients(); setMobileMenuOpen(false); }} className="text-[#4A4A4A] text-base font-medium py-3 px-3 rounded-lg hover:bg-gray-100 text-start min-h-[44px]">{t('landing.forClients')}</button>
+                <button onClick={() => { scrollToSuppliers(); setMobileMenuOpen(false); }} className="text-[#4A4A4A] text-base font-medium py-3 px-3 rounded-lg hover:bg-gray-100 text-start min-h-[44px]">{t('landing.forSuppliers')}</button>
               </nav>
               <div className="flex flex-col gap-2 pt-3 border-t border-gray-100">
                 <button onClick={() => { onNavigateToLogin(); setMobileMenuOpen(false); }} className="w-full flex items-center justify-center rounded-lg h-11 px-4 bg-gray-200 text-[#4A4A4A] text-sm font-bold">{t('common.login')}</button>
@@ -334,46 +341,95 @@ export const Landing: React.FC<LandingProps> = ({
         </section>
 
 
-        {/* ═══════════════════════ SECTION 4: FOR CLIENTS / SUPPLIERS ═══════════════════════ */}
-        <section className="audience-section py-20 md:py-28 bg-white">
+        {/* ═══════════════════════ SECTION 4A: FOR CLIENTS ═══════════════════════ */}
+        <section ref={clientsRef} id="clients" className="clients-section py-20 md:py-28 bg-white scroll-mt-20">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-              {/* Clients Card */}
-              <div
-                className="audience-card group relative rounded-3xl p-8 md:p-10 bg-gradient-to-br from-[#f0f9ff] to-[#e0f2fe] border border-[#0A2540]/5 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-[#0A2540]/10 hover:-translate-y-1 cursor-pointer"
-                onClick={onNavigateToAboutClients}
-                style={{ perspective: '1000px' }}
-              >
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#0A2540]/5 to-transparent rounded-bl-[100px]" />
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-2xl bg-[#0A2540] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-                    <span className="material-symbols-outlined text-white text-xl">shopping_bag</span>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
+              <div className="clients-content flex flex-col gap-6">
+                <div className="inline-flex items-center gap-2 bg-[#00C49A]/10 text-[#00C49A] px-4 py-2 rounded-full w-fit">
+                  <span className="material-symbols-outlined text-xl">storefront</span>
+                  <span className="text-sm font-semibold">{t('landing.forClients')}</span>
+                </div>
+                <h2 className="text-[#0A2540] text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">{t('about.clients.title')}</h2>
+                <p className="text-[#6b7280] text-lg leading-relaxed">{t('about.clients.description')}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                  {[
+                    { icon: 'verified', titleKey: 'about.clients.benefit1.title', descKey: 'about.clients.benefit1.desc' },
+                    { icon: 'request_quote', titleKey: 'about.clients.benefit2.title', descKey: 'about.clients.benefit2.desc' },
+                    { icon: 'sell', titleKey: 'about.clients.benefit3.title', descKey: 'about.clients.benefit3.desc' },
+                    { icon: 'support_agent', titleKey: 'about.clients.benefit4.title', descKey: 'about.clients.benefit4.desc' },
+                  ].map((b, i) => (
+                    <div key={i} className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                      <span className="material-symbols-outlined text-[#00C49A] text-2xl mt-0.5">{b.icon}</span>
+                      <div>
+                        <h4 className="font-semibold text-[#0A2540]">{t(b.titleKey)}</h4>
+                        <p className="text-sm text-[#6b7280]">{t(b.descKey)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={onNavigateToGetStarted}
+                  className="mt-4 w-fit group flex items-center justify-center gap-2 rounded-2xl h-13 px-8 bg-[#0A2540] text-white text-base font-bold hover:bg-[#0d3157] transition-all duration-300 hover:shadow-lg hover:shadow-[#0A2540]/20"
+                >
+                  {t('about.clients.cta')}
+                  <span className="material-symbols-outlined text-lg transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </button>
+              </div>
+              <div className="relative">
+                <div className="bg-gradient-to-br from-[#00C49A]/15 to-[#0A2540]/10 rounded-3xl p-10 aspect-square flex items-center justify-center">
+                  <div className="text-center">
+                    <span className="material-symbols-outlined text-[#0A2540] text-8xl md:text-9xl">shopping_bag</span>
+                    <p className="mt-4 text-[#0A2540] font-medium">{t('about.clients.imageCaption')}</p>
                   </div>
-                  <h3 className="text-[#0A2540] text-2xl md:text-3xl font-bold mb-4">{t('landing.forClients')}</h3>
-                  <p className="text-[#6b7280] text-base leading-relaxed mb-6">{t('landing.forClientsDesc')}</p>
-                  <span className="inline-flex items-center text-[#0A2540] font-bold text-sm group-hover:gap-3 gap-1 transition-all duration-300">
-                    {t('landing.learnMore')} <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                  </span>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              {/* Suppliers Card */}
-              <div
-                className="audience-card group relative rounded-3xl p-8 md:p-10 bg-gradient-to-br from-[#ecfdf5] to-[#d1fae5] border border-[#00C49A]/10 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-[#00C49A]/10 hover:-translate-y-1 cursor-pointer"
-                onClick={onNavigateToAboutSuppliers}
-                style={{ perspective: '1000px' }}
-              >
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#00C49A]/5 to-transparent rounded-bl-[100px]" />
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-2xl bg-[#00C49A] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-                    <span className="material-symbols-outlined text-white text-xl">storefront</span>
+        {/* ═══════════════════════ SECTION 4B: FOR SUPPLIERS ═══════════════════════ */}
+        <section ref={suppliersRef} id="suppliers" className="suppliers-section py-20 md:py-28 bg-[#F6F9FC] scroll-mt-20">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
+              <div className="relative order-2 lg:order-1">
+                <div className="bg-gradient-to-br from-[#0A2540]/10 to-[#00C49A]/15 rounded-3xl p-10 aspect-square flex items-center justify-center">
+                  <div className="text-center">
+                    <span className="material-symbols-outlined text-[#0A2540] text-8xl md:text-9xl">inventory_2</span>
+                    <p className="mt-4 text-[#0A2540] font-medium">{t('about.suppliers.imageCaption')}</p>
                   </div>
-                  <h3 className="text-[#0A2540] text-2xl md:text-3xl font-bold mb-4">{t('landing.forSuppliers')}</h3>
-                  <p className="text-[#6b7280] text-base leading-relaxed mb-6">{t('landing.forSuppliersDesc')}</p>
-                  <span className="inline-flex items-center text-[#00C49A] font-bold text-sm group-hover:gap-3 gap-1 transition-all duration-300">
-                    {t('landing.learnMore')} <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                  </span>
                 </div>
+              </div>
+              <div className="suppliers-content flex flex-col gap-6 order-1 lg:order-2">
+                <div className="inline-flex items-center gap-2 bg-[#0A2540]/10 text-[#0A2540] px-4 py-2 rounded-full w-fit">
+                  <span className="material-symbols-outlined text-xl">local_shipping</span>
+                  <span className="text-sm font-semibold">{t('landing.forSuppliers')}</span>
+                </div>
+                <h2 className="text-[#0A2540] text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">{t('about.suppliers.title')}</h2>
+                <p className="text-[#6b7280] text-lg leading-relaxed">{t('about.suppliers.description')}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                  {[
+                    { icon: 'groups', titleKey: 'about.suppliers.benefit1.title', descKey: 'about.suppliers.benefit1.desc' },
+                    { icon: 'trending_up', titleKey: 'about.suppliers.benefit2.title', descKey: 'about.suppliers.benefit2.desc' },
+                    { icon: 'payments', titleKey: 'about.suppliers.benefit3.title', descKey: 'about.suppliers.benefit3.desc' },
+                    { icon: 'analytics', titleKey: 'about.suppliers.benefit4.title', descKey: 'about.suppliers.benefit4.desc' },
+                  ].map((b, i) => (
+                    <div key={i} className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                      <span className="material-symbols-outlined text-[#0A2540] text-2xl mt-0.5">{b.icon}</span>
+                      <div>
+                        <h4 className="font-semibold text-[#0A2540]">{t(b.titleKey)}</h4>
+                        <p className="text-sm text-[#6b7280]">{t(b.descKey)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={onNavigateToGetStarted}
+                  className="mt-4 w-fit group flex items-center justify-center gap-2 rounded-2xl h-13 px-8 bg-[#00C49A] text-white text-base font-bold hover:bg-[#00C49A]/90 transition-all duration-300 hover:shadow-lg hover:shadow-[#00C49A]/20"
+                >
+                  {t('about.suppliers.cta')}
+                  <span className="material-symbols-outlined text-lg transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </button>
               </div>
             </div>
           </div>
@@ -491,8 +547,8 @@ export const Landing: React.FC<LandingProps> = ({
               </div>
               <div className="flex flex-col gap-4">
                 <h4 className="font-bold text-white">{t('footer.platform')}</h4>
-                <button onClick={onNavigateToAboutClients} className="text-sm text-gray-400 hover:text-white transition-colors text-start">{t('landing.forClients')}</button>
-                <button onClick={onNavigateToAboutSuppliers} className="text-sm text-gray-400 hover:text-white transition-colors text-start">{t('landing.forSuppliers')}</button>
+                <button onClick={scrollToClients} className="text-sm text-gray-400 hover:text-white transition-colors text-start">{t('landing.forClients')}</button>
+                <button onClick={scrollToSuppliers} className="text-sm text-gray-400 hover:text-white transition-colors text-start">{t('landing.forSuppliers')}</button>
               </div>
             </div>
             <div className="mt-12 border-t border-gray-100/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
