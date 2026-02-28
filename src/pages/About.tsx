@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageToggle } from '../components/LanguageToggle';
-
+import { ClientMotionGraphic } from '../components/ClientMotionGraphic';
+import { SupplierMotionGraphic } from '../components/SupplierMotionGraphic';
 interface AboutProps {
   onNavigateToLogin: () => void;
   onNavigateToGetStarted: () => void;
@@ -9,11 +10,11 @@ interface AboutProps {
   scrollTo?: 'clients' | 'suppliers';
 }
 
-export const About: React.FC<AboutProps> = ({ 
-  onNavigateToLogin, 
-  onNavigateToGetStarted, 
+export const About: React.FC<AboutProps> = ({
+  onNavigateToLogin,
+  onNavigateToGetStarted,
   onBack,
-  scrollTo 
+  scrollTo
 }) => {
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,13 +50,13 @@ export const About: React.FC<AboutProps> = ({
               <h2 className="text-[#0A2540] text-lg md:text-xl font-bold leading-tight tracking-[-0.015em]">{t('brand.name')}</h2>
             </button>
             <nav className="hidden md:flex flex-1 justify-center items-center gap-8">
-              <button 
+              <button
                 onClick={() => clientsRef.current?.scrollIntoView({ behavior: 'smooth' })}
                 className="text-[#4A4A4A] text-sm font-medium leading-normal hover:text-[#0A2540] min-h-[44px] flex items-center"
               >
                 {t('landing.forClients')}
               </button>
-              <button 
+              <button
                 onClick={() => suppliersRef.current?.scrollIntoView({ behavior: 'smooth' })}
                 className="text-[#4A4A4A] text-sm font-medium leading-normal hover:text-[#0A2540] min-h-[44px] flex items-center"
               >
@@ -64,19 +65,19 @@ export const About: React.FC<AboutProps> = ({
             </nav>
             <div className="flex gap-1.5 md:gap-2 items-center">
               <LanguageToggle variant="minimal" />
-              <button 
+              <button
                 onClick={onNavigateToLogin}
                 className="hidden sm:flex min-w-[60px] md:min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 md:h-11 px-3 md:px-4 bg-gray-200 text-[#4A4A4A] text-xs md:text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 transition-colors"
               >
                 <span className="truncate">{t('common.login')}</span>
               </button>
-              <button 
+              <button
                 onClick={onNavigateToGetStarted}
                 className="hidden sm:flex min-w-[70px] md:min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 md:h-11 px-3 md:px-4 bg-[#0A2540] text-white text-xs md:text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#0A2540]/90 transition-colors"
               >
                 <span className="truncate">{t('landing.getStarted')}</span>
               </button>
-              <button 
+              <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="flex md:hidden items-center justify-center size-11 rounded-lg hover:bg-gray-200 transition-colors"
                 aria-label={t('common.toggleMenu')}
@@ -88,18 +89,18 @@ export const About: React.FC<AboutProps> = ({
             </div>
           </div>
         </div>
-        
+
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-b border-gray-200 shadow-lg animate-in slide-in-from-top-2 duration-200">
             <div className="container mx-auto px-4 py-4">
               <nav className="flex flex-col gap-1 mb-4">
-                <button 
+                <button
                   onClick={() => { clientsRef.current?.scrollIntoView({ behavior: 'smooth' }); setMobileMenuOpen(false); }}
                   className="text-[#4A4A4A] text-base font-medium py-3 px-3 rounded-lg hover:bg-gray-100 hover:text-[#0A2540] transition-colors text-start min-h-[44px]"
                 >
                   {t('landing.forClients')}
                 </button>
-                <button 
+                <button
                   onClick={() => { suppliersRef.current?.scrollIntoView({ behavior: 'smooth' }); setMobileMenuOpen(false); }}
                   className="text-[#4A4A4A] text-base font-medium py-3 px-3 rounded-lg hover:bg-gray-100 hover:text-[#0A2540] transition-colors text-start min-h-[44px]"
                 >
@@ -107,13 +108,13 @@ export const About: React.FC<AboutProps> = ({
                 </button>
               </nav>
               <div className="flex flex-col gap-2 pt-3 border-t border-gray-100">
-                <button 
+                <button
                   onClick={() => { onNavigateToLogin(); setMobileMenuOpen(false); }}
                   className="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-gray-200 text-[#4A4A4A] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 transition-colors"
                 >
                   {t('common.login')}
                 </button>
-                <button 
+                <button
                   onClick={() => { onNavigateToGetStarted(); setMobileMenuOpen(false); }}
                   className="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-[#0A2540] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#0A2540]/90 transition-colors"
                 >
@@ -170,7 +171,7 @@ export const About: React.FC<AboutProps> = ({
                     </div>
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={onNavigateToGetStarted}
                   className="mt-4 w-fit flex cursor-pointer items-center justify-center gap-2 rounded-lg h-12 px-6 bg-[#0A2540] text-white text-base font-bold hover:bg-[#0A2540]/90 transition-colors"
                 >
@@ -178,13 +179,8 @@ export const About: React.FC<AboutProps> = ({
                   <span className="material-symbols-outlined">arrow_forward</span>
                 </button>
               </div>
-              <div className="relative">
-                <div className="bg-gradient-to-br from-[#00C49A]/20 to-[#0A2540]/10 rounded-2xl p-8 aspect-square flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="material-symbols-outlined text-[#0A2540] text-8xl md:text-9xl">shopping_bag</span>
-                    <p className="mt-4 text-[#0A2540] font-medium">{t('about.clients.imageCaption')}</p>
-                  </div>
-                </div>
+              <div className="relative aspect-square md:aspect-[4/3] lg:aspect-auto lg:h-full min-h-[400px]">
+                <ClientMotionGraphic />
               </div>
             </div>
           </div>
@@ -193,13 +189,8 @@ export const About: React.FC<AboutProps> = ({
         <section ref={suppliersRef} id="suppliers" className="py-16 md:py-24 bg-white scroll-mt-20">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className="relative order-2 lg:order-1">
-                <div className="bg-gradient-to-br from-[#0A2540]/10 to-[#00C49A]/20 rounded-2xl p-8 aspect-square flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="material-symbols-outlined text-[#0A2540] text-8xl md:text-9xl">inventory_2</span>
-                    <p className="mt-4 text-[#0A2540] font-medium">{t('about.suppliers.imageCaption')}</p>
-                  </div>
-                </div>
+              <div className="relative order-2 lg:order-1 aspect-square md:aspect-[4/3] lg:aspect-auto lg:h-full min-h-[400px]">
+                <SupplierMotionGraphic />
               </div>
               <div className="flex flex-col gap-6 order-1 lg:order-2">
                 <div className="inline-flex items-center gap-2 bg-[#0A2540]/10 text-[#0A2540] px-4 py-2 rounded-full w-fit">
@@ -242,7 +233,7 @@ export const About: React.FC<AboutProps> = ({
                     </div>
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={onNavigateToGetStarted}
                   className="mt-4 w-fit flex cursor-pointer items-center justify-center gap-2 rounded-lg h-12 px-6 bg-[#00C49A] text-white text-base font-bold hover:bg-[#00C49A]/90 transition-colors"
                 >
@@ -259,13 +250,13 @@ export const About: React.FC<AboutProps> = ({
             <h2 className="text-white text-3xl md:text-4xl font-bold mb-4">{t('about.cta.title')}</h2>
             <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">{t('about.cta.description')}</p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <button 
+              <button
                 onClick={onNavigateToGetStarted}
                 className="flex cursor-pointer items-center justify-center gap-2 rounded-lg h-12 px-8 bg-[#00C49A] text-white text-base font-bold hover:bg-[#00C49A]/90 transition-colors"
               >
                 {t('landing.getStarted')}
               </button>
-              <button 
+              <button
                 onClick={onNavigateToLogin}
                 className="flex cursor-pointer items-center justify-center gap-2 rounded-lg h-12 px-8 bg-white/10 text-white text-base font-bold hover:bg-white/20 transition-colors border border-white/20"
               >

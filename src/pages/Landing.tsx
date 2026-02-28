@@ -4,6 +4,8 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { LanguageToggle } from '../components/LanguageToggle';
+import { ClientMotionGraphic } from '../components/ClientMotionGraphic';
+import { SupplierMotionGraphic } from '../components/SupplierMotionGraphic';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -376,13 +378,8 @@ export const Landing: React.FC<LandingProps> = ({
                   <span className="material-symbols-outlined text-lg transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </button>
               </div>
-              <div className="relative">
-                <div className="bg-gradient-to-br from-[#00C49A]/15 to-[#0A2540]/10 rounded-3xl p-10 aspect-square flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="material-symbols-outlined text-[#0A2540] text-8xl md:text-9xl">shopping_bag</span>
-                    <p className="mt-4 text-[#0A2540] font-medium">{t('about.clients.imageCaption')}</p>
-                  </div>
-                </div>
+              <div className="relative aspect-square md:aspect-[4/3] lg:aspect-auto lg:h-full min-h-[400px]">
+                <ClientMotionGraphic />
               </div>
             </div>
           </div>
@@ -392,13 +389,8 @@ export const Landing: React.FC<LandingProps> = ({
         <section ref={suppliersRef} id="suppliers" className="suppliers-section py-20 md:py-28 bg-[#F6F9FC] scroll-mt-20">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
-              <div className="relative order-2 lg:order-1">
-                <div className="bg-gradient-to-br from-[#0A2540]/10 to-[#00C49A]/15 rounded-3xl p-10 aspect-square flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="material-symbols-outlined text-[#0A2540] text-8xl md:text-9xl">inventory_2</span>
-                    <p className="mt-4 text-[#0A2540] font-medium">{t('about.suppliers.imageCaption')}</p>
-                  </div>
-                </div>
+              <div className="relative order-2 lg:order-1 aspect-square md:aspect-[4/3] lg:aspect-auto lg:h-full min-h-[400px]">
+                <SupplierMotionGraphic />
               </div>
               <div className="suppliers-content flex flex-col gap-6 order-1 lg:order-2">
                 <div className="inline-flex items-center gap-2 bg-[#0A2540]/10 text-[#0A2540] px-4 py-2 rounded-full w-fit">
