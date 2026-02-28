@@ -159,23 +159,52 @@
   "landing": {
     "title": "{{brandName}}",
     "subtitle": "B2B Marketplace",
-    "heroTitle": "Streamline Your B2B Procurement",
-    "heroSubtitle": "Connect with verified suppliers, get competitive quotes, and manage your orders all in one place.",
+    "heroBadge": "Saudi Arabia's Managed B2B Marketplace",
+    "heroTitle": "Procurement Made Effortless",
+    "heroSubtitle": "Post your requirements, receive competitive quotes from verified suppliers, and manage every order — all on one intelligent platform.",
     "getStarted": "Get Started",
     "learnMore": "Learn More",
     "forClients": "For Clients",
-    "forClientsDesc": "Find reliable suppliers and get competitive quotes for your business needs.",
+    "forClientsDesc": "Post requirements and receive competitive quotes from pre-vetted suppliers. No searching, no cold calls — just results.",
     "forSuppliers": "For Suppliers",
-    "forSuppliersDesc": "Connect with verified clients and grow your business through our platform.",
+    "forSuppliersDesc": "Receive qualified RFQs from real buyers. Quote, win, and fulfill — with guaranteed payment through our managed process.",
+    "trustedBy": "Trusted by leading Saudi enterprises",
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Three simple steps to transform your procurement",
+      "step1Title": "Post Your RFQ",
+      "step1Desc": "Describe what you need — products, quantities, and delivery timeline. Our system matches you with qualified suppliers.",
+      "step2Title": "Compare Quotes",
+      "step2Desc": "Receive competitive quotes from multiple verified suppliers. Compare pricing, delivery, and quality side by side.",
+      "step3Title": "Manage Orders",
+      "step3Desc": "Accept the best quote, track fulfillment, and manage payments — all in one dashboard with full transparency."
+    },
     "features": {
       "title": "Why Choose {{brandName}}?",
       "verified": "Verified Partners",
-      "verifiedDesc": "All suppliers and clients are verified for secure transactions.",
+      "verifiedDesc": "Every supplier is vetted for quality, reliability, and compliance — so you can buy with confidence.",
       "competitive": "Competitive Pricing",
-      "competitiveDesc": "Get multiple quotes to ensure the best value for your procurement.",
+      "competitiveDesc": "Receive multiple quotes to ensure you always get the best value for your procurement.",
       "streamlined": "Streamlined Process",
-      "streamlinedDesc": "From RFQ to delivery, manage everything in one platform.",
+      "streamlinedDesc": "From RFQ to delivery, manage your entire supply chain in one platform.",
+      "anonymous": "Anonymous Bidding",
+      "anonymousDesc": "Supplier identities are hidden during the quoting phase, ensuring fair and unbiased pricing.",
+      "analytics": "Real-Time Analytics",
+      "analyticsDesc": "Track quotes, orders, and supplier performance with live dashboards and exportable reports.",
+      "secure": "Secure Payments",
+      "secureDesc": "Built-in payment management with credit controls and automated invoicing.",
       "loading": "Loading..."
+    },
+    "stats": {
+      "suppliers": "Verified Suppliers",
+      "transactions": "Transactions Processed",
+      "satisfaction": "Client Satisfaction",
+      "categories": "Product Categories"
+    },
+    "cta": {
+      "title": "Ready to Transform Your Procurement?",
+      "subtitle": "Join Saudi Arabia's fastest-growing B2B marketplace. Get started in minutes.",
+      "button": "Start Free Today"
     }
   },
   "login": {
